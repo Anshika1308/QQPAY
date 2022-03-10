@@ -1,8 +1,6 @@
 <template>
   <div class="transaction">
-    <NavBar />
     <div class="page-body">
-      <TitleBar title="Upload Business Documents" />
       <b-container>
         <b-row align-h="center my-5">
           <b-col>
@@ -22,30 +20,6 @@
                 <em>{{ uploads.text }}</em>
               </b-list-group-item>
             </b-list-group>
-            <b-row align-h="center">
-              <b-col col sm="12" md="12" lg="6" class="text-center">
-                <b-button-group>
-                  <b-button
-                    variant="secondary"
-                    @click="$router.push('/')"
-                    class="mt-5 mr-1 px-5"
-                    >Back</b-button
-                  >
-                  <b-button
-                    variant="primary"
-                    @click="$router.push('/')"
-                    class="mt-5 mr-1 px-5"
-                    >SAVE</b-button
-                  >
-                  <b-button
-                    variant="primary"
-                    @click="$router.push('/')"
-                    class="btn-primary mt-5 ml-auto px-5"
-                    >Save & Continue</b-button
-                  >
-                </b-button-group>
-              </b-col>
-            </b-row>
           </b-col>
         </b-row>
       </b-container>
@@ -54,15 +28,9 @@
 </template>
 
 <script>
-import NavBar from "@/components/navigations/NavBar.vue";
-import TitleBar from "@/components/navigations/TitleBar.vue";
 
 export default {
   name: "BusinessDocuments",
-  components: {
-    NavBar,
-    TitleBar,
-  },
   data() {
     return {
       upload_list: [
@@ -121,13 +89,30 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
-::v-deep .custom-control-input {
-  &:checked ~ .custom-control-label {
-    &::before {
-      color: #fff;
-      border-color: $green !important;
-      background-color: $green !important;
-    }
-  }
+.documents-container{
+  background: #efebeb;
+}
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.upload-file-main {
+  padding: 5px;
+  background: #efebeb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.upload-btn {
+  border: 1px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 0px 10px;
+  border-radius: 20px;
+  font-size: 20px;
+  
 }
 </style>
