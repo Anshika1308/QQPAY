@@ -1,0 +1,141 @@
+$background-color: #fff;
+$primary: #ff6b00;
+$secondary: #606d79;
+$txt: #4b3589;
+
+$white: #fff;
+$green: #2fd32c;
+
+$grey: #808080;
+$gainsboro: #f1f1f1;
+$lightgrey: #d3d3d3;
+$silver: #c0c0c0;
+$midgray: #b4b4b4;
+$darkgrey: #a9a9a9;
+$lightslategrey: #778899;
+$slategrey: #708090;
+$dimgrey: #696969;
+$darkgray: #333333;
+
+//Widths
+.wd-100p {
+	width: 100%;
+}
+.wd-50p {
+	width: 50%;
+}
+.wd-15p {
+	width: 15%;
+}
+.wd-200 {
+	width: 200px;
+}
+
+//Margin
+.mt-10 {
+	margin-top: 10rem;
+}
+.mt-05 {
+	margin-top: 5rem;
+}
+.mt-02 {
+	margin-top: 2rem;
+}
+.mt-01 {
+	margin-top: 1rem;
+}
+
+//Align
+.a-end {
+	text-align: end;
+}
+.a-center {
+	text-align: center;
+}
+.a-right {
+	text-align: right;
+}
+
+//Border-radius
+.b-radius-30 {
+	border-radius: 30px;
+}
+.b-radius-20 {
+	border-radius: 20px;
+}
+.b-radius-10 {
+	border-radius: 10px;
+}
+.b-radius-5 {
+	border-radius: 5px;
+}
+
+.form-control:focus {
+	border-color: $primary;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 107, 0, 0.2);
+}
+
+//backgroud Styles
+.btn-primary {
+	background-image: linear-gradient(to right, #ff6b00 0%, #ff6b00 51%, #ff6b00 100%) !important;
+	text-align: center;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: white;
+	border-radius: 3px;
+	display: block;
+	border: none;
+	&:hover {
+		background-position: right center;
+		color: #fff;
+		text-decoration: none;
+	}
+}
+.btn-grad-invites-secondary {
+	background-image: linear-gradient(to right, #c0c0c0 0%, #696969 51%, #696969 100%);
+	text-align: center;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: white;
+	border-radius: 3px;
+	display: block;
+	border: 1px #696969 solid;
+	&:hover {
+		background-position: right center;
+		color: #fff;
+		text-decoration: none;
+	}
+}
+
+.btn-invites {
+	background: #ff6b00;
+	text-align: center;
+	background-size: 200% auto;
+	color: white;
+	border-radius: 10px;
+	display: block;
+}
+
+.welcome-background {
+	background-size: auto;
+	background-repeat: no-repeat;
+	box-shadow: inset 0 0 2000px rgba(255, 255, 255, 1);
+	padding-bottom: 100px;
+}
+.btn-light {
+	border: 1px solid #d3d3d3 !important;
+}
+
+//Animations
+.fade-enter-active {
+	transition: opacity 0.5s;
+}
+.fade-leave-active {
+	transition: opacity 0.5s;
+}
+.fade-enter {
+	opacity: 0;
+}
+.fade-leave-to {
+	opacity: 0;
+}
