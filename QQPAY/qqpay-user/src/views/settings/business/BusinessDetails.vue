@@ -26,54 +26,51 @@
 						</b-row>
 						<b-row>
 							<b-col col sm="6">
-								<div data-v-16f10035="" data-v-0f80ec19="" class="tex--fieldcontainer">
+								<div data-v-16f10035="" data-v-0f80ec19="">
 									<label data-v-16f10035="" data-v-0f80ec19="" class="text-field-label">Enter Regulatory/ License Number</label>
-									<input data-v-16f10035="" data-v-0f80ec19="" type="date" name="" class="text-field-value">
-								</div>
+									<input data-v-16f10035="" data-v-0f80ec19="" type="date" name="" class="text-field-value"> </div>
 							</b-col>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Company Entity Type</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Private Limited</option>
-								</select>
-							</b-col>
+								<custom-dropdown :arrayOptions="entity_options" labelDropdown="Company Entity Type" defaultName="Select Compnany Entity Type" />
+                </b-col>
 						</b-row>
 						<b-row>
 							<b-col col sm="6">
 								<text-field textFieldLabel="Enter Regulatory/ License Number" :textFieldValue="business_data.regulatioryNumber" /> </b-col>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Source Of Funds</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Profits</option>
-								</select>
+                <custom-dropdown :arrayOptions="fund_options" labelDropdown="Source Of Funds" defaultName="Select Source Of Funds" />
 							</b-col>
 						</b-row>
 						<b-row>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Nature of Business</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Fashion & Textile</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="nature_options"
+                  labelDropdown="Nature of Business"
+                  defaultName="Select Nature of Business"
+                />
 							</b-col>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Product/service type</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Designer & Clothing</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="service_options"
+                  labelDropdown="Product/service type"
+                  defaultName="Select Service"
+                />
 							</b-col>
 						</b-row>
 						<b-row>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Ended Use of Account</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Send Payment</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="purpose_options"
+                  labelDropdown="Ended Use of Account"
+                  defaultName="Select Payment"
+                />
 							</b-col>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Annual Net Revanue</label>
-								<select class="text-field-value-select">
-									<option value="volvo">0 - 2 Lpa</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="revenue_options"
+                  labelDropdown="Annual Net Revenue"
+                  defaultName="Select Revenue"
+                />
 							</b-col>
 						</b-row>
 						<div class="company-details">
@@ -84,10 +81,15 @@
 							</b-row>
 							<b-row>
 								<b-col col sm="6">
-									<label class="text-field-label-select">Annual Net Revanue</label>
+									<!-- <label class="text-field-label-select">Annual Net Revanue</label>
 									<select class="text-field-value-select">
 										<option value="volvo">0 - 2 Lpa</option>
-									</select>
+									</select> -->
+                  <custom-dropdown
+                    :arrayOptions="revenue_options"
+                    labelDropdown="Annual Net Revenue"
+                    defaultName="Select Revenue"
+                  />
 								</b-col>
 								<b-col col sm="6">
 									<text-field textFieldLabel="Mobile Number" :textFieldValue="business_data.mobileNumber" /> </b-col>
@@ -193,24 +195,27 @@
 						</b-row>
 						<b-row>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Country Of Residency</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Profits</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="country_options"
+                  labelDropdown="Country Of Residency"
+                  defaultName="Select Country"
+                />
 							</b-col>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Nationality</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Profits</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="country_options"
+                  labelDropdown="Nationality"
+                  defaultName="Select Nationality"
+                />
 							</b-col>
 						</b-row>
 						<b-row>
 							<b-col col sm="6">
-								<label class="text-field-label-select">Politically Exposed Person(PEP)</label>
-								<select class="text-field-value-select">
-									<option value="volvo">Profits</option>
-								</select>
+                <custom-dropdown
+                  :arrayOptions="country_options"
+                  labelDropdown="Politically Exposed Person(PEP)"
+                  defaultName="Select PEP"
+                />
 							</b-col>
 							<div data-v-16f10035="" class="col-sm-6 col">
 								<div data-v-16f10035="" data-v-0f80ec19="" class="tex--fieldcontainer">
@@ -233,8 +238,7 @@
 							<div data-v-16f10035="" class="col-sm-6 col">
 								<div data-v-16f10035="" data-v-0f80ec19="" class="tex--fieldcontainer">
 									<label data-v-16f10035="" data-v-0f80ec19="" class="text-field-label">Mobile Number</label>
-									<input data-v-16f10035="" data-v-0f80ec19="" type="text" value="9898989898" class="text-field-value">
-								</div>
+									<input data-v-16f10035="" data-v-0f80ec19="" type="text" value="9898989898" class="text-field-value"> </div>
 							</div>
 						</b-row>
 						<div col sm="12" md="12" lg="12">
@@ -363,7 +367,7 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import TitleBar from "@/components/navigations/TitleBar.vue";
 import StepProgress from "@/components/tools/StepProgress.vue";
 import TextField from "@/components/common/TextField.vue";
-
+import CustomDropdown from "@/components/common/Dropdown.vue";
 
 
 export default {
@@ -372,7 +376,7 @@ export default {
     NavBar,
     TitleBar,
     TextField,
-  
+    CustomDropdown,
     "step-progress": StepProgress
   },
   data() {
@@ -499,12 +503,18 @@ export default {
           value: "Private Limited",
         },
         {
-          text: "rivate Limited2",
+          text: "Rivate Limited2",
           value: "Fashion & Textile",
         },
         {
-          text: "rivate Limited3",
+          text: "Rivate Limited3",
           value: "Designer Clothing",
+        },
+      ],
+      country_options: [
+        {
+          text: "Malaysia",
+          value: "Malaysia",
         },
       ],
       nature_options: [
@@ -642,7 +652,7 @@ button.print-reciept1 {
   outline: none;
 }
 .space-button1 {
-margin-top: 43px;
+  margin-top: 43px;
   display: flex;
   justify-content: space-between;
   align-items: center;

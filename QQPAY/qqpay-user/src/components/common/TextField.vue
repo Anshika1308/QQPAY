@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div class="tex--fieldcontainer">
-      <label class="text-field-label">{{textFieldLabel}}</label>
-      <input class="text-field-value" type="text" name="" v-model="textFieldValue">
-    </div>
+    <b-form-group
+      :label="textFieldLabel"
+      label-for="input-name"
+    >
+      <b-form-input
+        id="input-name"
+        v-model="textFieldValue"
+      ></b-form-input>
+    </b-form-group>
   </div>
 </template>
 
