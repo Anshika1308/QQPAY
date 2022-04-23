@@ -98,8 +98,8 @@
       responsive
       class="align-middle"
     >
-      <template #cell(i_o_IRH)="row">
-        <b>{{ row.item.i_o_IRH }} </b>
+      <template #cell(Payout_partner)="row">
+        <b>{{ row.item.payout_partner }} </b>
       </template>
       <template #cell(funding_date)="row"
         ><b>{{ row.item.funding_date }}</b>
@@ -190,91 +190,142 @@
       <b-card header="Funding Details" header-tag="header">
         <b-row>
           <b-col>
-            <b-form-group
-              id="fieldset-1"
-              label="Funding Date"
-              label-for="example-datepicker"
-            >
-              <b-form-datepicker
-                id="example-datepicker"
-                v-model="temp_funding.funding_date"
-                class="mb-2"
+               <b-form-group label="Payout Partner">
+              <b-form-input
+                v-model="temp_funding.Payout_partner"
                 size="sm"
-              ></b-form-datepicker>
+              ></b-form-input>
             </b-form-group>
+            
           </b-col>
           <b-col>
-            <b-form-group label="Exchange Rate">
+            <b-form-group label="PPCCY Type">
               <b-form-input
-                v-model="temp_funding.exchange_rate"
+                v-model="temp_funding.PPCCY_Type"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="USD Amount">
+            <b-form-group label="USD Amt">
               <b-form-input
-                v-model="temp_funding.amount_in_USD"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="MYR Amount">
-              <b-form-input
-                v-model="temp_funding.amount_in_MYR"
+                v-model="temp_funding.USD_Amt"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
         </b-row>
-      </b-card>
 
-      <b-card header="Purchase Details" header-tag="header">
-        <b-row>
+          <b-row>
           <b-col>
-            <b-form-group label="Purchase Date">
-              <b-form-datepicker
-                v-model="temp_funding.purchase_date"
-                class="mb-2"
+
+         <b-form-group label="USD PPCCY">
+              <b-form-input
+                v-model="temp_funding.USD_PPCCY"
                 size="sm"
-              ></b-form-datepicker>
+              ></b-form-input>
             </b-form-group>
           </b-col>
-          <b-col>
-            <b-form-group label="Transaction No." label-for="input-1">
+
+             <b-col>
+            <b-form-group label="PP Amt">
+              <b-form-input
+                v-model="temp_funding.PP_Amt"
+                size="sm"
+              ></b-form-input>
+            
+            </b-form-group>
+          </b-col>
+
+           <b-col>
+            <b-form-group label="Funding No" label-for="input-1">
               <b-form-input
                 id="input-1"
-                v-model="temp_funding.contract_no"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Exchange Partner">
-              <b-form-input
-                v-model="temp_funding.source_of_funds"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Partner Type">
-              <b-form-input
-                v-model="temp_funding.exchange_rate"
+                v-model="temp_funding.Funding_No"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
         </b-row>
+         
+         
+
       </b-card>
-      <b-form-textarea
-        id="textarea"
-        v-model="temp_funding.comment"
-        placeholder="Remarks"
-        rows="3"
-        max-rows="6"
-      ></b-form-textarea>
+    
+        
+        <b-card header="Purchase Details" header-tag="header">
+      
+        <b-row>
+
+
+           <b-col>
+            
+              <b-form-group label="Purchase DT">
+              <b-form-datepicker
+                v-model="temp_funding.Purchase_DT"
+                class="mb-2"
+                size="sm"
+              ></b-form-datepicker>
+
+            </b-form-group>
+          </b-col>
+         
+         
+          
+          <b-col>
+            <b-form-group label="Fees CCY Type">
+              <b-form-input
+                v-model="temp_funding.FeesCCY_Type"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+                <b-form-group label="Fees">
+              <b-form-input
+                v-model="temp_funding.Fees"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+            <b-row>
+           
+           <b-col>
+            <b-form-group label="MY RPPCCY">
+              <b-form-input
+                v-model="temp_funding.MY_RPPCCY"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+           </b-col> 
+
+           <b-col>
+            <b-form-group label="Bank POC">
+              <b-form-input
+                v-model="temp_funding.Bank_POC"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+           </b-col> 
+
+           <b-col>
+            <b-form-group label="Bank">
+              <b-form-input
+                v-model="temp_funding.Bank"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+           </b-col> 
+
+         
+             
+        </b-row>
+      </b-card>
+      
+        
       <template #modal-footer="{ ok }">
         <b-button variant="primary" @click="ok()"> SUBMIT </b-button>
       </template>
@@ -337,19 +388,20 @@ export default {
         },
       ],
       temp_funding: {
-        i_o_IRH: "O",
-        funding_date: "",
-        source_of_funds: "Maybank",
-        amount_in_USD: "66,509 USD",
-        exchange_rate: "",
-        amount_in_MYR: "2,80,003.89 MYR",
-        contract_no: "S1341125",
-        purchase_date: "02 Nov 21",
-        status: "Open",
-        created_by: "Deepu",
-        break_down: "0",
-        edited_by: "",
-        comment: "",
+          payout_partner: "axis",
+          PPCCY_Type: "INR",
+          USD_Amt: "19,970",
+          USD_PPCCY: "75",
+          PP_Amt: "1,497,750",
+          Funding_No: " ",
+          purchase_DT: " ",
+          FeesCCY_Type: "USD",
+          Fees: "20",
+          created_by : " ",
+          MY_RPPCY: "17.4",
+          Bank_POC: "",
+          Bank: "",
+          edited_by: "",
       },
       menu_hierarchy: [
         {
@@ -362,28 +414,37 @@ export default {
         },
       ],
       fields: [
-        "i_o_IRH",
-        "funding_date",
-        "source_of_funds",
-        "amount_in_USD",
-        "exchange_rate",
-        "amount_in_MYR",
-        "status",
+        "payout_partner",
+        "PPCCY_Type",
+        "USD_Amt",
+        "USD_PPCCY",
+        "PP_Amt",
+        "Funding No",
+        "Purchase_DT",
+        "FeesCCY_Type",
+        "Fees",
+        "Created_By",
+        "MY_RPPCY",
+        "Bank_POC",
+        "Bank",
+        "Edited_By",
         { key: "actions", label: "" },
       ],
       items: [
         {
-          i_o_IRH: "O",
-          funding_date: "01 Nov 21",
-          source_of_funds: "Maybank",
-          amount_in_USD: "66,509 USD",
-          exchange_rate: "4.2100",
-          amount_in_MYR: "2,80,003.89 MYR",
-          contract_no: "S1341125",
-          purchase_date: "02 Nov 21",
-          status: "Open",
-          created_by: "Siva",
-          break_down: "2",
+          payout_partner: "axis",
+          PPCCY_Type: "INR",
+          USD_Amt: "19,970",
+          USD_PPCCY: "75",
+          PP_Amt: "1,497,750",
+          Funding_No: " ",
+          purchase_DT: " ",
+          FeesCCY_Type: "USD",
+          Fees: "20",
+          created_by : " ",
+          MY_RPPCY: "17.4",
+          Bank_POC: "",
+          Bank: "",
           edited_by: "",
           comment: "This is a sample Funding",
         },
