@@ -190,39 +190,54 @@
       <b-card header="Settlement Details" header-tag="header">
         <b-row>
           <b-col>
-            <b-form-group
-              id="fieldset-1"
-              label="Settlement Date"
-              label-for="example-datepicker"
-            >
-              <b-form-datepicker
-                id="example-datepicker"
-                v-model="temp_settlement.settlement_date"
-                class="mb-2"
-                size="sm"
-              ></b-form-datepicker>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Exchange Rate">
+            <b-form-group label="Payout Partner">
               <b-form-input
-                v-model="temp_settlement.exchange_rate"
+                v-model="temp_settlement.payout_partner"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="USD Amount">
+            <b-form-group label="PP CCY">
               <b-form-input
-                v-model="temp_settlement.amount_in_USD"
+                v-model="temp_settlement.PP_CCY"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>          
+          
+          <b-col>
+            <b-form-group label="USD Amt">
+              <b-form-input
+                v-model="temp_settlement.USD_Amt"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <b-form-group label="Swift Charges">
+              <b-form-input
+                v-model="temp_settlement.swift_charges"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="MYR Amount">
+            <b-form-group label="PP Sharing Charges">
               <b-form-input
-                v-model="temp_settlement.amount_in_MYR"
+                v-model="temp_settlement.PP_sharing_charges"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group label="Tax">
+              <b-form-input
+                v-model="temp_settlement.tax"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -233,50 +248,77 @@
       <b-card header="Purchase Details" header-tag="header">
         <b-row>
           <b-col>
-            <b-form-group label="Purchase Date">
+            <b-form-group
+              id="fieldset-1"
+              label="Transaction Date"
+              label-for="example-datepicker"
+            >
               <b-form-datepicker
-                v-model="temp_settlement.purchase_date"
+                id="example-datepicker"
+                v-model="temp_settlement.trans_DT"
+                class="mb-2"
+                size="sm"
+              ></b-form-datepicker>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+            <b-form-group label="Transaction Number">
+              <b-form-input
+                v-model="temp_settlement.tran_NO"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+            <b-form-group label="US in PP" label-for="input-1">
+              <b-form-input
+                id="input-1"
+                v-model="temp_settlement.USD_in_PP"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+        </b-row>
+        <b-row>
+          <b-col>
+            <b-form-group label="MYR in PP" label-for="input-1">
+              <b-form-input
+                id="input-1"
+                v-model="temp_settlement.MYR_in_PP"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group
+              id="fieldset-1"
+              label="PP CCY Dates"
+              label-for="example-datepicker"
+            >
+              <b-form-datepicker
+                id="example-datepicker"
+                v-model="temp_settlement.PP_CCY_DT"
                 class="mb-2"
                 size="sm"
               ></b-form-datepicker>
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="Transaction No." label-for="input-1">
+            <b-form-group label="PP Bank POC">
               <b-form-input
-                id="input-1"
-                v-model="temp_settlement.contract_no"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Exchange Partner">
-              <b-form-input
-                v-model="temp_settlement.source_of_funds"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Partner Type">
-              <b-form-input
-                v-model="temp_settlement.exchange_rate"
+                v-model="temp_settlement.PP_Bank_POC"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
         </b-row>
       </b-card>
-      <b-form-textarea
-        id="textarea"
-        v-model="temp_settlement.comment"
-        placeholder="Remarks"
-        rows="3"
-        max-rows="6"
-      ></b-form-textarea>
+
       <template #modal-footer="{ ok }">
-        <b-button variant="primary" @click="ok()"> SUBMIT </b-button>
+        <b-button variant="primary" @click="ok();submitSettlementModal()"> SUBMIT </b-button>
       </template>
     </b-modal>
   </div>
@@ -384,7 +426,7 @@ export default {
         },
       ],
       temp_settlement: {
-        i_o_IRH: "O",
+/*         i_o_IRH: "O",
         settlement_date: "",
         source_of_funds: "Maybank",
         amount_in_USD: "66,509 USD",
@@ -396,7 +438,24 @@ export default {
         created_by: "Deepu",
         break_down: "0",
         edited_by: "",
-        comment: "",
+        comment: "", */
+
+        payout_partner: "",
+        PP_CCY: "",
+        USD_Amt: "",
+        swift_charges: "",
+        PP_sharing_charges: "",
+        tran_NO: "",
+        trans_DT: "",
+        created_by: "",
+        edited_by: "",
+        USD_in_PP: null,
+        MYR_in_PP: null,
+        PP_CCY_DT: "",
+        // PP_CCY_DT: "2021-11-01",
+        PP_Bank_POC: "",
+        tax: ""
+    
       },
       menu_hierarchy: [
         {
@@ -409,21 +468,41 @@ export default {
         },
       ],
       fields: [
-        "i_o_IRH",
-        "settlement_date",
-        "source_of_funds",
-        "amount_in_USD",
-        "exchange_rate",
-        "amount_in_MYR",
-        "status",
+        "payout_partner",
+        "PP_CCY",
+        "USD_Amt",
+        "swift_charges",
+        "PP_sharing_charges",
+        "tran_NO",
+        "trans_DT",
+        "created_by",
+        "edited_by",
+        "USD_in_PP",
+        "MYR_in_PP",
+        "PP_CCY_DT",
+        "PP_Bank_POC",
+        "tax",
         { key: "actions", label: "" },
       ],
       items: [
         {
-          i_o_IRH: "O",
-          settlement_date: "01 Nov 21",
+          payout_partner: "Axis",
+          PP_CCY: "USD",
+          USD_Amt: "66,509 USD",
+          swift_charges: "10$",
+          PP_sharing_charges: "N/A",
+          tran_NO: "D+PP",
+          trans_DT: "01 Nov 21",
+          created_by: "",
+          edited_by: "",
+          USD_in_PP: 74.50,
+          MYR_in_PP: 17.50,
+          PP_CCY_DT: "01 Nov 21",
+          PP_Bank_POC: "",
+          tax: ""
+
+/*           settlement_date: "01 Nov 21",
           source_of_funds: "Maybank",
-          amount_in_USD: "66,509 USD",
           exchange_rate: "4.2100",
           amount_in_MYR: "2,80,003.89 MYR",
           contract_no: "S1341125",
@@ -432,12 +511,16 @@ export default {
           created_by: "Siva",
           break_down: "2",
           edited_by: "",
-          comment: "This is a sample Settlement",
+          comment: "This is a sample Settlement", */
         },
       ],
     };
   },
-  methods: {},
+  methods: {
+    submitSettlementModal() {
+      this.items.push(this.temp_settlement);
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>
