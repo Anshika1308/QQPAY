@@ -152,9 +152,16 @@
             </b-row>
           </b-container>
         </b-col>
+
+
+        
+         <Business/>
       </b-row>
     </div>
   </div>
+
+
+  
 </template>
 
 <script>
@@ -163,6 +170,9 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import Deals from "@/views/treasury/Deals.vue";
 import Settlements from "@/views/treasury/Settlements.vue";
 import Funding from "@/views/treasury/Funding.vue";
+import Business from './compilance/Business.vue'
+ 
+
 
 export default {
   name: "Home",
@@ -170,7 +180,12 @@ export default {
     NavBar,
     Deals,
     Settlements,
-    Funding
+    Funding,
+     Business
+  
+   
+    
+
   },
   data() {
     return {
