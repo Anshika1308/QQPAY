@@ -42,6 +42,71 @@
                 <b-card no-body>
                   <b-tabs pills card>
                     <b-tab
+                      v-if="tab_show.user"
+                      :active="tab_active.user"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                          ></b-icon
+                        >
+                        User
+                        <b-button variant="outline-light" size="sm"
+                          @click="closeTab('user')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <ComplianceUser
+                    /></b-tab>
+
+                    <b-tab
+                      v-if="tab_show.business"
+                      :active="tab_active.business"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                          ></b-icon
+                        >
+                        Business
+                        <b-button variant="outline-light" size="sm"
+                          @click="closeTab('business')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <Business
+                    /></b-tab>
+
+                    <b-tab
+                      v-if="tab_show.fraud_users"
+                      :active="tab_active.fraud_users"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                          ></b-icon
+                        >
+                        Fraud Users
+                        <b-button variant="outline-light" size="sm"
+                          @click="closeTab('fraud_users')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <FruadUsers
+                    /></b-tab>                                        
+                    <b-tab
                       v-if="tab_show.deals"
                       :active="tab_active.deals"
                     >
@@ -152,15 +217,9 @@
             </b-row>
           </b-container>
         </b-col>
-
-
-        
-         <Business/>
       </b-row>
     </div>
   </div>
-
-
   
 </template>
 
@@ -170,9 +229,9 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import Deals from "@/views/treasury/Deals.vue";
 import Settlements from "@/views/treasury/Settlements.vue";
 import Funding from "@/views/treasury/Funding.vue";
-import Business from './compilance/Business.vue'
- 
-
+import ComplianceUser from "@/views/compilance/ComplianceUser.vue";
+import Business from "@/views/compilance/Business.vue";
+import FruadUsers from "@/views/compilance/FruadUsers.vue";
 
 export default {
   name: "Home",
@@ -181,28 +240,28 @@ export default {
     Deals,
     Settlements,
     Funding,
-     Business
-  
-   
-    
-
+    ComplianceUser,
+    Business,
+    FruadUsers
   },
   data() {
     return {
       deals: "Deals",
       tab_show: {
-        deals: true,
+        deals: false,
         settlements: false,
         funding: false,
         forex: false,
         statement: false,
+        user: true
       },
       tab_active: {
-        deals: true,
+        deals: false,
         settlements: false,
         funding: false,
         forex: false,
         statement: false,
+        user: true
       },
       menus: [
         {
@@ -223,7 +282,20 @@ export default {
         {
           id: 4,
           title: "Compliance",
-          sub_menus: {},
+          sub_menus: [
+            {
+              title: "User",
+              value: "user",
+            },
+            {
+              title: "Business",
+              value: "business",
+            },
+            {
+              title: "Fraud Users",
+              value: "fraud_users",
+            },
+          ],
         },
         {
           id: 5,

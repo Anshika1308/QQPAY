@@ -451,7 +451,14 @@ export default {
       ],
     };
   },
-  methods: {},
+  methods: {
+    ok() {
+      console.log('ok')
+    },
+    nav_update() {
+      console.log('nav update')
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>

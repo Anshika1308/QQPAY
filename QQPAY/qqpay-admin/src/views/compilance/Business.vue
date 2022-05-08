@@ -10,9 +10,7 @@
 export default {
   name: "Business",
   components: {
-    TreasuryFlow
-    
-    
+     
   }
 }
 </script>

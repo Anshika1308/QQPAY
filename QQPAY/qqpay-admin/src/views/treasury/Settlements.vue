@@ -519,6 +519,12 @@ export default {
   methods: {
     submitSettlementModal() {
       this.items.push(this.temp_settlement);
+    },
+    ok() {
+      console.log('ok')
+    },
+    nav_update() {
+      console.log('nav update')
     }
   },
 };
