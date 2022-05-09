@@ -37,7 +37,6 @@ const actions = {
   async createRemitte({ commit }, _remitteeDetails) {
     console.log('remitteeDetails', _remitteeDetails);
     const token = localStorage.getItem('access_token');
-    console.log('token', token);
     try {
       const responseData = await axios.post(`http://localhost:4000/api/v1/remitte_details/create_remitte`, _remitteeDetails, {
         headers: {

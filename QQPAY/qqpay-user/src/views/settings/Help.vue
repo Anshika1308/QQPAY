@@ -7,7 +7,7 @@
       <b-container>
         <b-row align-h="center my-5">
           <b-col class="text-center">
-            <h1>Hi, how can we help?</h1>
+            <h1>{{$t('helpCentre.intro')}}</h1>
             <img
                 alt="QQ Pay"
                 class="logo_img"
@@ -52,39 +52,39 @@ export default {
     return {
       settings: [
         {
-          heading: "FAQs",
+          heading: this.$t('helpCentre.faq'),
           data: [
             {
               id: 1,
-              title: "In which Coutries QQ Pay operate?",
-              text: "QQ Pay operates in Malaysia, Australia, Indonesia, US, India, UK at present instance, but to make remittance easier, we are expanding to other countries, stay tuned in to know about it.",
+              title: this.$t('helpCentre.ques'),
+              text: this.$t('helpCentre.ans'),
             },
             {
               id: 2,
-              title: "In which Coutries QQ Pay operate?",
-              text: "QQ Pay operates in Malaysia, Australia, Indonesia, US, India, UK at present instance, but to make remittance easier, we are expanding to other countries, stay tuned in to know about it.",
+              title: this.$t('helpCentre.ques'),
+              text: this.$t('helpCentre.ans'),
               value: true,
             },
             {
               id: 3,
-              title: "In which Coutries QQ Pay operate?",
-              text: "QQ Pay operates in Malaysia, Australia, Indonesia, US, India, UK at present instance, but to make remittance easier, we are expanding to other countries, stay tuned in to know about it.",
+              title: this.$t('helpCentre.ques'),
+              text: this.$t('helpCentre.ans'),
               value: true,
             },
           ],
         },
         {
-          heading: "Contact Us",
+          heading: this.$t('helpCentre.contact'),
           data: [
             {
               id: 1,
-              title: "Email",
+              title: this.$t('helpCentre.email'),
               text: "support@qqpay.com",
               value: true,
             },
             {
               id: 2,
-              title: "Help Line",
+              title: this.$t('helpCentre.helpLine'),
               text: "1800 1241 45",
               value: true,
             },

@@ -8,6 +8,7 @@ const state = {
   loginResponse:{},
   forgotPassword: {},
   updatepwdResponse: {},
+  language: '',
 };
 
 const mutations = {
@@ -101,6 +102,13 @@ const mutations = {
         break;
     }
   },
+  updateLanguage(state, payload) {
+    switch (payload.type) {
+      case "UPDATE_LANGUAGE":
+        state.language = payload.data;
+        break;
+    }
+  },
 
 };
 
@@ -170,7 +178,33 @@ const actions = {
       return e;
     }
   },
+  async ekycUpdate({ commit }, _kycDetails) {
+    try {
+      const token = localStorage.getItem('access_token');
+      const responseData = await axios.post(`http://localhost:5000/api/v1/user/ekyc`, _kycDetails, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'accept': 'application/json',
+        }
+      });
+      commit("updatePassword", { type: "UPDATE_PASSWORD", data: responseData });
+      // return responseData
+      console.log('ekyc', responseData);
+    } catch (e) {
+      console.log('error', e);
+      return e;
+    }
+  },
+  async setLanguage({ commit }, _langauge) {
+    try {
+      commit('updateLanguage', { type: "UPDATE_LANGUAGE", data: _langauge })
+    } catch(e) {
+      return e;
+    }
+  },
 };
+
 
 export default {
   namespaced: true,

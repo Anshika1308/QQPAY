@@ -3,7 +3,7 @@
     <div class="my-5">
       <b-container>
         <b-row align-v="center" align-h="center" class="my-auto">
-          <b-col col sm="12" md="12" lg="6" class="mt-5">
+          <b-col col sm="12" md="1" lg="6" class="mt-5">
             <b-jumbotron bg-variant="light" text-variant="secondary">
               <template #header><img
                 alt="QQ Pay"
@@ -68,9 +68,22 @@
             </b-card>
             
             <b-card class="mt-3" size="lg">
-              <div class="div-signup" @click="$router.push('/signup')">
-                <b-icon icon="person-lines-fill" scale="1.2" aria-hidden="true"></b-icon
-                >&nbsp;&nbsp;{{$t('loginScreen.singnupOption')}}
+              <div class="language-selection">
+                <div class="div-signup" @click="$router.push('/signup')">
+                  <b-icon icon="person-lines-fill" scale="1.2" aria-hidden="true"></b-icon
+                  >&nbsp;&nbsp;{{$t('loginScreen.singnupOption')}}
+                </div>
+                <div class="select-newlangauge">
+                  <select v-model="$i18n.locale">
+                    <option
+                      v-for="(lang) in language_options"
+                      :key="lang.imdex"
+                      :value="lang.value">
+                        {{ lang.text }}
+                    </option>
+                  </select>
+
+                </div>
               </div>
             </b-card>
           </b-col>
@@ -101,10 +114,21 @@ export default {
       errorMessage: "",
       submitDetailsError: false,
       loader: false,
+      language: 'English',
       dismissSecs: 5,
       dismissCountDown: 0,
       showDismissibleAlert: false,
       submitError: '',
+      language_options: [
+        {
+          text: "English",
+          value: "en",
+        },
+        {
+          text: "Chinese",
+          value: "ch",
+        },
+      ],
     };
   },
   computed: {
@@ -275,5 +299,13 @@ export default {
   color: red;
   font-size: 14px;
   text-align: -webkit-left;
+}
+.language-selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.button#input-type__BV_toggle_ {
+  font-size: 10px;
 }
 </style>

@@ -3,7 +3,7 @@
     <NavBar />
     <NavBarLeft />
     <div class="page-body">
-      <TitleBar title="Fund Transfer" />
+      <TitleBar :title="$t('fundTransfers.fundTransfer')" />
       <b-container>
         <b-row align-v="center" align-h="center" class="mt-5">
           <b-col col sm="12" md="12" lg="12">
@@ -16,7 +16,7 @@
         <b-row align-h="center my-5">
           <b-col col sm="12" md="12" lg="8">
             <div v-if="currentStep == 1">
-              <h4>How much would you like to transfer?</h4>
+              <h4>{{$t('fundTransfers.howMuchTransfer')}}</h4>
               <b-input-group size="lg" class="mt-3">
                 <b-form-input
                   placeholder="You Send"
@@ -53,7 +53,7 @@
                         label-cols-lg="3"
                         content-cols-sm="12"
                         content-cols-lg="4"
-                        label="Delivery Method"
+                        :label="$t('fundTransfers.deliveryMethod')"
                         label-for="input-relation"
                         label-size="sm"
                       >
@@ -84,7 +84,7 @@
                         label="1,822.75 INR"
                         label-size="sm"
                       >
-                        <small>Our fee</small>
+                        <small>{{$t('fundTransfers.ourFee')}}</small>
                       </b-form-group>
                       <b-form-group
                         label-cols-sm="12"
@@ -94,7 +94,7 @@
                         label="1,822.75 INR"
                         label-size="sm"
                       >
-                        <small>Total fee</small>
+                        <small>{{$t('fundTransfers.totalFee')}}</small>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -111,7 +111,7 @@
                         label="98,177.25 INR"
                         label-size="sm"
                       >
-                        <small>Amount we’ll convert</small>
+                        <small>{{$t('fundTransfers.amountConvert')}}</small>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -132,7 +132,7 @@
                         </b-col>
                         <b-col cols="4">
                           <small style="margin-left: -5px"
-                            >Guaranteed rate (24 hrs)</small
+                            >{{$t('fundTransfers.guarantteRate')}}</small
                           >
                         </b-col>
                       </b-row>
@@ -170,11 +170,11 @@
                 class="float-right mt-5 px-5"
                 variant="primary"
                 @click="onClickNext"
-                >Next</b-button
+                >{{$t('next')}}</b-button
               >
             </div>
             <div v-if="currentStep == 2">
-              <h4>Is this a personal transaction or on behalf of someone else?</h4>
+              <h4>{{$t('fundTransfers.isThisPersonalTransaction')}}</h4>
               <b-button-group size="lg">
                 <b-button
                   pressed.sync="false"
@@ -188,9 +188,9 @@
                     style="width: 80px; height: 80px; color: #b4b4b4;"
                   ></b-icon>
                   <br />
-                  My Account
+                  {{$t('fundTransfers.myAccount')}}
                   <br />
-                  <small>If you're paying from your own account.</small>
+                  <small>{{$t('fundTransfers.payingFromOwnAccount')}}.</small>
                 </b-button>
                 <b-button
                   pressed.sync="false"
@@ -204,9 +204,9 @@
                     style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  On behalf
+                  {{$t('fundTransfers.onBehalf')}}
                   <br />
-                  <small>If you're paying on behalf of someone else</small>
+                  <small>{{$t('fundTransfers.payingOnBehalfSomeone')}}</small>
                 </b-button>
               </b-button-group>
               <b-collapse v-model="on_behalf">
@@ -308,7 +308,7 @@
               >
             </div>
             <div v-if="currentStep == 3">
-              <h4>Who are you sending money to?</h4>
+              <h4>{{$t('fundTransfers.whoAreYouSendingMoney')}}?</h4>
               <b-form-group
                 label-for="filter-input"
                 label-cols-sm="0"
@@ -330,7 +330,7 @@
 
                   <b-input-group-append>
                     <b-button :disabled="!filter" @click="filter = ''"
-                      >Clear</b-button
+                      >{{$t('fundTransfers.clear')}}</b-button
                     >
                   </b-input-group-append>
                 </b-input-group>
@@ -378,11 +378,11 @@
               >
             </div>
             <div v-if="currentStep == 4">
-              <h4>Let us know why and how you want to send the money</h4>
+              <h4>{{$t('fundTransfers.letusKnowWhySend')}}</h4>
               <b-row class="mt-5">
                 <b-col
                   ><b-form-group
-                        label="Payment Method"
+                        :label="$t('fundTransfers.paymentMethod')"
                         label-for="input-name"
                       >
                         <b-dropdown
@@ -407,7 +407,7 @@
                 >
                 <b-col
                   ><b-form-group
-                    label="Transaction Reason"
+                    :label="$t('fundTransfers.transactionReason')"
                     label-for="input-type"
                   >
                     <b-form-input
@@ -418,7 +418,7 @@
               </b-row>
 
               <b-form-group
-                label="Source of Fund"
+                :label="$t('fundTransfers.sourceFund')"
                 label-for="input-type"
                 class="mt-2"
               >
@@ -427,7 +427,7 @@
                   v-model="transaction_details.details.fund_source"
                 ></b-form-input>
               </b-form-group>
-              <b-form-group label="Remarks" label-for="input-type" class="mt-2">
+              <b-form-group :label="$t('fundTransfers.remarks')" label-for="input-type" class="mt-2">
                 <b-form-input
                   id="input-name"
                   v-model="transaction_details.details.remarks"
@@ -440,7 +440,7 @@
                 content-cols-sm="12"
                 content-cols-lg="6"
                 v-if="transaction_details.details.method === 'Bank Deposit'"
-                label="Upload Bank Receipt"
+                :label="$t('fundTransfers.uploadBankReceipt')"
                 label-for="input-type"
                 class="mt-2"
               >
@@ -460,17 +460,17 @@
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
                 @click="onClickNext"
-                >Next</b-button
+                >{{$t('next')}}</b-button
               >
             </div>
             <div v-if="currentStep == 5" class="text-center">
-              <h4>Let's review and proceed with the transation</h4>
+              <h4>{{$t('letsReviewTransaction')}}</h4>
               <img
                 center
                 alt="QQ Pay"
@@ -534,11 +534,11 @@ export default {
       currentStep: 1,
       selected: [],
       steps: [
-        { text: "Amount" },
-        { text: "You" },
-        { text: "Recipient" },
-        { text: "Transaction Details" },
-        { text: "Review & Pay" },
+        { text: this.$t('fundTransfers.amount') },
+        { text: this.$t('fundTransfers.you') },
+        { text: this.$t('fundTransfers.receipient') },
+        { text: this.$t('fundTransfers.transactionDetails') },
+        { text: this.$t('fundTransfers.reviewPay') },
       ],
       transaction_details: {
         beneficiary: {},
@@ -580,27 +580,31 @@ export default {
       ],
       delivery_options: [
         {
-          text: "Bank Account",
+          text: this.$t('fundTransfers.bankAccount'),
           value: "Bank Account",
         },
         {
-          text: "Wallet",
+          text: this.$t('fundTransfers.wallet'),
           value: "Wallet",
         },
         {
-          text: "Home Delivery",
+          text: this.$t('fundTransfers.homeDelivery'),
           value: "Home Delivery",
         },
         {
-          text: "Pick up",
+          text: this.$t('fundTransfers.pickup'),
           value: "Pick up",
         },
       ],
       fields: [
-        "name",
-        "country",
-        "type",
-        "relationship",
+        // this.$t('fundTransfers.name'),
+        // this.$t('fundTransfers.country'),
+        // this.$t('fundTransfers.type'),
+        // this.$t('fundTransfers.relationship'),
+        'name',
+        'country',
+        'type',
+        'relationship',
         { key: "actions", label: "" },
       ],
       items: [

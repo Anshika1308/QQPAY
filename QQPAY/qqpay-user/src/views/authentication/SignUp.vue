@@ -341,9 +341,6 @@
     >
       Your Account has been Created Successfully and an OTP has been send to
       your Email ID & Phone Number
-      <template>
-        <b-button variant="primary" @click="$router.push('/login')"> OK </b-button>
-      </template>
     </b-modal>
     <Footer />
   </div>
@@ -506,7 +503,7 @@ export default {
     },
     nav_update() {
       this.$store.state.Common.user_details = this.user_details;
-      this.$router.push("updatepassword");
+      this.$router.push("login");
       console.log(this.user_details);
     },
     async onClickNextEmail() {
