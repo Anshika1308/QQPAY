@@ -4,16 +4,16 @@
       <b-row class="mx-0">
         <b-col col sm="12" md="4" lg="2" class="px-0 side-menu">
           <img
-            alt="QQ Pay"
-            class="logo_img p-3"
-            src="../assets/master_logo.png"
+              alt="QQ Pay"
+              class="logo_img p-3"
+              src="../assets/master_logo.png"
           />
           <b-list-group flush>
             <b-list-group-item v-for="menu in menus" :key="menu.id">
               <div
-                v-b-toggle.collapse-1
-                v-b-toggle="'menu-' + menu.id"
-                class="d-flex justify-content-between align-items-center"
+                  v-b-toggle.collapse-1
+                  v-b-toggle="'menu-' + menu.id"
+                  class="d-flex justify-content-between align-items-center"
               >
                 {{ menu.title }}
                 <b-icon icon="chevron-right" aria-hidden="true"></b-icon>
@@ -22,11 +22,11 @@
                 <b-card class="m-card">
                   <b-list-group flush>
                     <b-list-group-item
-                      href="#"
-                      v-for="sub_menu in menu.sub_menus"
-                      :key="sub_menu.title"
-                      @click="openTab(sub_menu.value)"
-                      ><small>{{ sub_menu.title }}</small></b-list-group-item
+                        href="#"
+                        v-for="sub_menu in menu.sub_menus"
+                        :key="sub_menu.title"
+                        @click="openTab(sub_menu.value)"
+                    ><small>{{ sub_menu.title }}</small></b-list-group-item
                     >
                   </b-list-group>
                 </b-card>
@@ -35,182 +35,252 @@
           </b-list-group>
         </b-col>
         <b-col col sm="12" md="8" lg="10" class="px-0">
-          <NavBar title="" />
+          <NavBar title=""/>
           <b-container>
             <b-row align-v="center" align-h="center" class="mt-5">
               <b-col col sm="12" md="12" lg="12">
                 <b-card no-body>
                   <b-tabs pills card>
                     <b-tab
-                      v-if="tab_show.user"
-                      :active="tab_active.user"
+                        v-if="tab_show.user"
+                        :active="tab_active.user"
                     >
                       <template #title>
                         <b-icon
                             icon="journal-check"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         User
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('user')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('user')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <ComplianceUser
-                    /></b-tab>
+                      />
+                    </b-tab>
 
                     <b-tab
-                      v-if="tab_show.business"
-                      :active="tab_active.business"
+                        v-if="tab_show.business"
+                        :active="tab_active.business"
                     >
                       <template #title>
                         <b-icon
                             icon="journal-check"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         Business
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('business')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('business')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <Business
-                    /></b-tab>
+                      />
+                    </b-tab>
 
                     <b-tab
-                      v-if="tab_show.fraud_users"
-                      :active="tab_active.fraud_users"
+                        v-if="tab_show.fraud_users"
+                        :active="tab_active.fraud_users"
                     >
                       <template #title>
                         <b-icon
                             icon="journal-check"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         Fraud Users
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('fraud_users')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('fraud_users')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
-                      <FruadUsers
-                    /></b-tab>                                        
+                      <FruadUsers/>
+                    </b-tab>
                     <b-tab
-                      v-if="tab_show.deals"
-                      :active="tab_active.deals"
+                        v-if="tab_show.deals"
+                        :active="tab_active.deals"
                     >
                       <template #title>
                         <b-icon
                             icon="journal-check"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         Deals
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('deals')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('deals')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <Deals
-                    /></b-tab>
+                      />
+                    </b-tab>
                     <b-tab
-                      v-if="tab_show.settlements"
-                      :active="tab_active.settlements"
+                        v-if="tab_show.settlements"
+                        :active="tab_active.settlements"
                     >
                       <template #title>
                         <b-icon
                             icon="diagram3-fill"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         Settlements
-                        <b-button variant="outline-light" size="sm"
-                          @click="closeTab('settlements')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                        <b-button
+                            variant="outline-light" size="sm"
+                            @click="closeTab('settlements')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <Settlements
-                    /></b-tab>
+                      />
+                    </b-tab>
                     <b-tab
-                      v-if="tab_show.funding"
-                      :active="tab_active.funding"
+                        v-if="tab_show.funding"
+                        :active="tab_active.funding"
                     >
                       <template #title>
                         <b-icon
                             icon="cash-stack"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         Funding
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('funding')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('funding')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <Funding
-                    /></b-tab>
+                      />
+                    </b-tab>
                     <b-tab
-                      v-if="tab_show.forex"
-                      :active="tab_active.forex"
+                        v-if="tab_show.forex"
+                        :active="tab_active.forex"
                     >
                       <template #title>
                         <b-icon
                             icon="graph-up"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         Daily Forex
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('forex')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('forex')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <Deals
-                    /></b-tab>
+                      />
+                    </b-tab>
                     <b-tab
-                      v-if="tab_show.statement"
-                      :active="tab_active.statement"
+                        v-if="tab_show.statement"
+                        :active="tab_active.statement"
                     >
                       <template #title>
                         <b-icon
                             icon="file-earmark-text"
                             aria-hidden="true"
-                          ></b-icon
+                        ></b-icon
                         >
                         A/C Statement
                         <b-button variant="outline-light" size="sm"
-                          @click="closeTab('statement')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
+                                  @click="closeTab('statement')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
                           ></b-icon
-                        ></b-button>
+                          >
+                        </b-button>
                       </template>
                       <Deals
-                    /></b-tab>
+                      />
+                    </b-tab>
+                    <b-tab
+                        v-if="tab_show.partners"
+                        :active="tab_active.partners"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                        ></b-icon
+                        >
+                        Partners
+                        <b-button
+                            variant="outline-light" size="sm"
+                            @click="closeTab('partners')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
+                          ></b-icon>
+                        </b-button>
+                      </template>
+                      <PartnerList @openTab="openTab"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="tab_show.add_partner"
+                        :active="tab_active.add_partner"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                        ></b-icon
+                        >
+                        Add Partner
+                        <b-button
+                            variant="outline-light" size="sm"
+                            @click="closeTab('add_partner')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
+                          ></b-icon>
+                        </b-button>
+                      </template>
+                      <AddPartner/>
+                    </b-tab>
                   </b-tabs>
                 </b-card>
               </b-col>
@@ -220,7 +290,7 @@
       </b-row>
     </div>
   </div>
-  
+
 </template>
 
 <script>
@@ -232,6 +302,8 @@ import Funding from "@/views/treasury/Funding.vue";
 import ComplianceUser from "@/views/compilance/ComplianceUser.vue";
 import Business from "@/views/compilance/Business.vue";
 import FruadUsers from "@/views/compilance/FruadUsers.vue";
+import PartnerList from "@/views/partners/PartnerList";
+import AddPartner from "@/views/partners/AddPartner";
 
 export default {
   name: "Home",
@@ -242,7 +314,9 @@ export default {
     Funding,
     ComplianceUser,
     Business,
-    FruadUsers
+    FruadUsers,
+    PartnerList,
+    AddPartner,
   },
   data() {
     return {
@@ -253,6 +327,8 @@ export default {
         funding: false,
         forex: false,
         statement: false,
+        partners: false,
+        add_partner: false,
         user: true
       },
       tab_active: {
@@ -261,6 +337,8 @@ export default {
         funding: false,
         forex: false,
         statement: false,
+        partners: false,
+        add_partner: false,
         user: true
       },
       menus: [
@@ -326,7 +404,12 @@ export default {
         {
           id: 6,
           title: "Partners",
-          sub_menus: {},
+          sub_menus: [
+            {
+              title: "Partners List",
+              value: "partners",
+            },
+          ],
         },
         {
           id: 7,
@@ -346,6 +429,7 @@ export default {
     closeTab(sub_menu) {
       this.tab_show[sub_menu] = false;
       this.tab_active[sub_menu] = false;
+      console.log(sub_menu)
     },
   },
 };
@@ -353,6 +437,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/global.scss";
+
 .btn-outline-light {
   border: none !important;
   background: transparent !important;
@@ -360,22 +445,28 @@ export default {
   padding: 0 !important;
   margin-left: 0.75rem;
 }
+
 .list-group-item {
   padding: 0.25rem 1.25rem !important;
 }
+
 .logo_img {
   height: 80px;
 }
+
 .m-card {
   border: none;
+
   .card-body {
     padding: 0;
   }
 }
+
 .side-menu {
   height: 100vh;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
+
 ::v-deep .nav-pills {
   .nav-link {
     margin: .3rem !important;
@@ -383,6 +474,7 @@ export default {
     color: $secondary !important;
     border: 1px solid $secondary !important;
   }
+
   .nav-link.active {
     color: $secondary !important;
     background: transparent !important;
