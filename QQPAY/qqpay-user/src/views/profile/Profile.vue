@@ -11,7 +11,7 @@
               class="circular-progress mx-auto"
               :value="percentage"
             />
-            <label>Profile Completeness</label>
+            <label>{{$t('profile.profileCompleteNess')}}</label>
             <b-row class="p-2">
               <b-col
                 col
@@ -118,7 +118,7 @@
               variant="primary"
               @click="$router.push('/')"
               class="mt-5 px-5 mx-auto"
-              >Update</b-button
+              >{{$t('profile.update')}}</b-button
             >
           </b-col>
         </b-row>
@@ -150,15 +150,15 @@ export default {
       user_details: {
         f_name: "Naraimha",
         l_name: "Rao",
-        account_type: "Business",
-        country: "Malaysia",
+        account_type: this.$t('profile.business'),
+        country: this.$t('profile.malasia'),
         email: "narasimha@softdevels.com",
         phone: "1234567894",
       },
       percentage: 50,
       completeness: [
         {
-          text: "Email Verification",
+          text: this.$t('profile.emailVerification'),
           value: true,
           link: "",
         },
@@ -168,7 +168,7 @@ export default {
           link: "",
         },
         {
-          text: "Mobile Number Verification",
+          text: this.$t('profile.mobileVerify'),
           value: true,
           link: "",
         },

@@ -53,41 +53,41 @@ export default {
     return {
       settings: [
         {
-          heading: "Notification Settings",
+          heading: this.$t('setting.notify'),
           data: [
             {
               id: 1,
-              title: "Transactional Notifications",
-              text: "These are to keep you updated about the transactions happening over QQ Pay, QQ Pay vowes to share the details of the money transfer happening.",
+              title: this.$t('setting.transaction'),
+              text: this.$t('setting.transData'),
               value: true,
             },
             {
               id: 2,
-              title: "Feature Updates Notifications",
-              text: "These are to keep you updated about the new features updates released by QQ Pay, as QQ Pay is evolving to make remittance easy as click, we would love to keep you updated about it.",
+              title: this.$t('setting.feature'),
+              text: this.$t('setting.fdata'),
               value: true,
             },
             {
               id: 3,
-              title: "Promotional Notifications",
-              text: "These are to keep you updated about the new persoanlised offers we got just for you, so that you can make the most of it.",
+              title: this.$t('setting.promotion'),
+              text: this.$t('setting.pdata'),
               value: true,
             },
           ],
         },
         {
-          heading: "Data Privacy",
+          heading: this.$t('setting.privacy'),
           data: [
             {
               id: 1,
-              title: "Share data with our Partners",
-              text: "Allow QQ Pay to share non-senstive data with our banking and non-banking partners, so as to we can roll out best in class offers for you.",
+              title: this.$t('setting.share'),
+              text: this.$t('setting.shareData'),
               value: true,
             },
             {
               id: 2,
-              title: "App Data Usage",
-              text: "Allow QQ Pay to collect data related to the app usage, the data gathered is completely non-sensitve, this helps QQ pay to fix bugs, improve the user exeperince, bring in new features.",
+              title: this.$t('setting.app'),
+              text: this.$t('setting.appData'),
               value: true,
             },
           ],
