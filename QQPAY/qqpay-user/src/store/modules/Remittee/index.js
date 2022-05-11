@@ -4,6 +4,8 @@ import axios from "axios";
 
 const state = {
   remitteResponse: {},
+  base_url: process.env.VUE_APP_BASEURL,
+  remittee_port: process.env.VUE_APP_REMITTE_PORT,
 };
 
 const mutations = {
@@ -38,7 +40,7 @@ const actions = {
     console.log('remitteeDetails', _remitteeDetails);
     const token = localStorage.getItem('access_token');
     try {
-      const responseData = await axios.post(`http://localhost:4000/api/v1/remitte_details/create_remitte`, _remitteeDetails, {
+      const responseData = await axios.post(`${state.base_url}:${state.remittee_port}/api/v1/remitte_details/create_remitte`, _remitteeDetails, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,

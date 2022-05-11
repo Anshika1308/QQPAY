@@ -9,6 +9,8 @@ const state = {
   forgotPassword: {},
   updatepwdResponse: {},
   language: '',
+  base_url: process.env.VUE_APP_BASEURL,
+  user_port: process.env.VUE_APP_USER_PORT,
 };
 
 const mutations = {
@@ -129,7 +131,7 @@ const actions = {
       }
     };
     try {
-      const fetchResponse = await fetch(`http://localhost:5000/api/v1/user/validate_email?User_Email=${_userDetails.User_Email}`, payloadData);
+      const fetchResponse = await fetch(`${state.base_url}${state.user_port}/api/v1/user/validate_email?User_Email=${_userDetails.User_Email}`, payloadData);
       const responseData = await fetchResponse.json();
       commit("registerEmployer", { type: "REGISTERED_EMPLOYER", data: responseData });
       return responseData
@@ -139,7 +141,7 @@ const actions = {
   },
   async registerAccount({ commit }, _userDetails) {
     try {
-      const responseData = await axios.put(`http://localhost:5000/api/v1/user/register`, _userDetails);
+      const responseData = await axios.put(`${state.base_url}:${state.user_port}/api/v1/user/register`, _userDetails);
       console.log('respinse', responseData);
       commit("registerAccount", { type: "REGISTERED_ACCOUNT", data: responseData });
       return responseData
@@ -149,39 +151,36 @@ const actions = {
   },
   async login({ commit }, _userDetails) {
     try {
-      const responseData = await axios.post(`http://localhost:5000/api/v1/user/login`, _userDetails);
+      const responseData = await axios.post(`${state.base_url}:${state.user_port}/api/v1/user/login`, _userDetails);
       commit("loginAccount", { type: "LOGIN_ACCOUNT", data: responseData });
       return responseData
     } catch (e) {
-      console.log('store error', e);
       return e;
     }
   },
   async forgotPassword({ commit }, _userDetails) {
     try {
       const User_Email = _userDetails.User_Email;
-      const responseData = await axios.get(`http://localhost:5000/api/v1/user/reset_password/?User_Email=${User_Email}`, User_Email);
+      const responseData = await axios.get(`${state.base_url}:${state.user_port}/api/v1/user/reset_password/?User_Email=${User_Email}`, User_Email);
       commit("resetPassword", { type: "RESET_PASSWORD", data: responseData });
       return responseData
     } catch (e) {
-      console.log('error', e);
       return e;
     }
   },
   async updatePassword({ commit }, _userDetails) {
     try {
-      const responseData = await axios.get(`http://localhost:5000/api/v1/user/update_password`, _userDetails);
+      const responseData = await axios.get(`${state.base_url}:${state.user_port}/api/v1/user/update_password`, _userDetails);
       commit("updatePassword", { type: "UPDATE_PASSWORD", data: responseData });
       return responseData
     } catch (e) {
-      console.log('error', e);
       return e;
     }
   },
   async ekycUpdate({ commit }, _kycDetails) {
     try {
       const token = localStorage.getItem('access_token');
-      const responseData = await axios.post(`http://localhost:5000/api/v1/user/ekyc`, _kycDetails, {
+      const responseData = await axios.post(`${state.base_url}:${state.user_port}/api/v1/user/ekyc`, _kycDetails, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -189,10 +188,8 @@ const actions = {
         }
       });
       commit("updatePassword", { type: "UPDATE_PASSWORD", data: responseData });
-      // return responseData
-      console.log('ekyc', responseData);
+      return responseData;
     } catch (e) {
-      console.log('error', e);
       return e;
     }
   },
