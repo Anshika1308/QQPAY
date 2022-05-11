@@ -88,17 +88,60 @@
                     <label>Purchase Date</label>
                     <label>{{ row.item.purchase_date }}</label>
                   </b-list-group-item>
+
                   <b-list-group-item
                     class="d-flex justify-content-between align-items-center"
                   >
                     <label>Created by</label>
                     <label>{{ row.item.created_by }}</label>
                   </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label>NoOfSetle</label>
+                    <label>{{ row.item.NoOf_Setle }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label>Bank POC</label>
+                    <label>{{ row.item.Bank_POC }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label>TOF</label>
+                    <label>{{ row.item.TOF }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label>Edited by</label>
+                    <label>{{ row.item.edited_by }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label>Service Charge</label>
+                    <label>{{ row.item.Service_Charge }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label>Service Tax</label>
+                    <label>{{ row.item.Service_Tax }}</label>
+                  </b-list-group-item>
                 </b-list-group>
               </div>
             </b-col>
             <b-col sm="12" md="6" lg="6" align-h="center">
-              <TreasuryFlow/>
+              <TreasuryFlow />
             </b-col>
             <b-col sm="12" md="6" lg="2">
               <div class="menu-sec">
@@ -163,6 +206,27 @@
               ></b-form-input>
             </b-form-group>
           </b-col>
+
+          <b-col>
+            <b-form-group label="i_o_IRH">
+              <b-form-input
+                v-model="temp_deal.i_o_IRH"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+      
+          <b-col>
+            <b-form-group label="Source of funds">
+              <b-form-input
+                v-model="temp_deal.source_of_funds"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+            </b-row>
+        <b-row>
           <b-col>
             <b-form-group label="USD Amount">
               <b-form-input
@@ -175,6 +239,24 @@
             <b-form-group label="MYR Amount">
               <b-form-input
                 v-model="temp_deal.amount_in_MYR"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+            <b-form-group label="Deal No">
+              <b-form-input
+                v-model="temp_deal.deal_no"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+            <b-form-group label="NoOf Setle">
+              <b-form-input
+                v-model="temp_deal.NoOf_Setle"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -194,26 +276,61 @@
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="Transaction No." label-for="input-1">
+            <b-form-group label="Service Charge" label-for="input-1">
               <b-form-input
                 id="input-1"
-                v-model="temp_deal.contract_no"
+                v-model="temp_deal.Service_Charge"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="Exchange Partner">
+            <b-form-group label="Service Tax">
               <b-form-input
-                v-model="temp_deal.source_of_funds"
+                v-model="temp_deal.Service_Tax"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="Partner Type">
+            <b-form-group label="Created By">
               <b-form-input
-                v-model="temp_deal.exchange_rate"
+                v-model="temp_deal.created_by"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col>
+            <b-form-group label="Edited By">
+              <b-form-input
+                v-model="temp_deal.edited_by"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+            <b-form-group label="TOF">
+              <b-form-input v-model="temp_deal.TOF" size="sm"></b-form-input>
+            </b-form-group>
+          </b-col>
+
+          <b-col>
+            <b-form-group label="Bank POC">
+              <b-form-input
+                v-model="temp_deal.Bank_POC"
+                size="sm"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+
+           <b-col>
+            <b-form-group label="Status">
+              <b-form-input
+                v-model="temp_deal.Status"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -239,7 +356,7 @@ import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
 export default {
   name: "Deals",
   components: {
-    TreasuryFlow
+    TreasuryFlow,
   },
   data() {
     return {
@@ -251,7 +368,13 @@ export default {
         amount_in_USD: "66,509 USD",
         exchange_rate: "",
         amount_in_MYR: "2,80,003.89 MYR",
-        contract_no: "S1341125",
+        deal_no: "",
+        NoOf_Setle: "",
+        Bank_POC: "",
+        TOF: "",
+        Service_Charge: "",
+        Service_Tax: "",
+     
         purchase_date: "02 Nov 21",
         status: "Open",
         created_by: "Deepu",
@@ -291,6 +414,11 @@ export default {
           purchase_date: "02 Nov 21",
           status: "Open",
           created_by: "Siva",
+          NoOf_Setle: "1",
+          Bank_POC: "",
+          TOF: "",
+          Service_Charge: "",
+          Service_Tax: "",
           break_down: "2",
           edited_by: "",
           comment: "This is a sample Deal",

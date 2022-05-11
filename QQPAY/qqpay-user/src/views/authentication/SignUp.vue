@@ -13,13 +13,22 @@
         </b-row>
         <b-row align-v="center" align-h="center" class="text-center mt-5">
           <b-col col sm="12" md="12" lg="8">
+            <b-alert
+              :show="countDownAlert"
+              dismissible
+              fade
+              variant="danger"
+              @dismiss-count-down="countDownSubmit"
+            >
+              This email already registered please provide different Email
+            </b-alert>
             <b-card
               v-if="currentStep == 1"
               class="card-style"
-              title="Create QQPay Account"
+              :title="$t('createQQPay')"
             >
               <b-card-text
-                >Let's start the sign up process with your personal/professional Email ID</b-card-text
+                >{{$t('signupProcess')}}</b-card-text
               >
               <b-input-group size="lg" class="mt-3">
                 <b-input-group-prepend is-text>
@@ -28,38 +37,51 @@
                 <b-form-input
                   type="email"
                   v-model="user_details.email"
-                  placeholder="Email ID"
+                  :placeholder="$t('emailID')"
+                  trim
                 ></b-form-input>
               </b-input-group>
+              <div v-if="validateEmail" class="floating-placeholder">
+                <span>{{errorMessage}}</span>
+              </div>
+              <div v-if="errorOnSubmit" class="floating-placeholder">
+                <span >{{submitErrorMessage}}</span>
+              </div>
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Next</b-button
-              >
+                @click="onClickNextEmail"
+                >{{$t('next')}}
+              </b-button>
+              <div class="spinner-border m-5" role="status" v-if="loader">
+                <span class="sr-only">Loading...</span>
+              </div>
             </b-card>
+
+            <!-- ---------------------------Occupation Section  ------------------------------------------->
             <b-card
               v-if="currentStep == 2"
               class="card-style"
-              title="What kind of account would you like to open?"
+              :title="$t('openaccountType')"
             >
-              <b-card-text>Account type selection</b-card-text>
+              <b-card-text>{{$t('accountSelection')}}</b-card-text>
               <b-button-group size="lg">
                 <b-button
                   pressed.sync="false"
                   variant="light"
                   size="lg"
                   class="px-5 py-3"
+                  @click="onClickPersonalAccount"
                 >
                   <b-icon
                     icon="person-circle"
                     style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  Personal
+                  {{$t('personal')}}
                   <br />
                   <small
-                    >Send, spend, and receive around the world for less.</small
+                    >{{$t('personalQuotes')}}</small
                   >
                 </b-button>
                 <b-button
@@ -67,38 +89,41 @@
                   variant="light"
                   size="lg"
                   class="px-5 py-3"
+                  @click="onClickBusinessAccount"
                 >
                   <b-icon
                     icon="briefcase-fill"
                     style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  Business
+                  {{$t('business')}}
                   <br />
-                  <small>Do business or freelance work internationally.</small>
+                  <small>{{$t('businessQuotes')}}.</small>
                 </b-button>
               </b-button-group>
               <b-button
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Next</b-button
+                @click="onClickNextAccountType"
+                >{{$t('nextLabel')}}</b-button
               >
             </b-card>
+
+            <!-- ---------------------------Country Section  ------------------------------------------->
+
             <b-card
               v-if="currentStep == 3"
               class="card-style"
-              title="Select the Country you are currently residing."
+              :title="$t('countryResiding')"
             >
               <b-card-text
-                >This will be the source country for all of your
-                transactions</b-card-text
+                >{{$t('sourceCountry')}}</b-card-text
               >
               <b-dropdown
                 id="input-type"
@@ -120,27 +145,28 @@
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
-              >
+                >{{$t('backLabel')}}</b-button>
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Next</b-button
+                @click="onClickNextCountry"
+                >{{$t('nextLabel')}}</b-button
               >
             </b-card>
+            <!-- ---------------------------Phone Detail Section  ------------------------------------------->
+
             <b-card
               v-if="currentStep == 4"
               class="card-style"
-              title="Verify your phone number with a OTP"
+              :title="$t('verifyPhone')"
             >
-              <b-card-text>It helps us keep your account secure.</b-card-text>
+              <b-card-text>{{$t('helpups')}}.</b-card-text>
               <b-input-group size="lg" class="mt-3" v-if="!otp_verify">
                 <b-input-group-prepend is-text> +60 </b-input-group-prepend>
                 <b-form-input
                   type="number"
                   v-model="user_details.phone"
-                  placeholder="Phone Number"
+                  :placeholder="$t('phoneNumber')"
                 ></b-form-input>
               </b-input-group>
               <b-input-group size="lg" class="mt-3" v-else>
@@ -150,109 +176,152 @@
                   placeholder="Enter OTP"
                 ></b-form-input>
               </b-input-group>
+              <div v-if="onChangePhone" class="floating-placeholder">
+                <span>{{errorMessage}}</span>
+              </div>
+              <div v-if="errorOnSubmit" class="floating-placeholder">
+                <span>{{submitErrorMessage}}</span>
+              </div>
               <b-button
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Get OTP</b-button
+                @click="onClickNextOtp"
+                >{{$t('getOTP')}}</b-button
               >
             </b-card>
+            <!-- ---------------------------Personal Detail Section  ------------------------------------------->
+
             <b-card
               v-if="currentStep == 5"
               class="card-style"
-              title="Let us know your Good Name"
+              :title="$t('goodName')"
             >
               <b-card-text
-                >You are almost there to finish the sign up
-                process!</b-card-text
+                >{{$t('finisProcess')}}!</b-card-text
               >
               <b-form-input
                 v-model="user_details.f_name"
-                placeholder="First Name"
+                :placeholder="$t('fName')"
                 class="mt-3"
                 size="lg"
               ></b-form-input>
+              <div v-if="validateName" class="floating-placeholder">
+                <span>{{errorMessage}}</span>
+              </div>
               <b-form-input
                 v-model="user_details.l_name"
-                placeholder="Last Name"
+                :placeholder="$t('lName')"
                 class="mt-3"
                 size="lg"
               ></b-form-input>
+              <div v-if="validateName" class="floating-placeholder">
+                <span>{{errorMessage}}</span>
+              </div>
+              <div v-if="errorOnSubmit" class="floating-placeholder">
+                <span>{{submitErrorMessage}}</span>
+              </div>
               <b-button
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Next</b-button
+                @click="onClickNextName"
+                >{{$t('nextLabel')}}</b-button
               >
             </b-card>
+            <b-alert
+              :show="dismissCountDown"
+              dismissible
+              fade
+              variant="danger"
+              @dismiss-count-down="countDownChanged"
+            >
+              Sign up api is not working please try again in some time
+            </b-alert>
+
+            <!-- ---------------------------Password Detail Section  ------------------------------------------->
+
             <b-card
               v-if="currentStep == 6"
               class="card-style"
-              title="Set Your Account Password"
+              :title="$t('setAccountPass')"
             >
               <b-card-text
-                >Set a strong password and finish the sign up
-                process!</b-card-text
+                >{{$t('setStrongPassword')}}!</b-card-text
               >
               <b-form-input
-                v-model="user_details.f_name"
-                placeholder="Password"
+                v-model="user_details.password"
+                :placeholder="$t('currentPass')"
                 type="password"
                 class="mt-3"
                 size="lg"
               ></b-form-input>
+              <div v-if="validateCurrentPassword" class="floating-placeholder">
+                <span>{{errorMessage}}</span>
+              </div>
               <b-form-group
                 class="mt-3 text-left"
-                description="Min. 8 characters, one upper & lowercase, one number, one special character."
+                :description="$t('passwordStrength')"
               >
                 <b-form-input
-                  v-model="user_details.l_name"
-                  placeholder="Re-Enter Password"
+                  v-model="user_details.comfirmPassword"
+                  :placeholder="$t('confirmPass')"
+                  type="password"
                   size="lg"
                 ></b-form-input>
               </b-form-group>
+              <div v-if="errorOnSubmit" class="floating-placeholder">
+                <span>{{submitErrorMessage}}</span>
+              </div>
               <b-button
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Create Account</b-button
+                @click="onSubmitAccount"
+                >
+                <div class="button-loader" v-if="loader">
+                  <span class="spinner-border spinner-border-sm"></span>
+                </div>
+                <div v-else>Create Account</div>
+                </b-button
               >
             </b-card>
-            <label
-              >By Signing up you agree to our
-              <b-link @click="$router.push('/forgotpassword')"
-                >Terms & Condtions</b-link
+            
+            <div class="label-policy">
+              <b-checkbox />
+              <label
+                >{{$t('signupAgree')}}
+                <b-link @click="$router.push('/forgotpassword')"
+                  >Terms & Condtions</b-link
+                >
+                and
+                <b-link @click="$router.push('/forgotpassword')"
+                  >Privacy Policy</b-link
+                ></label
               >
-              and
-              <b-link @click="$router.push('/forgotpassword')"
-                >Privacy Policy</b-link
-              ></label
-            >
+            </div>
             <b-alert v-model="showError" variant="danger" dismissible>
               {{ error_txt }}
             </b-alert>
             <br />
             <br />
             <label class="mt-4"
-              >Already have an account?
+              >{{$t('alreadyAccount')}}
               <b-link @click="$router.push('/login')"
                 >Log in</b-link
               ></label
@@ -272,9 +341,6 @@
     >
       Your Account has been Created Successfully and an OTP has been send to
       your Email ID & Phone Number
-      <template #modal-footer="{ ok }">
-        <b-button variant="primary" @click="ok()"> OK </b-button>
-      </template>
     </b-modal>
     <Footer />
   </div>
@@ -297,12 +363,12 @@ export default {
     return {
       otp_verify: false,
       steps: [
-        { text: "Email" },
-        { text: "Account Type" },
-        { text: "Country" },
-        { text: "2FA" },
-        { text: "Your Name" },
-        { text: "Set Password" },
+        { text: this.$t('email') },
+        { text: this.$t('accountType') },
+        { text: this.$t('country') },
+        { text: this.$t('security') },
+        { text: this.$t('name') },
+        { text: this.$t('setPwd') },
       ],
       currentStep: 1,
       user_details: {
@@ -312,10 +378,22 @@ export default {
         country: "Malaysia",
         email: "",
         phone: "",
+        password: "",
+        comfirmPassword: "",
       },
       error_txt: "",
+      errorMessage: "",
+      errorOnSubmit: false,
+      submitDetailsError: false,
+      submitErrorMessage: '',
+      emailError: false,
       showError: false,
       showModal: false,
+      alertError: '',
+      loader: false,
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      countDownAlert: 0,
       account_options: [
         {
           text: "Personal",
@@ -335,7 +413,81 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("Common", ["user_details"]),
+    ...mapGetters("Common"),
+    validateEmail(){
+      const email = this.user_details.email;
+      if (email) {
+        //eslint-disable-next-line
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+          //eslint-disable-next-line
+          this.errorMessage =  " " ;
+          //eslint-disable-next-line
+          this.emailError = false;
+           //eslint-disable-next-line
+          this.errorOnSubmit = false;
+          return true;
+        } else {
+          //eslint-disable-next-line
+          this.errorMessage = "Please Enter the valid email address";
+          //eslint-disable-next-line
+          this.emailError = true;
+           //eslint-disable-next-line
+          this.errorOnSubmit = false;
+          return true;
+        }
+      } else {
+        //eslint-disable-next-line
+        this.emailError = true;
+        //eslint-disable-next-line
+        this.errorOnSubmit = false;
+        return false;
+      }
+    },
+    validateCurrentPassword(){
+      const currentPassowrd = this.user_details.password;
+      const recievedPassword = this.passwordValidation(currentPassowrd);
+      if (recievedPassword) {
+        //eslint-disable-next-line
+        this.submitDetailsError = true;
+        //eslint-disable-next-line
+        this.submitErrorMessage = '';
+        return true;
+      }
+      //eslint-disable-next-line
+      this.submitDetailsError = false;
+      return false;
+    },
+    onChangePhone() {
+      if (this.user_details.phone.length >= 10) {
+        //eslint-disable-next-line
+        this.errorOnSubmit = false;
+        //eslint-disable-next-line
+        this.submitErrorMessage = '';
+        //eslint-disable-next-line
+        this.errorMessage = '';
+        return true;
+      } else if (this.user_details.phone.length >= 1 &&
+        this.user_details.phone.length <= 10){
+         //eslint-disable-next-line
+        this.errorOnSubmit = '';
+        //eslint-disable-next-line
+        this.errorMessage = 'Please enter the valid phone number';
+        return true;
+      } else  {
+        //eslint-disable-next-line
+        this.errorMessage = '';
+        return true;
+      }
+    },
+    validateName() {
+      if (this.user_details.f_name && this.user_details.l_name) {
+        //eslint-disable-next-line
+        this.errorOnSubmit = '';
+        return true;
+      } else {
+        return true;
+      }
+    },
   },
   methods: {
     submit_user_details() {
@@ -351,14 +503,180 @@ export default {
     },
     nav_update() {
       this.$store.state.Common.user_details = this.user_details;
-      this.$router.push("updatepassword");
+      this.$router.push("login");
       console.log(this.user_details);
     },
-    onClickNext: function () {
+    async onClickNextEmail() {
+      if (this.user_details.email && this.emailError === false) {
+        this.errorMessage = '';
+        this.errorOnSubmit = false;
+        this.submitErrorMessage = '';
+        const userDetails = {
+          User_Email: this.user_details.email
+        }
+        try {
+          this.loader = true;
+          const responseData = await this.$store.dispatch('Authentication/registerEmail', userDetails);
+          const { status_code } = responseData;
+          if (status_code === 200) {
+            this.loader = false;
+            this.currentStep++;
+          } else {
+            this.countDownAlert = this.dismissSecs
+            this.loader = false;
+          }
+        } catch (error) {
+          console.log('error', error);
+          this.loader = false
+        }
+      } else {
+        this.errorOnSubmit = true;
+        this.errorMessage = '';
+        this.submitErrorMessage = "Please enter the email address" 
+      }
+    },
+    onClickNextAccountType() {
       this.currentStep++;
+    },
+    onClickNextCountry() {
+      this.currentStep++;
+    },
+    onClickNextOtp() {
+      if (this.user_details.phone) {
+        this.currentStep++;
+        this.errorMessage = "";
+        this.submitErrorMessage = '';
+      } else {
+        this.errorOnSubmit = true;
+        this.submitErrorMessage = "Please Enter the phone number";
+      }
+    },
+    onClickNextName() {
+      if (this.user_details.f_name && this.user_details.l_name) {
+        this.currentStep++;
+        this.errorMessage = "";
+        this.submitErrorMessage = '';
+      } else {
+        this.errorOnSubmit = true;
+        this.submitErrorMessage = "Please Enter First and Last Name";
+      }
     },
     onClickBack: function () {
       this.currentStep--;
+    },
+    onClickPersonalAccount() {
+      this.user_details.account_type = 'PER';
+    },
+    onClickBusinessAccount() {
+      this.user_details.account_type = 'BUS';
+    },
+    async onSubmitAccount() {
+      const currentPass = this.user_details.password;
+      const confirmPass = this.user_details.comfirmPassword;
+
+      if (currentPass && confirmPass && this.submitDetailsError === false) {
+        if (currentPass === confirmPass) {
+          const userDetails = {
+            User_Email: this.user_details.email,
+            Password: this.user_details.password,
+            User_Type: this.user_details.account_type,
+            FirstName: this.user_details.f_name,
+            LastName: this.user_details.l_name
+          }
+          try {
+            this.loader = true;
+            const responseData = await this.$store.dispatch('Authentication/registerAccount', userDetails);
+            if (responseData && responseData.status === 200) {
+              this.showModal = true;
+              this.loader = false
+              this.errorOnSubmit = false;
+              this.submitErrorMessage = '';
+              this.currentStep++;
+            } else {
+              this.countDownAlert = this.dismissSecs
+              this.loader = false;
+              this.showModal = false;
+            }
+          } catch (error) {
+            this.loader = false
+            this.showModal = false;
+          }
+        }
+      }
+      if(currentPass.length > 0 && confirmPass.length > 0 ) {
+        if (currentPass !== confirmPass) {
+          this.errorOnSubmit = true;
+          this.submitErrorMessage = "Password do not match Please enter the correct password";
+        }
+      }
+      if (!currentPass && confirmPass) {
+        this.errorOnSubmit = true;
+        this.submitErrorMessage = "Please enter the Current Passowrd ";
+        this.errorMessage = '';
+      }
+      if (currentPass && !confirmPass) {
+        this.errorOnSubmit = true;
+        this.submitErrorMessage = "Please enter the Confirm Passowrd";
+        this.errorMessage = '';
+      }
+      if (!currentPass && !confirmPass) {
+        this.errorOnSubmit = true;
+        this.submitErrorMessage = "Please enter the both Passowrd"
+        this.errorMessage = '';
+      }
+    },
+    passwordValidation(currentPassowrd) {
+      if (currentPassowrd.length > 0) {
+        if (currentPassowrd.length < 8) {
+          //eslint-disable-next-line
+          this.errorMessage = "Your password must be at least 8 characters";
+          return true;
+        }
+        if (currentPassowrd.search(/[a-z]/i) < 0) {
+          //eslint-disable-next-line
+          this.errorMessage = "Your password must contain at least one letter.";
+          return true;
+        }
+        if (currentPassowrd.search(/[0-9]/) < 0) {
+          //eslint-disable-next-line
+          this.errorMessage = "Your password must contain at least one digit.";
+          return true;
+        }
+        const isContainsUppercase = /^(?=.*[A-Z]).*$/;
+        if (!isContainsUppercase.test(currentPassowrd)) {
+          //eslint-disable-next-line
+          this.errorMessage = "Password must have at least one Uppercase Character.";
+          return true;
+        }
+      
+        const isContainsLowercase = /^(?=.*[a-z]).*$/;
+        if (!isContainsLowercase.test(currentPassowrd)) {
+          //eslint-disable-next-line
+          this.errorMessage =  "Password must have at least one Lowercase Character.";
+          return true;
+        }
+
+        const isContainsSymbol = /^(?=.*[~`!@#$%^&*()--+={}[\]|\\:;"'<>,.?/_₹]).*$/;
+        if (!isContainsSymbol.test(currentPassowrd)) {
+          //eslint-disable-next-line
+          this.errorMessage = "Password must contain at least one Special Symbol.";
+          return true;
+        }
+        return false;
+      }
+      //eslint-disable-next-line
+      this.errorMessage = '';
+      return false;
+    },
+    
+    // set the timer for the alert to fade away
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+
+    // set timer for email verify error to fade
+    countDownSubmit(countDownDismiss) {
+      this.countDownAlert = countDownDismiss
     },
   },
 };
@@ -411,4 +729,15 @@ label {
 .card {
   border: none;
 }
+.floating-placeholder {
+  color: red;
+  font-size: 14px;
+  text-align: -webkit-left;
+}
+.label-policy {
+  display: flex;
+}
+// .validation-error {
+//   margin-right: 363px;
+// }
 </style>
