@@ -16,7 +16,7 @@
         <b-row align-h="center my-5">
           <b-col col sm="12" md="12" lg="8">
             <div v-if="currentStep == 1">
-              <h4>{{$t('fundTransfers.howMuchTransfer')}}</h4>
+              <h4>{{ $t("fundTransfers.howMuchTransfer") }}</h4>
               <b-input-group size="lg" class="mt-3">
                 <b-form-input
                   placeholder="You Send"
@@ -68,7 +68,8 @@
                             :key="option.value"
                             :value="option.value"
                             @click="
-                              transaction_details.details.delivery = option.value
+                              transaction_details.details.delivery =
+                                option.value
                             "
                             size="sm"
                           >
@@ -84,7 +85,7 @@
                         label="1,822.75 INR"
                         label-size="sm"
                       >
-                        <small>{{$t('fundTransfers.ourFee')}}</small>
+                        <small>{{ $t("fundTransfers.ourFee") }}</small>
                       </b-form-group>
                       <b-form-group
                         label-cols-sm="12"
@@ -94,7 +95,7 @@
                         label="1,822.75 INR"
                         label-size="sm"
                       >
-                        <small>{{$t('fundTransfers.totalFee')}}</small>
+                        <small>{{ $t("fundTransfers.totalFee") }}</small>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -111,7 +112,7 @@
                         label="98,177.25 INR"
                         label-size="sm"
                       >
-                        <small>{{$t('fundTransfers.amountConvert')}}</small>
+                        <small>{{ $t("fundTransfers.amountConvert") }}</small>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -131,9 +132,9 @@
                           ></b>
                         </b-col>
                         <b-col cols="4">
-                          <small style="margin-left: -5px"
-                            >{{$t('fundTransfers.guarantteRate')}}</small
-                          >
+                          <small style="margin-left: -5px">{{
+                            $t("fundTransfers.guarantteRate")
+                          }}</small>
                         </b-col>
                       </b-row>
                     </b-col>
@@ -170,11 +171,11 @@
                 class="float-right mt-5 px-5"
                 variant="primary"
                 @click="onClickNext"
-                >{{$t('next')}}</b-button
+                >{{ $t("next") }}</b-button
               >
             </div>
             <div v-if="currentStep == 2">
-              <h4>{{$t('fundTransfers.isThisPersonalTransaction')}}</h4>
+              <h4>{{ $t("fundTransfers.isThisPersonalTransaction") }}</h4>
               <b-button-group size="lg">
                 <b-button
                   pressed.sync="false"
@@ -185,12 +186,12 @@
                 >
                   <b-icon
                     icon="person"
-                    style="width: 80px; height: 80px; color: #b4b4b4;"
+                    style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  {{$t('fundTransfers.myAccount')}}
+                  {{ $t("fundTransfers.myAccount") }}
                   <br />
-                  <small>{{$t('fundTransfers.payingFromOwnAccount')}}.</small>
+                  <small>{{ $t("fundTransfers.payingFromOwnAccount") }}.</small>
                 </b-button>
                 <b-button
                   pressed.sync="false"
@@ -204,101 +205,101 @@
                     style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  {{$t('fundTransfers.onBehalf')}}
+                  {{ $t("fundTransfers.onBehalf") }}
                   <br />
-                  <small>{{$t('fundTransfers.payingOnBehalfSomeone')}}</small>
+                  <small>{{ $t("fundTransfers.payingOnBehalfSomeone") }}</small>
                 </b-button>
               </b-button-group>
               <b-collapse v-model="on_behalf">
-              <b-card
-                header="Personal Details"
-                header-tag="header"
-                class="mt-3"
-              >
-                <b-row>
-                  <b-col>
-                    <b-form-group
-                      label="Full legal first and middle names"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Date of birth"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col>
-                    <b-form-group
-                      label="Full legal last name(s)"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Phone"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-card>
-              <b-card header="Address" header-tag="header" class="mt-3">
-                <b-row>
-                  <b-col>
-                    <b-form-group
-                      label="Country"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Address"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Occupation"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col>
-                    <b-form-group
-                      label="City"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Postal code"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-card>
-              <b-button
-                class="float-left mt-5 px-5"
-                variant="outline-secondary"
-                @click="onClickBack"
-                >Back</b-button
-              >
+                <b-card
+                  header="Personal Details"
+                  header-tag="header"
+                  class="mt-3"
+                >
+                  <b-row>
+                    <b-col>
+                      <b-form-group
+                        label="Full legal first and middle names"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                      <b-form-group
+                        label="Date of birth"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                    <b-col>
+                      <b-form-group
+                        label="Full legal last name(s)"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                      <b-form-group
+                        label="Phone"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-card>
+                <b-card header="Address" header-tag="header" class="mt-3">
+                  <b-row>
+                    <b-col>
+                      <b-form-group
+                        label="Country"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                      <b-form-group
+                        label="Address"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                      <b-form-group
+                        label="Occupation"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                    <b-col>
+                      <b-form-group
+                        label="City"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                      <b-form-group
+                        label="Postal code"
+                        label-for="input-type"
+                        class="mt-2"
+                      >
+                        <b-form-input id="input-name"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-card>
+                <b-button
+                  class="float-left mt-5 px-5"
+                  variant="outline-secondary"
+                  @click="onClickBack"
+                  >Back</b-button
+                >
               </b-collapse>
               <b-button
                 class="float-right mt-5 px-5"
@@ -308,7 +309,7 @@
               >
             </div>
             <div v-if="currentStep == 3">
-              <h4>{{$t('fundTransfers.whoAreYouSendingMoney')}}?</h4>
+              <h4>{{ $t("fundTransfers.whoAreYouSendingMoney") }}?</h4>
               <b-form-group
                 label-for="filter-input"
                 label-cols-sm="0"
@@ -329,9 +330,9 @@
                   ></b-form-input>
 
                   <b-input-group-append>
-                    <b-button :disabled="!filter" @click="filter = ''"
-                      >{{$t('fundTransfers.clear')}}</b-button
-                    >
+                    <b-button :disabled="!filter" @click="filter = ''">{{
+                      $t("fundTransfers.clear")
+                    }}</b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -378,32 +379,32 @@
               >
             </div>
             <div v-if="currentStep == 4">
-              <h4>{{$t('fundTransfers.letusKnowWhySend')}}</h4>
+              <h4>{{ $t("fundTransfers.letusKnowWhySend") }}</h4>
               <b-row class="mt-5">
                 <b-col
                   ><b-form-group
-                        :label="$t('fundTransfers.paymentMethod')"
-                        label-for="input-name"
+                    :label="$t('fundTransfers.paymentMethod')"
+                    label-for="input-name"
+                  >
+                    <b-dropdown
+                      id="input-relation"
+                      :text="transaction_details.details.method"
+                      variant="light"
+                      class="wd-100p"
+                    >
+                      <b-dropdown-item
+                        v-for="option in method_options"
+                        :key="option.value"
+                        :value="option.value"
+                        @click="
+                          transaction_details.details.method = option.value
+                        "
+                        size="sm"
                       >
-                        <b-dropdown
-                          id="input-relation"
-                          :text="transaction_details.details.method"
-                          variant="light"
-                          class="wd-100p"
-                        >
-                          <b-dropdown-item
-                            v-for="option in method_options"
-                            :key="option.value"
-                            :value="option.value"
-                            @click="
-                              transaction_details.details.method = option.value
-                            "
-                            size="sm"
-                          >
-                            {{ option.text }}
-                          </b-dropdown-item>
-                        </b-dropdown>
-                      </b-form-group></b-col
+                        {{ option.text }}
+                      </b-dropdown-item>
+                    </b-dropdown>
+                  </b-form-group></b-col
                 >
                 <b-col
                   ><b-form-group
@@ -427,7 +428,11 @@
                   v-model="transaction_details.details.fund_source"
                 ></b-form-input>
               </b-form-group>
-              <b-form-group :label="$t('fundTransfers.remarks')" label-for="input-type" class="mt-2">
+              <b-form-group
+                :label="$t('fundTransfers.remarks')"
+                label-for="input-type"
+                class="mt-2"
+              >
                 <b-form-input
                   id="input-name"
                   v-model="transaction_details.details.remarks"
@@ -460,17 +465,17 @@
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >{{$t('backLabel')}}</b-button
+                >{{ $t("backLabel") }}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
                 @click="onClickNext"
-                >{{$t('next')}}</b-button
+                >{{ $t("next") }}</b-button
               >
             </div>
             <div v-if="currentStep == 5" class="text-center">
-              <h4>{{$t('letsReviewTransaction')}}</h4>
+              <h4>{{ $t("letsReviewTransaction") }}</h4>
               <img
                 center
                 alt="QQ Pay"
@@ -499,9 +504,7 @@
                 @click="onClickBack"
                 >Back</b-button
               >
-              <b-button
-                class="float-right mt-5 px-5"
-                variant="primary"
+              <b-button class="float-right mt-5 px-5" variant="primary"
                 >Confirm and PAY</b-button
               >
             </div>
@@ -526,7 +529,7 @@ export default {
     NavBarLeft,
     "step-progress": StepProgress,
   },
-  data() {
+  data () {
     return {
       filter: null,
       on_behalf: false,
@@ -624,7 +627,7 @@ export default {
     };
   },
   methods: {
-    select_beneficiary(data) {
+    select_beneficiary (data) {
       this.transaction_details.beneficiary = data;
       this.tabIndex++;
       console.log(this.transaction_details.beneficiary);
@@ -635,13 +638,13 @@ export default {
     onClickBack: function () {
       this.currentStep--;
     },
-    onRowSelected(items) {
+    onRowSelected (items) {
       this.selected = items;
     },
-    onBehalf(){
+    onBehalf () {
       this.on_behalf = true;
     },
-    notOnBehalf(){
+    notOnBehalf () {
       this.on_behalf = false;
     }
   },
