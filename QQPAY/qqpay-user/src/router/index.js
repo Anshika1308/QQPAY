@@ -88,10 +88,10 @@ const routes = [{
             import ('../views/profile/Profile.vue')
     },
     {
-        path: '/kyc',
-        name: 'KYC',
+        path: '/paymentGateway',
+        name: 'PaymentGateway',
         component: () =>
-            import ('../views/profile/KYC.vue')
+            import ('../views/PaymentGateway.vue')
     }
 ]
 

@@ -504,7 +504,10 @@
                 @click="onClickBack"
                 >Back</b-button
               >
-              <b-button class="float-right mt-5 px-5" variant="primary"
+              <b-button
+                class="float-right mt-5 px-5"
+                variant="primary"
+                @click="ConfirmAndPay"
                 >Confirm and PAY</b-button
               >
             </div>
@@ -646,6 +649,9 @@ export default {
     },
     notOnBehalf () {
       this.on_behalf = false;
+    },
+    ConfirmAndPay () {
+      this.$router.push({ name: 'PaymentGateway' })
     }
   },
 };
