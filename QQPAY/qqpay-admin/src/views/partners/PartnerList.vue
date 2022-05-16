@@ -57,6 +57,16 @@
             </template>
           </template>
         </b-table>
+        <div>
+          <ul>
+            <li
+                v-for='partner in partners'
+                :key='partner'
+            >
+              <p>{{ partner }}</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </b-container>
     <!-- <p>
@@ -68,6 +78,8 @@
 
 
 <script>
+import {mapActions, mapState} from 'vuex'
+
 export default {
   name: "PartnerList",
   data() {
@@ -119,10 +131,19 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["getPartnerList"]),
     onRowSelected(items) {
       this.selected = items;
     },
   },
+  computed: {
+    ...mapState([
+      'partners'
+    ])
+  },
+  created() {
+    this.getPartnerList()
+  }
 };
 </script>
 <style lang="scss" scoped>
