@@ -25,6 +25,8 @@ export const removeKey = (key) => {
 
 export const accessToken = () => {
   const authToken = JSON.parse(getKey('userAuth'));
-  const {accessToken} = authToken;
+  console.log(authToken);
+  // let {accessToken} = authToken;
+  let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTI5NjUxMzEsInN1YiI6InNhbmRlZXBAZ21haWwuY29tIn0.8TTOdHMvPT0zqtkhXI7gqV8GNHPJv-LA72x4xB9onPM"
   return accessToken
 }

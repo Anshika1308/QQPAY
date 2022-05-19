@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import {accessToken} from "./sessionKey";
+import { accessToken } from "./sessionKey";
 
 const API_ROOT = process.env.VUE_APP_SERVER_ENDPOINT
 
@@ -22,7 +22,7 @@ export const getApiData = async (url, param = null) => {
       url: `${url}`,
       params: param,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         // Do whatever you want to transform the data
@@ -37,7 +37,7 @@ export const getApiData = async (url, param = null) => {
 
 //post data to api
 export const postApiData = async (data) => {
-  const {url, formData} = data;
+  const { url, formData } = data;
   let response;
   try {
     response = await instance({
@@ -45,7 +45,7 @@ export const postApiData = async (data) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -60,7 +60,7 @@ export const postApiData = async (data) => {
 
 //post data to api
 export const postApiDataNoAuth = async (data) => {
-  const {url, formData} = data;
+  const { url, formData } = data;
   let response;
   try {
     response = await instance({
@@ -68,7 +68,7 @@ export const postApiDataNoAuth = async (data) => {
       url: `${url}`,
       data: formData,
       headers: {
-        // Authorization: `Bearer ${accessToken()}`,
+        // Authorization: `bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -83,7 +83,7 @@ export const postApiDataNoAuth = async (data) => {
 
 //update data
 export const putApiData = async (data) => {
-  const {url, formData} = data;
+  const { url, formData } = data;
   let response;
   try {
     response = await instance({
@@ -91,7 +91,7 @@ export const putApiData = async (data) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -114,7 +114,7 @@ export const deleteApiData = async (url) => {
     url: url,
     // params: param,
     headers: {
-      Authorization: `Bearer ${accessToken()}`,
+      Authorization: `bearer ${accessToken()}`,
     },
   });
   return response;
@@ -122,7 +122,7 @@ export const deleteApiData = async (url) => {
 
 //delete bulk data
 export const bulkDeleteApiData = async (data) => {
-  const {url, formData} = data;
+  const { url, formData } = data;
   let response;
   response = await instance({
     method: "DELETE",
@@ -130,7 +130,7 @@ export const bulkDeleteApiData = async (data) => {
     data: formData,
     // params: param,
     headers: {
-      Authorization: `Bearer ${accessToken()}`,
+      Authorization: `bearer ${accessToken()}`,
     },
   });
   return response;
@@ -138,7 +138,7 @@ export const bulkDeleteApiData = async (data) => {
 
 //update data
 export const patchApiData = async (data) => {
-  const {url, formData} = data;
+  const { url, formData } = data;
   let response;
   try {
     response = await instance({
@@ -146,7 +146,7 @@ export const patchApiData = async (data) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -168,7 +168,7 @@ export const downloadApiData = async (url, fileName) => {
       url: url,
       responseType: 'blob',
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `bearer ${accessToken()}`,
       },
     }).then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));

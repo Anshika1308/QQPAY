@@ -1,19 +1,25 @@
+import APIS from "../../constants/EndPoint";
+import { getApiData } from "../../helpers/AxiosInstance";
+
 const partnerStore = {
   state: {
-    partners: ['test test']
+    partners: []
   },
-  mutations: {
-    LOAD_PARTNER_LIST(state, data) {
-      state.partners = data
-    }
-  },
+
   actions: {
-    getPartnerList({commit}) {
-      // const res = await axios.get(API_ENDPOINTS.PAGES);
-      commit("LOAD_PARTNER_LIST", ['partner one', 'partner two']);
+    async fetchPartners({ commit }) {
+      const response = await getApiData(APIS.GET_PARTNER_LIST);
+      commit("setPartners", response.data.data)
     },
   },
-  getters: {}
+  mutations: {
+    setPartners: (state, users) => (
+      state.partners = users
+    ),
+  },
+  getters: {
+    partnerLists: state => state.partners
+  }
 }
 
 export default partnerStore

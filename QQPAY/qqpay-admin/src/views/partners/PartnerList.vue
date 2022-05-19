@@ -8,14 +8,8 @@
       <div class="search-area">
         <b-row>
           <b-col class="input-feild" cols='8'>
-            <b-form-select
-                v-model="filterSelected"
-                :options="filterOptions"
-            ></b-form-select>
-            <b-form-input
-                v-model="searchValue"
-                placeholder="Search for user"
-            ></b-form-input>
+            <b-form-select v-model="filterSelected" :options="filterOptions"></b-form-select>
+            <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
           </b-col>
           <b-col cols='2'>
             <b-button class="search-btn">Search</b-button>
@@ -26,15 +20,8 @@
         </b-row>
       </div>
       <div class="compliance-table">
-        <b-table
-            :items="items"
-            :fields="fields"
-            :select-mode="selectMode"
-            responsive="sm"
-            ref="selectableTable"
-            selectable
-            @row-selected="onRowSelected"
-        >
+        <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable"
+                 selectable @row-selected="onRowSelected">
           <template v-slot:cell(name_&_occupation)="row">
             <div class="name-occupation">
               <img :src="row.item.avatarImg" alt="Image"/>
@@ -46,10 +33,7 @@
             </div>
           </template>
           <template v-slot:cell(risk_status)="row">
-            <b-form-select
-                v-model="row.item.risk_status"
-                :options="riskStatusOptions"
-            ></b-form-select>
+            <b-form-select v-model="row.item.risk_status" :options="riskStatusOptions"></b-form-select>
           </template>
           <template v-slot:cell(fraudulent)="row">
             <template v-if="row.item.fraudulent">
@@ -57,16 +41,6 @@
             </template>
           </template>
         </b-table>
-        <div>
-          <ul>
-            <li
-                v-for='partner in partners'
-                :key='partner'
-            >
-              <p>{{ partner }}</p>
-            </li>
-          </ul>
-        </div>
       </div>
     </b-container>
     <!-- <p>
@@ -78,7 +52,7 @@
 
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: "PartnerList",
@@ -100,28 +74,9 @@ export default {
         "email",
         "country",
         "partner_type",
-        "",
+        "action",
       ],
-      items: [
-        {
-          partner_name: "Yammi Peter",
-          contact_person: "Sandeep",
-          id: "54326",
-          number: "+91 9172131234",
-          email: "Test2@mail.com",
-          country: "India",
-          partner_type: "Indiviual",
-        },
-        {
-          partner_name: "Jason",
-          id: "5542",
-          contact_person: "Sandeep",
-          email: "Test1@mail.com",
-          number: "+91 98121211",
-          country: "India",
-          partner_type: "Indiviual",
-        },
-      ],
+      items: [],
       riskStatusOptions: [
         {value: "Low risk", text: "Low risk"},
         {value: "High risk", text: "High risk"},
@@ -131,18 +86,28 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getPartnerList"]),
+    ...mapActions(["fetchPartners"]),
     onRowSelected(items) {
       this.selected = items;
     },
+    formatTableData() {
+      this.items = this.partnerLists.map(item => ({
+        partner_name: item.contact_name1,
+        id: item.agent_id,
+        contact_person: item.contact_name2,
+        number: item.phone1,
+        email: item.email1,
+        country: item.country,
+        partner_type: item.agent_type,
+      }))
+    }
   },
   computed: {
-    ...mapState([
-      'partners'
-    ])
+    ...mapGetters(["partnerLists"]),
   },
-  created() {
-    this.getPartnerList()
+  async created() {
+    await this.fetchPartners()
+    this.formatTableData()
   }
 };
 </script>
