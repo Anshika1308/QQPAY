@@ -7,7 +7,8 @@ const APIS = {
   CURRENT_USER_CHANGE_PASSWORD: `/user/set_password/`,
 
   // PARTNER SERVICE
-  GET_PARTNER_LIST:'/partner_details/get_partners'
+  GET_PARTNER_LIST: '/partner_details/get_partners',
+  DELETE_PARTNER: '/partner_details/delete_partner_by_id'
 }
 
 export default APIS

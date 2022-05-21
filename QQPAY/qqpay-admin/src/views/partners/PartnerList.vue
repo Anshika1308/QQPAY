@@ -20,33 +20,33 @@
         </b-row>
       </div>
       <div class="compliance-table">
-        <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable"
-                 selectable @row-selected="onRowSelected">
-          <template v-slot:cell(name_&_occupation)="row">
-            <div class="name-occupation">
-              <img :src="row.item.avatarImg" alt="Image"/>
-              <div>
-                {{ row.item.name }}
-                <br/>
-                <small>{{ row.item.occupation }}</small>
-              </div>
-            </div>
-          </template>
-          <template v-slot:cell(risk_status)="row">
-            <b-form-select v-model="row.item.risk_status" :options="riskStatusOptions"></b-form-select>
-          </template>
-          <template v-slot:cell(fraudulent)="row">
-            <template v-if="row.item.fraudulent">
-              <b-icon icon="flag-fill" variant="danger"></b-icon>
+        <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable">
+          <template v-slot:cell(action)="row">
+            <template v-if="row.item.action">
+              <b-icon class="btn" icon="pencil-square" variant="success"></b-icon>
+              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)"></b-icon>
             </template>
           </template>
         </b-table>
       </div>
+      <b-overlay :show="deleteConfirm" no-wrap>
+        <template #overlay>
+          <div v-if="processing" class="text-center p-4 loading text-light rounded">
+            <div class="mb-3">Processing...</div>
+          </div>
+          <div v-else ref="dialog" tabindex="-1" role="dialog" aria-modal="false" aria-labelledby="form-confirm-label"
+               class="text-center p-3">
+            <p><strong id="form-confirm-label">Are you sure you want to delete?</strong></p>
+            <div class="d-flex">
+              <b-button class="mr-3 search-btn" @click="onCancel">
+                Cancel
+              </b-button>
+              <b-button variant="outline-success" @click="onOK">OK</b-button>
+            </div>
+          </div>
+        </template>
+      </b-overlay>
     </b-container>
-    <!-- <p>
-        Selected Rows:<br>
-        {{ selected }}
-        </p> -->
   </div>
 </template>
 
@@ -58,6 +58,9 @@ export default {
   name: "PartnerList",
   data() {
     return {
+      deleteConfirm: false,
+      processing: false,
+      deleteSelectedId: null,
       selectMode: "single",
       filterOptions: [
         {value: "null", text: "Filter"},
@@ -86,10 +89,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPartners"]),
-    onRowSelected(items) {
-      this.selected = items;
-    },
+    ...mapActions(["fetchPartners", "deletePartner"]),
     formatTableData() {
       this.items = this.partnerLists.map(item => ({
         partner_name: item.contact_name1,
@@ -99,7 +99,20 @@ export default {
         email: item.email1,
         country: item.country,
         partner_type: item.agent_type,
+        action: item.agent_id,
       }))
+    },
+    onSubmit(id) {
+      this.deleteSelectedId = id
+      this.processing = false
+      this.deleteConfirm = true
+    },
+    onCancel() {
+      this.deleteConfirm = false
+    },
+    onOK() {
+      this.deletePartner(this.deleteSelectedId)
+      this.deleteConfirm = false
     }
   },
   computed: {
@@ -119,6 +132,11 @@ export default {
   border: none;
   border-radius: 5px;
   height: 35px;
+}
+
+.loading {
+  background-color: $primary;
+
 }
 
 .search-area {

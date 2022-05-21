@@ -439,13 +439,78 @@ export default {
 
       },
       companyDetail: {
-
+        nameOfEmployer: "",
+        partnerId: "",
+        partnerType: "",
+        partnerTypeOptions: [
+          { value: null, text: 'Please select an option' },
+          { value: 'a', text: 'This is First option' },
+          { value: 'b', text: 'Selected Option' },
+          { value: { C: '3PO' }, text: 'This is an option with object value' },
+          { value: 'd', text: 'This one is disabled', disabled: true }
+        ],
+        businessLicense: "",
+        address: "",
+        licenseExpiryDate: "",
+        city: "",
+        country: "",
+        phone1: "",
+        phone2: "",
+        email: "",
+        website: "",
+        zipCode: "",
+        blockThisPartner: false,
+        isThisNonIRHPartner: false
       },
       bankAndBranchAccountDetail: {
+        calculatePayoutComissionDaily: false,
+        doNotAllowSameUserToApprove: false,
+        creditLimitToSDNTRN: "",
+        localCurrency: "",
+        localCurrencyOptins: [
+          { value: null, text: 'Please select an option' },
+          { value: 'a', text: 'This is First option' },
+          { value: 'b', text: 'Selected Option' },
+          { value: { C: '3PO' }, text: 'This is an option with object value' },
+          { value: 'd', text: 'This one is disabled', disabled: true }
+        ],
+        mileageDefined: "",
+        maxPayoutAmtPerTXNCashPay: "",
+        maxPayoutAmtPerTXNACDeposit: "",
+        partnerSettlementIn: "",
+        limitForACustomerPerDay: false,
+        partnerRights: "",
+        localTime: "",
+        dateFormat: "",
+        riskLevels: "",
+        taxType: "",
+        taxTypeOptions: [
+          { value: null, text: 'Please select an option' },
+          { value: 'a', text: 'This is First option' },
+          { value: 'b', text: 'Selected Option' },
+          { value: { C: '3PO' }, text: 'This is an option with object value' },
+          { value: 'd', text: 'This one is disabled', disabled: true }
+        ],
+        settlementDate: "",
+        paymentMethodAllowed: [],
+        paymentMethodAllowedOptions: [
+          "Account Despoit to Other Bank"
+        ],
+        remarks: "",
+        printReciptInformtion: "",
+        fundCollectionDay: ""
 
       },
       additionalDetails: {
-
+        smsNotificationToSender: "",
+        mobileFormat: "",
+        mobileDigitMin: "",
+        mobileDigitMax: "",
+        mobileCountryCode: "",
+        smsNotificationToBeneficiary: "",
+        isThisAPreFundingPartner: false,
+        alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent: "",
+        barnchLimitToMakeAPayment: ""
       }
     }
   }
