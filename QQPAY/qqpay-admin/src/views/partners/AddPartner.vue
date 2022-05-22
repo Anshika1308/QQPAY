@@ -4,37 +4,37 @@
       <b-row class="mt-2">
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-contact-person-required" label="Contact Person"
-            label-for="input-contact-person-required" description="This field is required">
+                        label-for="input-contact-person-required" description="This field is required">
             <b-form-input id="input-contact-person-required" v-model="contactInformation.contactPerson1" type="text"
-              required></b-form-input>
+                          required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-post-required" label="Post" label-for="input-post-required"
-            description="This field is required">
+                        description="This field is required">
             <b-form-input id="input-post-required" v-model="contactInformation.post1" type="email" required>
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-contact-person-phone-required" label="Contact Person Phone"
-            label-for="input-contact-person-phone-required" description="This field is required">
+                        label-for="input-contact-person-phone-required" description="This field is required">
             <b-form-input id="input-contact-person-phone-required" v-model="contactInformation.contactPersonPhone1"
-              type="tel" required></b-form-input>
+                          type="tel" required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-contact-person-email-required" label="Contact Person Email"
-            label-for="input-contact-person-email-required" description="This field is required">
+                        label-for="input-contact-person-email-required" description="This field is required">
             <b-form-input id="input-contact-person-email-required" v-model="contactInformation.contactPersonEmail1"
-              type="email" required></b-form-input>
+                          type="email" required></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
       <b-row class="mt-2">
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-contact-person" label="Contact Person" label-for="input-contact-person">
-            <b-form-input id="input-contact-person" v-model="contactInformation.contactPerson1" type="text">
+            <b-form-input id="input-contact-person" v-model="contactInformation.contactPerson2" type="text">
             </b-form-input>
           </b-form-group>
         </b-col>
@@ -45,15 +45,16 @@
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-contact-person-phone" label="Contact Person Phone"
-            label-for="input-contact-person-phone">
-            <b-form-input id="input-contact-person-phone" v-model="text" type="tel">
+                        label-for="input-contact-person-phone">
+            <b-form-input id="input-contact-person-phone" v-model="contactInformation.contactPersonPhone2" type="tel">
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-contact-person-email" label="Contact Person Email"
-            label-for="input-contact-person-email">
-            <b-form-input id="input-contact-person-email" v-model="text" type="email" required></b-form-input>
+                        label-for="input-contact-person-email">
+            <b-form-input id="input-contact-person-email" v-model="contactInformation.contactPersonEmail2" type="email"
+                          required></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
@@ -62,81 +63,97 @@
       <b-row class="mt-2">
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-name-of-employee" label="Name of Employer" label-for="input-name-of-employee"
-            description="This field is required">
-            <b-form-input id="input-name-of-employee" v-model="text" type="text" required></b-form-input>
+                        description="This field is required">
+            <b-form-input id="input-name-of-employee" v-model="companyDetail.nameOfEmployer" type="text"
+                          required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-partner-id" label="Partner ID" label-for="input-partner-id">
-            <b-form-input id="input-partner-id" v-model="text" type="text"></b-form-input>
+            <b-form-input id="input-partner-id" v-model="companyDetail.partnerId" type="text"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-partner-type" label="Partner Type" label-for="input-partner-type">
-            <b-form-select id="input-partner-type" v-model="selected" :options="options"></b-form-select>
+            <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.partnerType"
+                           :options="companyDetail.partnerTypeOptions"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-business-license" label="Business License" label-for="input-business-license">
-            <b-form-input id="input-business-license" v-model="text" type="text" required></b-form-input>
+            <b-form-input id="input-business-license" v-model="companyDetail.businessLicense" type="text"
+                          required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-address" label="Address" label-for="input-address">
-            <b-form-input id="input-address" v-model="text" type="text" required></b-form-input>
+            <b-form-input id="input-address" v-model="companyDetail.address" type="text" required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-license-expiry-date" label="License Expiry Date"
-            label-for="input-license-expiry-date">
-            <b-form-input id="input-license-expiry-date" v-model="text" type="date" required></b-form-input>
+                        label-for="input-license-expiry-date">
+            <b-form-input id="input-license-expiry-date" v-model="companyDetail.licenseExpiryDate" type="date"
+                          required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-city" label="City" label-for="input-city">
-            <b-form-input id="input-city" v-model="text" type="text" required></b-form-input>
+            <b-form-input id="input-city" v-model="companyDetail.city" type="text" required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-country" label="Country" label-for="input-country">
-            <b-form-select id="input-partner-type" v-model="selected" :options="options"></b-form-select>
+            <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.country"
+                           :options="companyDetail.countryOptions"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-phone-1" label="Phone 1" label-for="input-phone-1">
-            <b-form-input id="input-phone-1" v-model="text" type="tel" required></b-form-input>
+            <b-form-input id="input-phone-1" v-model="companyDetail.phone1" type="tel" required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-phone-2" label="Phone 2" label-for="input-phone-2">
-            <b-form-input id="input-phone-2" v-model="text" type="tel" required></b-form-input>
+            <b-form-input id="input-phone-2" v-model="companyDetail.phone2" type="tel" required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-email" label="Email" label-for="input-email">
-            <b-form-input id="input-email" v-model="text" type="email" required></b-form-input>
+            <b-form-input id="input-email" v-model="companyDetail.email" type="email" required></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-1" label="Website" label-for="input-1">
-            <b-form-input id="input-1" v-model="text" type="url"></b-form-input>
+            <b-form-input id="input-1" v-model="companyDetail.website" type="url"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-zip-code" label="Zip Code" label-for="input-zip-code">
-            <b-form-input id="input-zip-code" v-model="text" type="text"></b-form-input>
+            <b-form-input id="input-zip-code" v-model="companyDetail.zipCode" type="text"></b-form-input>
           </b-form-group>
         </b-col>
 
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-checkbox class="mt-5" id="checkbox-block-this-user" v-model="status" name="checkbox-block-this-user"
-            value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              class="mt-5 checkbox"
+              id="checkbox-block-this-user"
+              v-model="companyDetail.blockThisPartner"
+              name="checkbox-block-this-user"
+              value="true"
+              unchecked-value="false"
+          >
             Block This Partner
           </b-form-checkbox>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-checkbox class="mt-5" id="checkbox-is-this-non-irh-partner" v-model="status"
-            name="checkbox-block-this-user" value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              class="mt-5"
+              id="checkbox-is-this-non-irh-partner"
+              v-model="companyDetail.isThisNonIRHPartner"
+              name="checkbox-block-this-user"
+              value="true"
+              unchecked-value="false">
             Is This Non-IRH Partner
           </b-form-checkbox>
         </b-col>
@@ -145,192 +162,169 @@
     <b-card class="mt-3" header="Bank and Branch A/C Details">
       <b-row>
         <b-col md="6" sm="12" lg="6" xl="6" class="mb-4">
-          <b-form-checkbox id="checkbox-calculate-payout-commission-daily" v-model="status"
-            name="checkbox-block-this-user" value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              id="checkbox-calculate-payout-commission-daily"
+              v-model="bankAndBranchAccountDetail.calculatePayoutCommissionDaily"
+              name="checkbox-block-this-user"
+              value="true"
+              unchecked-value="false">
             Calculate Payout Commission Daily
           </b-form-checkbox>
         </b-col>
         <b-col md="6" sm="12" lg="6" xl="6" class="mb-4">
-          <b-form-checkbox id="checkbox-do-not-allow-same-user-to-approve-transaction" v-model="status"
-            name="checkbox-block-this-user" value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              id="checkbox-do-not-allow-same-user-to-approve-transaction"
+              v-model="bankAndBranchAccountDetail.doNotAllowSameUserToApprove"
+              name="checkbox-block-this-user"
+              value="accepted"
+              unchecked-value="not_accepted">
             Do not Allow Same User To Approve Transaction
           </b-form-checkbox>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-group id="input-group-credit-limit-to-sdb-trn" label="Credit Limit To SDN TRN"
-            label-for="input-credit-limit-to-sdb-trn">
-            <b-form-input id="input-credit-limit-to-sdb-trn" v-model="text" type="text"></b-form-input>
+          <b-form-group
+              id="input-group-credit-limit-to-sdb-trn"
+              label="Credit Limit To SBN TRN"
+              label-for="input-credit-limit-to-sdb-trn">
+            <b-form-input
+                id="input-credit-limit-to-sdb-trn"
+                v-model="bankAndBranchAccountDetail.creditLimitToSBNTRN"
+                type="text"
+            ></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-group id="input-group-limit-per-transaction-send" label="Credit Limit To SDN TRN"
-            label-for="input-limit-per-transaction-send">
-            <b-form-input id="input-limit-per-transaction-send" v-model="text" type="text"></b-form-input>
+          <b-form-group
+              id="input-group-limit-per-transaction-send"
+              label="Credit Limit To SDN TRN"
+              label-for="input-limit-per-transaction-send">
+            <b-form-input
+                id="input-limit-per-transaction-send"
+                v-model="bankAndBranchAccountDetail.creditLimitToSDNTRN"
+                type="text"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-local-currency" label="Local Currency" label-for="input-local-currency">
-            <b-form-select id="input-local-currency" v-model="selected" :options="options"></b-form-select>
+            <b-form-select
+                class="form-control"
+                id="input-local-currency"
+                v-model="bankAndBranchAccountDetail.localCurrency"
+                :options="bankAndBranchAccountDetail.localCurrencyOptions"
+            ></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-mileage-defined" label="Mileage Defined" label-for="input-mileage-defined">
-            <b-form-input id="input-mileage-defined" v-model="text" type="text">
+            <b-form-input id="input-mileage-defined" v-model="bankAndBranchAccountDetail.mileageDefined" type="text">
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-max-payout-amt-per-txn" label="Max Payout Amt per TXN (Cash Pay)"
-            label-for="input-max-payout-amt-per-txn">
-            <b-form-input id="input-max-payout-amt-per-txn" v-model="text" type="text"></b-form-input>
+                        label-for="input-max-payout-amt-per-txn">
+            <b-form-input id="input-max-payout-amt-per-txn"
+                          v-model="bankAndBranchAccountDetail.maxPayoutAmtPerTXNCashPay" type="text"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-max-payout-amt-per-txn" label="Max Payout Amt per TXN (AC Deposit)"
-            label-for="input-max-payout-amt-per-txn">
-            <b-form-input id="input-max-payout-amt-per-txn" v-model="text" type="text"></b-form-input>
+                        label-for="input-max-payout-amt-per-txn">
+            <b-form-input id="input-max-payout-amt-per-txn"
+                          v-model="bankAndBranchAccountDetail.maxPayoutAmtPerTXNACDeposit" type="text"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-partner-settlement-in" label="Partner Settlement In"
-            label-for="input-partner-settlement-in">
-            <b-form-select id="input-partner-settlement-in" v-model="selected" :options="options"></b-form-select>
+                        label-for="input-partner-settlement-in">
+            <b-form-select
+                class="form-control"
+                id="input-partner-settlement-in"
+                v-model="bankAndBranchAccountDetail.partnerSettlementIn"
+                :options="bankAndBranchAccountDetail.partnerSettlementInOptions"
+            ></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-checkbox class="mt-5" id="checkbox-limit-for-a-customer-per-day" v-model="status"
-            name="checkbox-limit-for-a-customer-per-day" value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              class="mt-5"
+              id="checkbox-limit-for-a-customer-per-day"
+              v-model="bankAndBranchAccountDetail.limitForACustomerPerDay"
+              name="checkbox-limit-for-a-customer-per-day"
+              value="true"
+              unchecked-value="false">
             Limit for a customer per day
           </b-form-checkbox>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-partner-rights" label="Partner Rights" label-for="input-partner-rights">
-            <b-form-select id="input-partner-rights" v-model="selected" :options="options"></b-form-select>
+            <b-form-select
+                id="input-partner-rights"
+                v-model="bankAndBranchAccountDetail.partnerRights"
+                :options="bankAndBranchAccountDetail.partnerRightsOptions"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-local-time" label="Local Time" label-for="input-local-time">
-            <b-form-input id="input-local-time" v-model="text" type="time"></b-form-input>
+            <b-form-input id="input-local-time" v-model="bankAndBranchAccountDetail.localTime"
+                          type="time"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-date-format" label="Date Format" label-for="input-date-format">
-            <b-form-input id="input-date-format" v-model="text" type="date"></b-form-input>
+            <b-form-input id="input-date-format" v-model="bankAndBranchAccountDetail.dateFormat"
+                          type="date"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-risk-levels" label="Risk Levels" label-for="input-risk-levels">
-            <b-form-select id="input-risk-levels" v-model="selected" :options="options"></b-form-select>
+            <b-form-select id="input-risk-levels" v-model="bankAndBranchAccountDetail.riskLevels"
+                           :options="bankAndBranchAccountDetail.riskLevelsOptions"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-tax-type" label="Tax Type" label-for="input-tax-type">
-            <b-form-select id="input-tax-type" v-model="selected" :options="options"></b-form-select>
+            <b-form-select id="input-tax-type" v-model="bankAndBranchAccountDetail.taxType"
+                           :options="bankAndBranchAccountDetail.taxTypeOptions"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-settlement-date" label="Settlement Date" label-for="input-settlement-date">
-            <b-form-input id="input-settlement-date" v-model="text" type="date">
+            <b-form-input id="input-settlement-date" v-model="bankAndBranchAccountDetail.settlementDate" type="date">
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="12" sm="12" lg="12" xl="12" class="mb-4">
+
           <b-form-group id="input-group-partner-settlement-in" label="Payment Mode Allowed"
-            label-for="input-partner-settlement-in">
-            <b-row>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Account Deposit to Other Bank
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Home Delivery Manila City
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  CUP Bank Card
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Wallet
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Cash Payment
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Home Delivery Provinces
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  BKASH
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Upay
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Account Deposit
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Other Bank Deposit
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  ROCKET PAY
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Instant Credit
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Home Delivery
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  NEFT
-                </b-form-checkbox>
-              </b-col>
-              <b-col md="4" sm="12" lg="4" xl="4">
-                <b-form-checkbox v-model="status" value="accepted" unchecked-value="not_accepted">
-                  Mobile Payment Direct Credit
-                </b-form-checkbox>
-              </b-col>
-            </b-row>
+                        label-for="input-partner-settlement-in">
+            <b-form-checkbox-group
+                v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
+                :options="bankAndBranchAccountDetail.paymentMethodAllowedOptions"
+                class="mb-3"
+                value-field="item"
+                text-field="name"
+                disabled-field="notEnabled"
+            ></b-form-checkbox-group>
           </b-form-group>
         </b-col>
         <b-col md="12" sm="12" lg="12" xl="12" class="mb-4">
           <b-form-group id="input-group-remarks" label="Remarks" label-for="input-remarks">
-            <b-form-textarea id="input-remarks" v-model="text" rows="6"></b-form-textarea>
+            <b-form-textarea id="input-remarks" v-model="bankAndBranchAccountDetail.remarks" rows="6"></b-form-textarea>
           </b-form-group>
         </b-col>
         <b-col md="12" sm="12" lg="12" xl="12" class="mb-4">
           <b-form-group id="input-group-print-receipt-information" label="Print Receipt Information"
-            label-for="input-print-receipt-information">
-            <b-form-textarea id="input-print-receipt-information" v-model="text" rows="6"></b-form-textarea>
+                        label-for="input-print-receipt-information">
+            <b-form-textarea id="input-print-receipt-information"
+                             v-model="bankAndBranchAccountDetail.printReceiptInformation" rows="6"></b-form-textarea>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-fund-collection-day" label="Fund Collection Day"
-            label-for="input-fund-collection-day">
-            <b-form-select id="input-tax-type" v-model="selected" :options="options"></b-form-select>
+                        label-for="input-fund-collection-day">
+            <b-form-select id="input-tax-type" v-model="bankAndBranchAccountDetail.fundCollectionDay"
+                           :options="bankAndBranchAccountDetail.fundCollectionDayOptions"></b-form-select>
           </b-form-group>
         </b-col>
       </b-row>
@@ -339,59 +333,74 @@
     <b-card class="mt-3" header="Additional Details">
       <b-row>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-checkbox class="mt-5" id="checkbox-sms-notification-to-sender" v-model="status"
-            name="checkbox-sms-notification-to-sender" value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              class="mt-5"
+              id="checkbox-sms-notification-to-sender"
+              v-model="additionalDetails.smsNotificationToSender"
+              name="checkbox-sms-notification-to-sender"
+              value="true"
+              unchecked-value="false"
+          >
             SMS Notification To Sender
           </b-form-checkbox>
         </b-col>
-        <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
+        <b-col md="6" sm="fundCollectionDayOptions12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-mobile-format" label="Mobile Format" label-for="input-mobile-format">
-            <b-form-input id="input-mobile-format" v-model="text" type="text">
+            <b-form-input id="input-mobile-format" v-model="additionalDetails.mobileFormat" type="text">
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-mobile-digit-min" label="Mobile Digit Min" label-for="input-mobile-digit-min">
-            <b-form-input id="input-mobile-digit-min" v-model="text" type="text">
+            <b-form-input id="input-mobile-digit-min" v-model="additionalDetails.mobileDigitMin" type="text">
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-mobile-digit-max" label="Mobile Digit Max" label-for="input-mobile-digit-max">
-            <b-form-input id="input-mobile-digit-max" v-model="text" type="text">
+            <b-form-input id="input-mobile-digit-max" v-model="additionalDetails.mobileDigitMax" type="text">
             </b-form-input>
           </b-form-group>
         </b-col>
 
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-country-code" label="Mobile Country Code" label-for="input-country-code">
-            <b-form-input id="input-country-code" v-model="text" type="text">
+            <b-form-input id="input-country-code" v-model="additionalDetails.mobileCountryCode" type="text">
             </b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-checkbox class="mt-5" id="checkbox-sms-notification-to-beneficiary" v-model="status"
-            name="checkbox-sms-notification-to-beneficiary" value="accepted" unchecked-value="not_accepted">
+                           name="checkbox-sms-notification-to-beneficiary" value="accepted"
+                           unchecked-value="not_accepted">
             SMS Notification To Beneficiary
           </b-form-checkbox>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-          <b-form-checkbox class="mt-5" id="checkbox-is-this-a-pre-funding-partner" v-model="status"
-            name="checkbox-is-this-a-pre-funding-partner" value="accepted" unchecked-value="not_accepted">
+          <b-form-checkbox
+              class="mt-5"
+              id="checkbox-is-this-a-pre-funding-partner"
+              v-model="additionalDetails.isThisAPreFundingPartner"
+              name="checkbox-is-this-a-pre-funding-partner" value="true"
+              unchecked-value="false">
             Is This a Pre-Funding Partner
           </b-form-checkbox>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-alert-notification"
-            label="Alert Notification if Balance Below if Partner is Prepaid Agent"
-            label-for="input-alert-notification">
-            <b-form-input id="input-alert-notification" v-model="text" type="text"></b-form-input>
+                        label="Alert Notification if Balance Below if Partner is Prepaid Agent"
+                        label-for="input-alert-notification">
+            <b-form-input
+                id="input-alert-notification"
+                v-model="additionalDetails.alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent"
+                type="text"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
           <b-form-group id="input-group-branch-limit-to-make-payment" label="Branch Limit To make a Payment"
-            label-for="input-branch-limit-to-make-payment">
-            <b-form-input id="input-branch-limit-to-make-payment" v-model="text" type="text"></b-form-input>
+                        label-for="input-branch-limit-to-make-payment">
+            <b-form-input id="input-branch-limit-to-make-payment" v-model="additionalDetails.branchLimitToMakeAPayment"
+                          type="text"></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
@@ -404,6 +413,8 @@
 
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
   name: 'AddPartner',
   data() {
@@ -412,11 +423,11 @@ export default {
       selected: null,
       status: 'not_accepted',
       options: [
-        { value: null, text: 'Please select an option' },
-        { value: 'a', text: 'This is First option' },
-        { value: 'b', text: 'Selected Option' },
-        { value: { C: '3PO' }, text: 'This is an option with object value' },
-        { value: 'd', text: 'This one is disabled', disabled: true }
+        {value: null, text: 'Please select an option'},
+        {value: 'a', text: 'This is First option'},
+        {value: 'b', text: 'Selected Option'},
+        {value: {C: '3PO'}, text: 'This is an option with object value'},
+        {value: 'd', text: 'This one is disabled', disabled: true}
       ],
       contactInformation: {
         contactPerson1: "",
@@ -432,19 +443,26 @@ export default {
       companyDetail: {
         nameOfEmployer: "",
         partnerId: "",
-        partnerType: "",
+        partnerType: null,
         partnerTypeOptions: [
-          { value: null, text: 'Please select an option' },
-          { value: 'a', text: 'This is First option' },
-          { value: 'b', text: 'Selected Option' },
-          { value: { C: '3PO' }, text: 'This is an option with object value' },
-          { value: 'd', text: 'This one is disabled', disabled: true }
+          {value: 'a', text: 'Partner Type 1'},
+          {value: 'b', text: 'Partner Type 1'},
+          {value: 'c', text: 'Partner Type 2'},
+          {value: 'd', text: 'Partner Type 3'},
+          {value: 'e', text: 'Partner Type 4', disabled: true}
         ],
         businessLicense: "",
         address: "",
         licenseExpiryDate: "",
         city: "",
         country: "",
+        countryOptions: [
+          {value: 'a', text: 'Country Type 1'},
+          {value: 'b', text: 'Country Type 1'},
+          {value: 'c', text: 'Country Type 2'},
+          {value: 'd', text: 'Country Type 3'},
+          {value: 'e', text: 'Country Type 4', disabled: true}
+        ],
         phone1: "",
         phone2: "",
         email: "",
@@ -454,42 +472,84 @@ export default {
         isThisNonIRHPartner: false
       },
       bankAndBranchAccountDetail: {
-        calculatePayoutComissionDaily: false,
+        calculatePayoutCommissionDaily: false,
         doNotAllowSameUserToApprove: false,
         creditLimitToSDNTRN: "",
-        localCurrency: "",
-        localCurrencyOptins: [
-          { value: null, text: 'Please select an option' },
-          { value: 'a', text: 'This is First option' },
-          { value: 'b', text: 'Selected Option' },
-          { value: { C: '3PO' }, text: 'This is an option with object value' },
-          { value: 'd', text: 'This one is disabled', disabled: true }
+        creditLimitToSBNTRN: "",
+        localCurrency: null,
+        localCurrencyOptions: [
+          {value: 'a', text: 'Currency Type 1'},
+          {value: 'b', text: 'Currency Type 1'},
+          {value: 'c', text: 'Currency Type 2'},
+          {value: 'd', text: 'Currency Type 3'},
+          {value: 'e', text: 'Currency Type 4', disabled: true}
         ],
         mileageDefined: "",
         maxPayoutAmtPerTXNCashPay: "",
         maxPayoutAmtPerTXNACDeposit: "",
-        partnerSettlementIn: "",
+        partnerSettlementIn: null,
+        partnerSettlementInOptions: [
+          {value: 'a', text: 'Settlement In Type 1'},
+          {value: 'b', text: 'Settlement In Type 1'},
+          {value: 'c', text: 'Settlement In Type 2'},
+          {value: 'd', text: 'Settlement In Type 3'},
+          {value: 'e', text: 'Settlement In Type 4', disabled: true}
+        ],
         limitForACustomerPerDay: false,
-        partnerRights: "",
+        partnerRights: null,
+        partnerRightsOptions: [
+          {value: 'a', text: 'Partner Rights Type 1'},
+          {value: 'b', text: 'Partner Rights Type 1'},
+          {value: 'c', text: 'Partner Rights Type 2'},
+          {value: 'd', text: 'Partner Rights Type 3'},
+          {value: 'e', text: 'Partner Rights Type 4', disabled: true}
+        ],
         localTime: "",
         dateFormat: "",
-        riskLevels: "",
-        taxType: "",
+        riskLevels: null,
+        riskLevelsOptions: [
+          {value: 'a', text: 'Risk Level Type 1'},
+          {value: 'b', text: 'Risk Level Type 1'},
+          {value: 'c', text: 'Risk Level Type 2'},
+          {value: 'd', text: 'Risk Level Type 3'},
+          {value: 'e', text: 'Risk Level Type 4', disabled: true}
+        ],
+        taxType: null,
         taxTypeOptions: [
-          { value: null, text: 'Please select an option' },
-          { value: 'a', text: 'This is First option' },
-          { value: 'b', text: 'Selected Option' },
-          { value: { C: '3PO' }, text: 'This is an option with object value' },
-          { value: 'd', text: 'This one is disabled', disabled: true }
+          {value: 'a', text: 'Tax Type 1'},
+          {value: 'b', text: 'Tax Type 1'},
+          {value: 'c', text: 'Tax Type 2'},
+          {value: 'd', text: 'Tax Type 3'},
+          {value: 'e', text: 'Tax Type 4', disabled: true}
         ],
         settlementDate: "",
-        paymentMethodAllowed: [],
+        paymentMethodAllowedSelected: [],
         paymentMethodAllowedOptions: [
-          "Account Despoit to Other Bank"
+          "Account Deposit to Other Bank",
+          "Home Delivery Manila City",
+          "CUP Bank Card",
+          "Wallet",
+          "Cash Payment",
+          "Home Delivery Provinces",
+          "Upay",
+          "Account Deposit",
+          "Other Bank Deposit",
+          "ROCKET PAY",
+          "Instant Credit",
+          "Home Delivery",
+          "NEFT",
+          "Mobile Payment Direct Credit",
         ],
         remarks: "",
-        printReciptInformtion: "",
-        fundCollectionDay: ""
+        printReceiptInformation: "",
+        fundCollectionDay: null,
+        fundCollectionDayOptions: [
+          {value: 'a', text: 'Fund Collection Type 1'},
+          {value: 'b', text: 'Fund Collection Type 1'},
+          {value: 'c', text: 'Fund Collection Type 2'},
+          {value: 'd', text: 'Fund Collection Type 3'},
+          {value: 'e', text: 'Fund Collection Type 4', disabled: true}
+        ],
 
       },
       additionalDetails: {
@@ -501,9 +561,17 @@ export default {
         smsNotificationToBeneficiary: "",
         isThisAPreFundingPartner: false,
         alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent: "",
-        barnchLimitToMakeAPayment: ""
+        branchLimitToMakeAPayment: ""
       }
     }
+  },
+  methods: {
+    ...mapActions(["addPartner"]),
+  },
+  computed: {
+  },
+  async created() {
+
   }
 }
 </script>
@@ -516,5 +584,10 @@ export default {
   border: none;
   border-radius: 5px;
   height: 35px;
+}
+
+.bv-no-focus-ring {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 </style>
