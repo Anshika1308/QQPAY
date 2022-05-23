@@ -36,8 +36,7 @@ export const getApiData = async (url, param = null) => {
 }
 
 //post data to api
-export const postApiData = async (data) => {
-  const { url, formData } = data;
+export const postApiData = async (url, formData) => {
   let response;
   try {
     response = await instance({
@@ -59,8 +58,7 @@ export const postApiData = async (data) => {
 }
 
 //post data to api
-export const postApiDataNoAuth = async (data) => {
-  const { url, formData } = data;
+export const postApiDataNoAuth = async (url, formData) => {
   let response;
   try {
     response = await instance({
@@ -82,8 +80,7 @@ export const postApiDataNoAuth = async (data) => {
 }
 
 //update data
-export const putApiData = async (data) => {
-  const { url, formData } = data;
+export const putApiData = async (url, formData) => {
   let response;
   try {
     response = await instance({
@@ -137,8 +134,7 @@ export const bulkDeleteApiData = async (data) => {
 };
 
 //update data
-export const patchApiData = async (data) => {
-  const { url, formData } = data;
+export const patchApiData = async (url, formData ) => {
   let response;
   try {
     response = await instance({

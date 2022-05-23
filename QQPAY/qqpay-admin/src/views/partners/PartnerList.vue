@@ -111,7 +111,7 @@ export default {
       this.deleteConfirm = false
     },
     onOK() {
-      this.deletePartner(this.deleteSelectedId)
+      this.deletePartner({vm: this, id: this.deleteSelectedId})
       this.deleteConfirm = false
     }
   },
