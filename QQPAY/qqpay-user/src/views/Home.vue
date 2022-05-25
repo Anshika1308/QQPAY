@@ -63,7 +63,10 @@
                         }}</small>
                       </div>
                     </b-list-group-item>
-                    <b-list-group-item @click="$router.push('/transactionsummary')" class="footer-link">
+                    <b-list-group-item
+                      @click="$router.push('/transactionsummary')"
+                      class="footer-link"
+                    >
                       <small>Show All</small></b-list-group-item
                     >
                   </b-list-group>
@@ -177,7 +180,8 @@
                       <b-col cols="12" class="text-left">
                         <b-row>
                           <b-col cols="4">
-                            <medium class="converted" style="margin-left: -15px">74.6497</medium
+                            <medium class="converted" style="margin-left: -15px"
+                              >74.6497</medium
                             >&nbsp;&nbsp;<b
                               ><b-icon
                                 icon="graph-up"
@@ -222,9 +226,12 @@
                     </b-dropdown>
                   </template>
                 </b-input-group>
-                <b-list-group-item class="list-border text-center footer-link" @click="$router.push('/transaction')">
-                      <small>Start Transaction</small></b-list-group-item
-                    >
+                <b-list-group-item
+                  class="list-border text-center footer-link"
+                  @click="$router.push('/transaction')"
+                >
+                  <small>Start Transaction</small></b-list-group-item
+                >
               </b-col>
             </b-row>
           </div>
@@ -237,6 +244,7 @@
 <script>
 import NavBar from "@/components/navigations/NavBar.vue";
 import NavBarLeft from "@/components/navigations/NavBarLeft.vue";
+import { getAllISOCodes } from "iso-country-currency";
 
 export default {
   name: "Home",
@@ -244,7 +252,7 @@ export default {
     NavBar,
     NavBarLeft,
   },
-  data() {
+  data () {
     return {
       country_options: [
         {
@@ -329,6 +337,9 @@ export default {
       ],
     };
   },
+  mounted () {
+    console.log(getAllISOCodes())
+  }
 };
 </script>
 <style lang="scss" scoped>
