@@ -6,7 +6,11 @@
         <div>
           <b-button-group size="sm">
             <b-button variant="outline-light" v-b-modal.add-deal>
-              <b-icon icon="file-earmark-plus-fill"></b-icon> New Deal
+              <b-icon
+                icon="file-earmark-plus-fill"
+                v-on:click="getContract"
+              ></b-icon>
+              New Deal
             </b-button>
             <b-button variant="outline-light">
               <b-icon icon="cloud-download-fill"></b-icon> Export XLS
@@ -49,9 +53,11 @@
       :filter="filter"
       responsive
       class="align-middle"
+      v-for="item in list"
+      v-bind:key="item.id"
     >
-      <template #cell(i_o_IRH)="row">
-        <b>{{ row.item.i_o_IRH }} </b>
+      <template #cell(item)="row">
+        <b>{{ row.item.deal_type }} </b>
       </template>
       <template #cell(deal_date)="row"
         ><b>{{ row.item.deal_date }}</b>
@@ -195,7 +201,8 @@
                 v-model="temp_deal.deal_date"
                 class="mb-2"
                 size="sm"
-              ></b-form-datepicker>
+              >
+              </b-form-datepicker>
             </b-form-group>
           </b-col>
           <b-col>
@@ -215,7 +222,7 @@
               ></b-form-input>
             </b-form-group>
           </b-col>
-      
+
           <b-col>
             <b-form-group label="Source of funds">
               <b-form-input
@@ -224,8 +231,7 @@
               ></b-form-input>
             </b-form-group>
           </b-col>
-
-            </b-row>
+        </b-row>
         <b-row>
           <b-col>
             <b-form-group label="USD Amount">
@@ -327,12 +333,9 @@
             </b-form-group>
           </b-col>
 
-           <b-col>
+          <b-col>
             <b-form-group label="Status">
-              <b-form-input
-                v-model="temp_deal.Status"
-                size="sm"
-              ></b-form-input>
+              <b-form-input v-model="temp_deal.Status" size="sm"></b-form-input>
             </b-form-group>
           </b-col>
         </b-row>
@@ -343,7 +346,8 @@
         placeholder="Remarks"
         rows="3"
         max-rows="6"
-      ></b-form-textarea>
+      >
+      </b-form-textarea>
       <template #modal-footer="{ ok }">
         <b-button variant="primary" @click="ok()"> SUBMIT </b-button>
       </template>
@@ -353,34 +357,22 @@
 
 <script>
 import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
+import axios from "axios";
 export default {
   name: "Deals",
   components: {
     TreasuryFlow,
   },
+  created() {
+    this.getContract();
+  },
   data() {
     return {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTMxMTMyNTcsInN1YiI6ImFuc2hpa2FndXB0YTU4M0BnbWFpbC5jb20ifQ.8nHju6H4hYur2lW8ejF-H_4y36gTlCetNeXi-VrZ0uE",
       filter: null,
       temp_deal: {
-        i_o_IRH: "O",
-        deal_date: "",
-        source_of_funds: "Maybank",
-        amount_in_USD: "66,509 USD",
-        exchange_rate: "",
-        amount_in_MYR: "2,80,003.89 MYR",
-        deal_no: "",
-        NoOf_Setle: "",
-        Bank_POC: "",
-        TOF: "",
-        Service_Charge: "",
-        Service_Tax: "",
-     
-        purchase_date: "02 Nov 21",
-        status: "Open",
-        created_by: "Deepu",
-        break_down: "0",
-        edited_by: "",
-        comment: "",
+        list: undefined,
       },
       menu_hierarchy: [
         {
@@ -428,54 +420,84 @@ export default {
   },
   methods: {
     ok() {
-      console.log('ok')
+      console.log("ok");
     },
     nav_update() {
-      console.log('nav update')
-    }
+      console.log("nav update");
+    },
+
+    async getContract() {
+      console.log("token", this.token);
+
+      axios
+        .get("http://3.111.140.40:8001/api/v1/new-contract/get-all-contract", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          this.list = response.data.data;
+          console.log("result", response.data.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
   },
 };
+
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+
 .menu-sec {
   margin-top: 0.5rem;
 }
+
 .card-body {
   padding: 0 !important;
 }
+
 .card {
   margin-bottom: 1rem !important;
 }
+
 .btn-outline-light {
   color: $txt !important;
   border-color: $primary !important;
 }
+
 .btn-secondary {
   background: $txt !important;
 }
+
 .row {
   margin: 5px;
 }
+
 .expand-btn {
   color: $primary !important;
   border: none !important;
   background: $white !important;
 }
+
 .action-btn {
   background: $primary;
   border-radius: 4px;
   color: $white;
   border: none !important;
 }
+
 .action-div {
   text-align: end;
 }
+
 ::v-deep .table {
   td {
     vertical-align: middle !important;
   }
 }
+
 .title-lbl {
   width: 100%;
   padding: 5px;
@@ -484,9 +506,11 @@ export default {
   color: $txt;
   border-bottom: 1px solid $txt;
 }
+
 .form-group {
   margin-bottom: 0;
 }
+
 .list-group-item {
   padding: 0;
 }
@@ -496,9 +520,11 @@ export default {
   font-size: 12px;
   font-weight: 600;
 }
+
 ::v-deep td {
   font-size: 12px !important;
 }
+
 ::v-deep .col-form-label {
   color: $dimgrey;
 }
