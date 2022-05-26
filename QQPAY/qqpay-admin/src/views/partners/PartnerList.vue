@@ -7,9 +7,17 @@
     <b-container>
       <div class="search-area">
         <b-row>
-          <b-col class="input-feild" cols='8'>
-            <b-form-select v-model="filterSelected" :options="filterOptions"></b-form-select>
+          <b-col class="input-field" cols='8' v-click-outside="onClickOutside">
+            <span class="partner-filter" @click="togglePartnerFilter=!togglePartnerFilter">Partner Filter</span>
             <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
+            <div v-show="togglePartnerFilter" class="partner-filter-content">
+              <b-row cols="2 m-1">
+                <b-col cols="8" class="text-left">Country</b-col>
+                <b-col cols="4" class="text-right">Column</b-col>
+                <b-col cols="8" class="text-left">Partner Type</b-col>
+                <b-col cols="4" class="text-right">Column</b-col>
+              </b-row>
+            </div>
           </b-col>
           <b-col cols='2'>
             <b-button class="search-btn">Search</b-button>
@@ -53,11 +61,27 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import Vue from "vue";
+
+Vue.directive("click-outside", {
+  bind(el, binding, vnode) {
+    el.clickOutsideEvent = (event) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event);
+      }
+    };
+    document.body.addEventListener("click", el.clickOutsideEvent);
+  },
+  unbind(el) {
+    document.body.removeEventListener("click", el.clickOutsideEvent);
+  },
+});
 
 export default {
   name: "PartnerList",
   data() {
     return {
+      togglePartnerFilter: false,
       deleteConfirm: false,
       processing: false,
       deleteSelectedId: null,
@@ -112,8 +136,13 @@ export default {
     },
     onOK() {
       this.deletePartner({vm: this, id: this.deleteSelectedId})
+      this.fetchPartners()
       this.deleteConfirm = false
-    }
+    },
+    onClickOutside() {
+      if (this.togglePartnerFilter)
+        this.togglePartnerFilter = !this.togglePartnerFilter
+    },
   },
   computed: {
     ...mapGetters(["partnerLists"]),
@@ -139,10 +168,34 @@ export default {
 
 }
 
+.partner-filter {
+  width: 200px;
+  border: 1px solid grey;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+.partner-filter-content {
+  position: absolute;
+  width: 500px;
+  background: white;
+  margin-top: 40px;
+  box-shadow: 2px 4px 10px 3px #888888;
+  padding: 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
 .search-area {
   margin: 40px 20px;
 
-  .input-feild {
+  .input-field {
     display: flex;
 
     select {
@@ -160,8 +213,6 @@ export default {
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
     }
-
-
   }
 
   .search-btn {
@@ -193,4 +244,5 @@ export default {
 .compliance-table {
   text-align: center;
 }
+
 </style>
