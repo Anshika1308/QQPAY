@@ -1,29 +1,27 @@
 <template>
   <div>
     <div class="d-flex justify-content-between">
-      <h1>Partner List</h1>
+      <h1>Partner Commission List</h1>
       <b-button class="search-btn">Export</b-button>
     </div>
     <b-container>
       <div class="search-area">
         <b-row>
-          <b-col class="input-field" cols='8' v-click-outside="onClickOutside">
-            <span class="partner-filter" @click="togglePartnerFilter=!togglePartnerFilter">Filter</span>
-            <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
-            <div v-show="togglePartnerFilter" class="partner-filter-content">
-              <b-row cols="2 m-1">
-                <b-col cols="8" class="text-left">Country</b-col>
-                <b-col cols="4" class="text-right">Column</b-col>
-                <b-col cols="8" class="text-left">Partner Type</b-col>
-                <b-col cols="4" class="text-right">Column</b-col>
-              </b-row>
-            </div>
+          <b-col class="input-field" cols='8'>
+            <b-form-select
+                v-model="country"
+                :options="countryOptions"
+            ></b-form-select>
+            <b-form-input
+                v-model="searchValue"
+                placeholder="Search for user"
+            ></b-form-input>
           </b-col>
           <b-col cols='2'>
             <b-button class="search-btn">Search</b-button>
           </b-col>
           <b-col cols='2'>
-            <b-button class="status-btn" @click="$emit('openTab', 'add_partner')">Add Partner</b-button>
+            <b-button class="status-btn" @click="$emit('openTab', 'add_partner_commission')">Add P.C.</b-button>
           </b-col>
         </b-row>
       </div>
@@ -78,7 +76,7 @@ Vue.directive("click-outside", {
 });
 
 export default {
-  name: "PartnerList",
+  name: "PartnerCommissions",
   data() {
     return {
       togglePartnerFilter: false,
@@ -86,22 +84,22 @@ export default {
       processing: false,
       deleteSelectedId: null,
       selectMode: "single",
-      filterOptions: [
+      countryOptions: [
         {value: "null", text: "Filter"},
         {value: "a", text: "This is First option"},
         {value: "b", text: "Selected Option"},
       ],
-      filterSelected: null,
+      country: null,
       selected: [],
       fields: [
-        "partner_name",
-        "id",
-        "contact_person",
-        "number",
-        "email",
         "country",
-        "partner_type",
-        "action",
+        "partner",
+        "payment_type",
+        "upper_limit",
+        "common_charge_by",
+        "common_charge_ccy",
+        "active",
+        "remarks",
       ],
       items: [],
       riskStatusOptions: [

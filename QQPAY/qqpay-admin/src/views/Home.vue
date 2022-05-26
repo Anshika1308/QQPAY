@@ -279,7 +279,53 @@
                           ></b-icon>
                         </b-button>
                       </template>
-                      <AddPartner/>
+                      <AddPartner @openTab="openTab" />
+                    </b-tab>
+                    <b-tab
+                        v-if="tab_show.partner_commissions"
+                        :active="tab_active.partner_commissions"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                        ></b-icon
+                        >
+                        Partner Commission
+                        <b-button
+                            variant="outline-light" size="sm"
+                            @click="closeTab('partner_commissions')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
+                          ></b-icon>
+                        </b-button>
+                      </template>
+                      <PartnerCommissionList @openTab="openTab" />
+                    </b-tab>
+                    <b-tab
+                        v-if="tab_show.add_partner_commission"
+                        :active="tab_active.add_partner_commission"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                        ></b-icon
+                        >
+                        Add Partner Commission
+                        <b-button
+                            variant="outline-light" size="sm"
+                            @click="closeTab('add_partner_commission')"
+                        >
+                          <b-icon
+                              icon="x-circle-fill"
+                              aria-hidden="true"
+                          ></b-icon>
+                        </b-button>
+                      </template>
+                      <AddPartnerCommission/>
                     </b-tab>
                   </b-tabs>
                 </b-card>
@@ -304,10 +350,13 @@ import Business from "@/views/compilance/Business.vue";
 import FruadUsers from "@/views/compilance/FruadUsers.vue";
 import PartnerList from "@/views/partners/PartnerList";
 import AddPartner from "@/views/partners/AddPartner";
+import PartnerCommissionList from "@/views/partners/PartnerCommissionList";
+import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
 
 export default {
   name: "Home",
   components: {
+    AddPartnerCommission,
     NavBar,
     Deals,
     Settlements,
@@ -317,6 +366,7 @@ export default {
     FruadUsers,
     PartnerList,
     AddPartner,
+    PartnerCommissionList,
   },
   data() {
     return {
@@ -329,6 +379,8 @@ export default {
         statement: false,
         partners: false,
         add_partner: false,
+        add_partner_commission: false,
+        partner_commissions: false,
         user: true
       },
       tab_active: {
@@ -338,7 +390,8 @@ export default {
         forex: false,
         statement: false,
         partners: false,
-        add_partner: false,
+        add_partner_commission: false,
+        partner_commissions: false,
         user: true
       },
       menus: [
@@ -408,6 +461,9 @@ export default {
             {
               title: "Partners List",
               value: "partners",
+            }, {
+              title: "Partner Commission",
+              value: "partner_commissions",
             },
           ],
         },
@@ -421,6 +477,7 @@ export default {
   },
   methods: {
     openTab(sub_menu) {
+      console.log(sub_menu, "test")
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;
       Object.keys(this.tab_active).forEach((v) => (this.tab_active[v] = false));
