@@ -12,4 +12,10 @@
   font-feature-settings: "kern";
   color: #696969;
 }
+.add-partner .custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff;
+  border-color: #ff6b00 !important;
+  background-color: #ff6b00 !important;
+
+}
 </style>
