@@ -2,7 +2,7 @@
   <div class="beneficiary">
     <NavBar />
     <div class="page-body">
-      <TitleBar title="Add Beneficiary" />
+      <TitleBar :title="$t('beneficiary.addBeneficiary')" />
       <b-container>
         <b-row align-v="center" align-h="center" class="mt-5">
           <b-col col sm="12" md="12" lg="12">
@@ -13,11 +13,20 @@
           </b-col>
         </b-row>
         <b-row align-h="center" class="my-5">
+          <b-alert
+            :show="dismissCountDown"
+            dismissible
+            fade
+            variant="danger"
+            @dismiss-count-down="countDownChanged"
+          >
+            {{submitError}}
+            </b-alert>
           <b-col col sm="12" md="12" lg="8">
             <b-card
               v-if="currentStep == 1"
               class="card-style"
-              title="What kind of beneficiary would you like to add?"
+              :title="$t('beneficiary.kindOfBenficiary')"
             >
               <b-button-group size="lg">
                 <b-button
@@ -25,16 +34,17 @@
                   variant="light"
                   size="lg"
                   class="px-5 py-3"
+                  @click="onClickIndividualAccount"
                 >
                   <b-icon
                     icon="person-circle"
                     style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  Individual
+                  {{$t('beneficiary.individual')}}
                   <br />
                   <small
-                    >Send, spend, and receive around the world for less.</small
+                    >{{$t('beneficiary.individualSubHeader')}}.</small
                   >
                 </b-button>
                 <b-button
@@ -42,31 +52,33 @@
                   variant="light"
                   size="lg"
                   class="px-5 py-3"
+                  @click="onClickBusinessAccount"
                 >
                   <b-icon
                     icon="briefcase-fill"
                     style="width: 80px; height: 80px; color: #b4b4b4"
                   ></b-icon>
                   <br />
-                  Business
+                  {{$t('beneficiary.business')}}
                   <br />
-                  <small>Do business or freelance work internationally.</small>
+                  <small>{{$t('beneficiary.businessSubHeader')}}.</small>
                 </b-button>
               </b-button-group>
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
                 @click="onClickNext"
-                >Next</b-button
+                >{{$t('beneficiary.next')}}</b-button
               >
             </b-card>
+            <!-- ---------------------------Personal Detail Section  ------------------------------------------->
             <b-card
               v-if="currentStep == 2"
               class="card-style"
-              title="Let us get some basic details of the beneficiary"
+              :title="$t('beneficiary.letusSomeBasic')"
             >
               <b-form-group
-                label="Full name of the beneficiary"
+                :label="$t('beneficiary.fullName')"
                 label-for="input-name"
               >
                 <b-form-input
@@ -74,10 +86,13 @@
                   v-model="beneficiary.name"
                 ></b-form-input>
               </b-form-group>
+              <div v-if="errorMessage" class="floating-placeholder-name">
+                <span>{{errorMessage}}</span>
+              </div>
               <b-row>
                 <b-col
                   ><b-form-group
-                    label="Beneficiary Country"
+                    :label="$t('beneficiary.country')"
                     label-for="input-country"
                   >
                     <b-dropdown
@@ -99,7 +114,7 @@
                 >
                 <b-col
                   ><b-form-group
-                    label="Relationship"
+                    :label="$t('beneficiary.relationship')"
                     label-for="input-relation"
                   >
                     <b-dropdown
@@ -123,8 +138,8 @@
               <b-row>
                 <b-col>
                   <b-form-group
-                    label="Phone Number"
-                    description="(Optional)"
+                    :label="$t('beneficiary.phoneNumber')"
+                    :description="$t('beneficiary.optional')"
                     label-for="input-phone"
                   >
                     <b-form-input
@@ -136,8 +151,8 @@
                 </b-col>
                 <b-col>
                   <b-form-group
-                    label="Email Address"
-                    description="(Optional)"
+                    :label="$t('beneficiary.emailAddress')"
+                    :description="$t('beneficiary.optional')"
                     label-for="input-email"
                   >
                     <b-form-input
@@ -152,23 +167,24 @@
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Next</b-button
+                @click="onClickNextSecondSection"
+                >{{$t('next')}}</b-button
               >
             </b-card>
+            <!-- ---------------------------Address Section  ------------------------------------------->
             <b-card
               v-if="currentStep == 3"
               class="card-style"
-              title="Please enter address of the beneficiary"
+              :title="$t('beneficiary.enterAddressBeneficiary')"
             >
               <b-form-group
-                label="Address"
-                description="(Optional)"
+                :label="$t('beneficiary.address')"
+                :description="$t('beneficiary.optional')"
                 label-for="input-address"
               >
                 <b-form-textarea
@@ -181,7 +197,7 @@
 
               <b-row>
                 <b-col>
-                  <b-form-group label="State" label-for="input-state">
+                  <b-form-group :label="$t('beneficiary.state')" label-for="input-state">
                     <b-dropdown
                       id="input-state"
                       :text="beneficiary.state"
@@ -200,7 +216,7 @@
                   </b-form-group>
                 </b-col>
                 <b-col>
-                  <b-form-group label="City" label-for="input-city">
+                  <b-form-group :label="$t('beneficiary.city')" label-for="input-city">
                     <b-dropdown
                       id="input-city"
                       :text="beneficiary.city"
@@ -223,54 +239,73 @@
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
                 @click="onClickNext"
-                >Next</b-button
+                >{{$t('next')}}</b-button
               >
             </b-card>
+
+          <!-- ---------------------------Account Section  ------------------------------------------->
             <b-card
               v-if="currentStep == 4"
               class="card-style"
-              title="Please enter bank account details of the beneficiary"
+              :title="$t('beneficiary.bankAccuntDetails')"
             >
-              <b-form-group label="Bank Account Number" label-for="input-acc">
+              <b-form-group :label="$t('beneficiary.bankAccountNumber')" label-for="input-acc">
                 <b-form-input
                   id="input-acc"
                   type="password"
                   v-model="beneficiary.account"
                 ></b-form-input>
               </b-form-group>
+              <div v-if="errorAccount" class="floating-placeholder-name">
+                <span>{{errorAccount}}</span>
+              </div>
               <b-form-group
-                label="Re-Enter Account Number"
+                :label="$t('beneficiary.renterBankAccount')"
                 label-for="input-acc-re"
               >
                 <b-form-input
                   id="input-acc-re"
                   type="number"
-                  v-model="temp_account"
+                  v-model="beneficiary.confirmAccount"
                 ></b-form-input>
               </b-form-group>
-              <b-form-group label="SWIFT/BIC Code" label-for="input-ifsc">
+              <div v-if="errorConfirm" class="floating-placeholder-name">
+                <span>{{errorConfirm}}</span>
+              </div>
+              <b-form-group :label="$t('beneficiary.swiftCode')" label-for="input-ifsc">
                 <b-form-input
                   id="input-ifsc"
                   v-model="beneficiary.ifsc"
                 ></b-form-input>
               </b-form-group>
+              <div v-if="errorSwiftCode" class="floating-placeholder-name">
+                <span>{{errorSwiftCode}}</span>
+              </div>
+              <div v-if="errorMessage" class="floating-placeholder-name">
+                <span>{{errorMessage}}</span>
+              </div>
               <b-button
                 class="float-left mt-5 px-5"
                 variant="outline-secondary"
                 @click="onClickBack"
-                >Back</b-button
+                >{{$t('backLabel')}}</b-button
               >
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
-                @click="onClickNext"
-                >Create Beneficiary</b-button
+                @click="onCreateBeneficiary"
+                >
+                <div class="button-loader" v-if="loader">
+                  <span class="spinner-border spinner-border-sm"></span>
+                </div>
+                <div v-else>{{$t('beneficiary.createBeneficiary')}}</div>
+                </b-button
               >
             </b-card>
           </b-col>
@@ -295,13 +330,16 @@ export default {
   data() {
     return {
       steps: [
-        { text: "Account Type" },
-        { text: "Basic Details" },
-        { text: "Address" },
-        { text: "Bank Details" },
+        { text: this.$t('beneficiary.accountType') },
+        { text: this.$t('beneficiary.basicDetails') },
+        { text: this.$t('beneficiary.address') },
+        { text: this.$t('beneficiary.bankDetails') },
       ],
       currentStep: 1,
-      temp_account: "",
+      loader: false,
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      showDismissibleAlert: false,
       beneficiary: {
         type: "Business",
         country: "India",
@@ -314,7 +352,14 @@ export default {
         city: "Bangalore",
         account: "",
         ifsc: "",
+        confirmAccount: "",
       },
+      errorAccount: '',
+      errorConfirm: '',
+      errorSwiftCode: '',
+      fieldInputBlank: '',
+      errorMessage: '',
+      submitError: '',
       type_options: [
         {
           text: "Business",
@@ -374,6 +419,129 @@ export default {
     onClickBack: function () {
       this.currentStep--;
     },
+    onClickBusinessAccount() {
+      this.beneficiary.type = 'BUS'
+    },
+    onClickIndividualAccount() {
+      this.beneficiary.type = 'PER'
+    },
+    onClickNextSecondSection() {
+      if (!this.beneficiary.name) {
+        this.errorMessage = 'Please enter the full name';
+      } else {
+        this.currentStep++;
+        this.errorMessage = '';
+      }
+    }, 
+    async onCreateBeneficiary() {
+      if (!this.beneficiary.account || !this.beneficiary.confirmAccount || !this.beneficiary.ifsc) {
+        this.errorMessage = '',
+        this.confirmAccount = '';
+        this.errorSwiftCode = '';
+        this.errorAccount = 'Please enter the account number it can not be empty';
+        this.errorConfirm = 'Please enter the confirm account number it can not be empty';
+        this.errorSwiftCode = 'Please enter the SWIFT code of account it can not be empty';
+      }
+      if (this.beneficiary.account) {
+        this.errorAccount = '';
+      }
+      if (this.beneficiary.confirmAccount) {
+          this.errorConfirm = '';
+      }
+      if (this.beneficiary.ifsc) {
+        this.errorSwiftCode = '';
+      }
+      if (this.beneficiary.account && this.beneficiary.confirmAccount && this.beneficiary.ifsc) {
+        if (this.beneficiary.account !== this.beneficiary.confirmAccount) {
+          this.errorSwiftCode = '',
+          this.errorAccount = '';
+          this.confirmAccount = '';
+          this.errorMessage = 'Account and Confirm Account do not match please enter the correct number';
+        } else {
+          try {
+            this.loader = true;
+            const remiteeData = {
+              Remittee_name: this.beneficiary.name,
+              Title: "",
+              first_name: "",
+              middle_name: "",
+              last_name: "",
+              gender: "",
+              nationality_cd: "",
+              birth_cntry: this.beneficiary.country,
+              Remittee_occup: this.beneficiary.type,
+              occupation_text: "",
+              address: this.beneficiary.address,
+              phone_no: this.beneficiary.phone,
+              Altr_Phone_no: "",
+              email_id: this.beneficiary.email,
+              Remittee_dob: "",
+              State_Code: 0,
+              district_Code: 0,
+              city_Code: 0,
+              Remittee_city: this.beneficiary.city,
+              Remittee_state: this.beneficiary.state,
+              Country_code: "",
+              postal_cd: "",
+              is_internal_staff: "",
+              relation_with_Remitter_cd: "",
+              relation_with_Remitter_others: this.beneficiary.relationship,
+              pay_crncy_cd: "MYR",
+              paying_cntry_cd: "IND",
+              payment_mode_cd: "FPX",
+              bank_ac_no: this.beneficiary.account,
+              bank_ac_type: "",
+              bank_branch_address: "",
+              bank_branch_cd: "",
+              bank_cd: "",
+              iban_no: "",
+              swift_no: this.beneficiary.ifsc,
+              bic_cd: "",
+              registration_type_cd: "",
+              created_on: "2022-04-20T06:38:06.943107",
+              modified_on: "2022-04-20T06:38:06.943114",
+              created_by: "",
+              modified_by: "",
+              creation_parent_agent_cd: "",
+              mod_parent_agent_cd: "",
+              id_card_type_cd: 0,
+              id_card_type_no: "",
+              id_card_type_exp_date: "2022-04-20",
+              parent_pay_agent_cd: "",
+              parent_pay_sub_agent_cd: "",
+              is_negativelisted: false,
+              negative_match_criteria: "",
+              del_flag: false,
+              IsActive: false,
+              IsResident: false
+            }
+            this.loader = true;
+            const responseData = await this.$store.dispatch('Remittee/createRemitte', remiteeData);
+            if (responseData && responseData.status === 200) {
+              this.loader = false
+              this.submitErrorMessage = '';
+              this.submitError = '';
+              this.$router.push({name: 'KYC'})
+            }else if (responseData && responseData.status === 401) {
+              this.loader = false
+              this.errorOnSubmit = false;
+              this.submitError = 'Please provde the correct beneficiary details';
+            } else {
+              this.submitError = 'User is not authorised please login the user';
+              this.dismissCountDown = this.dismissSecs
+              this.loader = false;
+            }
+          } catch (error) {
+            this.loader = false
+            this.submitError = 'User is not authorised';
+          }
+        }
+        console.log('in')
+      }
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
   },
 };
 </script>
@@ -416,5 +584,11 @@ export default {
 }
 ::v-deep .btn-light {
   border: 1px solid $lightgrey !important;
+}
+.floating-placeholder-name {
+  color: red;
+  margin-top: -12px;
+  font-size: 14px;
+  text-align: -webkit-left;
 }
 </style>

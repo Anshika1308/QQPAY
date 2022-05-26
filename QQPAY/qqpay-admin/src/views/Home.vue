@@ -177,6 +177,22 @@
                       </template>
                       <SpecialRates
                     /></b-tab>
+                    <b-tab v-if="tab_show.Service" :active="tab_active.Service">
+                      <template #title>
+                        <b-icon icon="cash-stack" aria-hidden="true"></b-icon>
+                        Service
+                        <b-button
+                          variant="outline-light"
+                          size="sm"
+                          @click="closeTab('Service')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <Service
+                    /></b-tab>
                     <b-tab
                       v-if="tab_show.manageScore"
                       :active="tab_active.manageScore"
@@ -196,14 +212,28 @@
                       </template>
                       <ManageScore
                     /></b-tab>
+                     <b-tab v-if="tab_show.PPComm" :active="tab_active.PPComm">
+                      <template #title>
+                        <b-icon icon="cash-stack" aria-hidden="true"></b-icon>
+                         PP Comm
+                        <b-button
+                          variant="outline-light"
+                          size="sm"
+                          @click="closeTab('PPComm')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <PPComm
+                    /></b-tab>
                   </b-tabs>
                 </b-card>
               </b-col>
             </b-row>
           </b-container>
         </b-col>
-
-        <Business />
       </b-row>
     </div>
   </div>
@@ -215,13 +245,14 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import Deals from "@/views/treasury/Deals.vue";
 import Settlements from "@/views/treasury/Settlements.vue";
 import Funding from "@/views/treasury/Funding.vue";
-import Business from "./compilance/Business.vue";
+//import Business from "./compilance/Business.vue";
 import DailyForex from "@/views/treasury/DailyForex.vue";
 //import { component } from 'vue/types/umd';
 import ServiceCharge from "@/views/setup/ServiceCharge.vue";
 import SpecialRates from "@/views/setup/SpecialRates.vue";
 import ManageScore from "@/views/setup/ManageScore.vue";
-
+import Service from "./ServiceCharge/Service.vue";
+import PPComm from "./ServiceCharge/PPComm.vue";
 export default {
   name: "Home",
   components: {
@@ -229,11 +260,13 @@ export default {
     Deals,
     Settlements,
     Funding,
-    Business,
+    //Business,
     DailyForex,
     ServiceCharge,
     SpecialRates,
-    ManageScore
+    ManageScore,
+    Service,
+    PPComm,
   },
   data() {
     return {
@@ -247,6 +280,9 @@ export default {
         serviceCharge: false,
         specialRates: false,
         manageScore: false,
+        UserDetails: true,
+        Service: true,
+        PPComm: true,
       },
       tab_active: {
         deals: true,
@@ -257,6 +293,9 @@ export default {
         serviceCharge: false,
         specialRates: false,
         manageScore: false,
+        UserDetails: false,
+        Service: false,
+        PPComm: false,
       },
       menus: [
         {
@@ -277,7 +316,12 @@ export default {
         {
           id: 4,
           title: "Compliance",
-          sub_menus: {},
+          sub_menus: [
+            {
+              title: "UserDetails",
+              value: "UserDetails",
+            },
+          ],
         },
         {
           id: 5,
@@ -317,19 +361,16 @@ export default {
         },
         {
           id: 8,
-          title: "Setup",
+          title: "Service charge",
           sub_menus: [
             {
-              title: "Service Charge",
-              value: "serviceCharge",
+              title: "All setups",
+              value: "Service",
             },
+
             {
-              title: "Special Rates",
-              value: "specialRates",
-            },
-            {
-              title: "Manage Score",
-              value: "manageScore",
+              title: "PP Comm Charge",
+              value: "PPComm",
             },
           ],
         },
