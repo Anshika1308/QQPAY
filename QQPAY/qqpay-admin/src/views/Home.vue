@@ -374,6 +374,24 @@ export default {
             },
           ],
         },
+         {
+          id: 9 ,
+          title: "Setup",
+          sub_menus: [
+            {
+              title: "Service Charge",
+              value: "serviceCharge",
+            },
+            {
+              title: "Special Rates",
+              value: "specialRates",
+            },
+            {
+              title: "Manage Score",
+              value: "manageScore",
+            },
+          ],
+        },
       ],
     };
   },
