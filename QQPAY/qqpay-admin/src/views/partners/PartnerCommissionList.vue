@@ -21,7 +21,7 @@
             <b-button class="search-btn">Search</b-button>
           </b-col>
           <b-col cols='2'>
-            <b-button class="status-btn" @click="$emit('openTab', 'add_partner_commission')">Add P.C.</b-button>
+            <b-button class="status-btn" v-b-modal.partner-commission-modal>Add P.C.</b-button>
           </b-col>
         </b-row>
       </div>
@@ -53,16 +53,21 @@
         </template>
       </b-overlay>
     </b-container>
+    <b-modal id="partner-commission-modal" hide-footer size="xl" title="Add Partner Commission">
+      <AddPartnerCommission/>
+    </b-modal>
   </div>
 </template>
 
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
 
 
 export default {
   name: "PartnerCommissions",
+  components: {AddPartnerCommission},
   data() {
     return {
       togglePartnerFilter: false,

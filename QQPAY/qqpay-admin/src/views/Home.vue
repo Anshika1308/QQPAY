@@ -304,29 +304,6 @@
                       </template>
                       <PartnerCommissionList @openTab="openTab" />
                     </b-tab>
-                    <b-tab
-                        v-if="tab_show.add_partner_commission"
-                        :active="tab_active.add_partner_commission"
-                    >
-                      <template #title>
-                        <b-icon
-                            icon="journal-check"
-                            aria-hidden="true"
-                        ></b-icon
-                        >
-                        Add Partner Commission
-                        <b-button
-                            variant="outline-light" size="sm"
-                            @click="closeTab('add_partner_commission')"
-                        >
-                          <b-icon
-                              icon="x-circle-fill"
-                              aria-hidden="true"
-                          ></b-icon>
-                        </b-button>
-                      </template>
-                      <AddPartnerCommission/>
-                    </b-tab>
                   </b-tabs>
                 </b-card>
               </b-col>
@@ -351,12 +328,10 @@ import FruadUsers from "@/views/compilance/FruadUsers.vue";
 import PartnerList from "@/views/partners/PartnerList";
 import AddPartner from "@/views/partners/AddPartner";
 import PartnerCommissionList from "@/views/partners/PartnerCommissionList";
-import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
 
 export default {
   name: "Home",
   components: {
-    AddPartnerCommission,
     NavBar,
     Deals,
     Settlements,
@@ -379,7 +354,6 @@ export default {
         statement: false,
         partners: false,
         add_partner: false,
-        add_partner_commission: false,
         partner_commissions: false,
         user: true
       },
@@ -390,7 +364,6 @@ export default {
         forex: false,
         statement: false,
         partners: false,
-        add_partner_commission: false,
         partner_commissions: false,
         user: true
       },
