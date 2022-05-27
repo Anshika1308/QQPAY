@@ -12,9 +12,7 @@ const partnerCommissionStore = {
       commit("setPartnerCommission", response.data.data)
     },
     async deletePartnerCommission({commit}, {vm, id}) {
-      console.log(id)
       const response = await deleteApiData(`${APIS.DELETE_PARTNER_COMMISSION}/${id}`);
-      console.log(response)
       if (response.data.status_code === 200) {
         commit("removePartnerCommission", id)
         vm.$bvToast.toast('Partner Deleted Successfully', {
@@ -22,15 +20,26 @@ const partnerCommissionStore = {
           variant: "danger",
           solid: true
         })
+      } else {
+        vm.$bvToast.toast('Unable to delete item', {
+          title: "Success",
+          variant: "success",
+          solid: true
+        })
       }
     },
     async addPartner({commit}, {vm, data}) {
       const formData = JSON.stringify(data)
       const response = await postApiData(APIS.CREATE_PARTNER, formData);
-      console.log(response)
       if (response.data.status_code === 200) {
-        commit("addPartner", response.data)
+        commit("setPartnerCommission", response.data)
         vm.$bvToast.toast('Partner Added Successfully', {
+          title: "Success",
+          variant: "success",
+          solid: true
+        })
+      } else {
+        vm.$bvToast.toast('Something went wrong', {
           title: "Success",
           variant: "success",
           solid: true
@@ -43,9 +52,9 @@ const partnerCommissionStore = {
       state.partnerCommissions = data
     ),
     removePartnerCommission: (state, id) => (
-      state.partners.filter(partner => partner.agent_id !== id),
-        state.partners.splice(partner => partner.agent_id, 1),
-        console.log(state.partners)
+      state.partnerCommissions.filter(commission => commission.id !== id),
+        state.partnerCommissions.splice(commission => commission.id, 1),
+        console.log(state.partnerCommissions, "state partners")
     ),
 
     addPartner: (state, data) => (// eslint-disable-line no-unused-vars
