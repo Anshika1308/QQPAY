@@ -59,21 +59,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import Vue from "vue";
 
-Vue.directive("click-outside", {
-  bind(el, binding, vnode) {
-    el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) {
-        vnode.context[binding.expression](event);
-      }
-    };
-    document.body.addEventListener("click", el.clickOutsideEvent);
-  },
-  unbind(el) {
-    document.body.removeEventListener("click", el.clickOutsideEvent);
-  },
-});
 
 export default {
   name: "PartnerCommissions",
@@ -94,12 +80,13 @@ export default {
       fields: [
         "country",
         "partner",
-        "payment_type",
+        "payment_method",
         "upper_limit",
-        "common_charge_by",
-        "common_charge_ccy",
+        "comm_charge_by",
+        "comm_charge_ccy",
         "active",
         "remarks",
+        "action"
       ],
       items: [],
       riskStatusOptions: [
@@ -111,17 +98,18 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPartners", "deletePartner"]),
+    ...mapActions(["fetchPartnerCommission", "deletePartnerCommission"]),
     formatTableData() {
-      this.items = this.partnerLists.map(item => ({
-        partner_name: item.contact_name1,
-        id: item.agent_id,
-        contact_person: item.contact_name2,
-        number: item.phone1,
-        email: item.email1,
+      console.log(this.partnerCommissionList)
+      this.items = this.partnerCommissionList.map(item => ({
         country: item.country,
-        partner_type: item.agent_type,
-        action: item.agent_id,
+        partner: item.partner_id,
+        payment_method: item.payment_method,
+        comm_charge_by: item.service_charge_by,
+        comm_charge_ccy: item.service_charge_by,
+        upper_limit: item.upper_limit,
+        active: item.is_active,
+        action: item.id,
       }))
     },
     onSubmit(id) {
@@ -133,8 +121,7 @@ export default {
       this.deleteConfirm = false
     },
     onOK() {
-      this.deletePartner({vm: this, id: this.deleteSelectedId})
-      this.fetchPartners()
+      this.deletePartnerCommission({vm: this, id: this.deleteSelectedId})
       this.deleteConfirm = false
     },
     onClickOutside() {
@@ -143,10 +130,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["partnerLists"]),
+    ...mapGetters(["partnerCommissionList"]),
   },
   async created() {
-    await this.fetchPartners()
+    await this.fetchPartnerCommission()
     this.formatTableData()
   }
 };
