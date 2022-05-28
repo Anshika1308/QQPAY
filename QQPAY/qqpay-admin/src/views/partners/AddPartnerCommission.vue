@@ -9,7 +9,7 @@
                 <b-form-select
                     v-model="partnerSelected"
                     :options="partnerType"
-                    class="mb-3"
+                    class="mb-3 form-control"
                 />
               </b-form-group>
             </b-col>
@@ -18,7 +18,7 @@
                 <b-form-select
                     v-model="paymentMethodSelected"
                     :options="paymentMethodOptions"
-                    class="mb-3"
+                    class="mb-3 form-control"
                 />
               </b-form-group>
             </b-col>
@@ -28,14 +28,23 @@
                 <b-form-select
                     v-model="selectedServiceCharge"
                     :options="selectedServiceChargeType"
-                    class="mb-3"
+                    class="mb-3 form-control"
+                    @change="toggleUpperLimit"
                 />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
-              <b-form-group id="input-group-service-charge" label="Service Charge" label-for="input-service-charge"
-                            description="This field is required">
-                <b-form-input id="input-contact-service-charge" v-model="serviceCharge" type="text" required/>
+              <b-form-group id="input-group-service-charge" label="Service Charge" label-for="input-service-charge">
+                <b-form-input id="input-contact-service-charge" v-model="serviceCharge" type="text"/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="6" xl="6">
+              <b-form-group id="input-group-currency" label="Country" label-for="input-currency">
+                <b-form-select
+                    v-model="selectedCountry"
+                    :options="countryOptions"
+                    class="mb-3 form-control"
+                />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
@@ -43,19 +52,19 @@
                 <b-form-select
                     v-model="selectedCurrency"
                     :options="selectedCurrencyType"
-                    class="mb-3"
+                    class="mb-3 form-control"
                 />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
-              <b-form-group id="input-group-upper-limit" label="Upper Limit"
-                            label-for="input-group-upper-limit" description="This field is required">
-                <b-form-input id="input-group-upper-limit" v-model="upperLimit" type="text" required/>
+              <b-form-group id="input-group-upper-limit" label="Upper Limit" label-for="input-group-upper-limit">
+                <b-form-input id="input-group-upper-limit" v-model="upperLimit" type="number"
+                              :disabled="isDisableUpperLimit"/>
               </b-form-group>
             </b-col>
-            <b-col md="12" sm="12" lg="12" xl="12">
+            <b-col md="6" sm="12" lg="6" xl="6">
               <b-form-checkbox
-                  class="mb-2"
+                  class="mt-5"
                   id="checkbox-active-status"
                   v-model="active"
                   name="checkbox-active-status"
@@ -73,7 +82,7 @@
           </b-row>
         </b-card>
         <b-row class="d-flex justify-content-end">
-          <b-button class="submit-btn " type="submit" @click="$bvModal.show('modal-1')">Submit</b-button>
+          <b-button class="submit-btn " type="submit">Submit</b-button>
         </b-row>
       </form>
     </b-container>
@@ -82,24 +91,26 @@
 
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'AddPartnerCommission',
   data() {
     return {
+      isDisableUpperLimit: false,
       partnerSelected: null,
       partnerType: [
-        {value: null, text: 'Please select an option'},
-        {value: 'a', text: 'This is First option'},
-        {value: 'b', text: 'Selected Option'},
-        {value: 'c', text: 'This is an option with object value'},
-        {value: 'd', text: 'This one is disabled', disabled: true}
+        {value: null, text: 'Please select an option', disabled: true}
       ],
       paymentMethodSelected: null,
       paymentMethodOptions: [
         {value: "cash_payment", text: 'Cash Payment'},
         {value: 'account_deposit', text: 'Account Payment'},
+      ],
+      selectedCountry: null,
+      countryOptions: [
+        {value: "nepal", text: 'Nepal'},
+        {value: 'country', text: 'Country'},
       ],
       selectedServiceCharge: null,
       selectedServiceChargeType: [
@@ -112,35 +123,47 @@ export default {
         {value: 'local_currency', text: 'Local Currency'},
         {value: 'usd', text: 'USD Dollar'},
       ],
-      upperLimit: "",
+      upperLimit: null,
       payCommission: "",
       remarks: "",
       active: false
     }
   },
   methods: {
-    ...mapActions(["addPartner"]),
+    ...mapActions(["addPartnerCommission", "fetchPartners"]),
     handleSubmit() {
-      this.addPartner({
+      this.addPartnerCommission({
             vm: this, data: {
               partner_id: this.partnerSelected,
-              country: this.contactInformation.contactPerson1,
-              designation1: this.contactInformation.post1,
-              email1: this.contactInformation.contactPersonEmail1,
-              contact_name2: this.contactInformation.contactPerson2,
-              designation2: this.contactInformation.post2,
-              email2: this.contactInformation.contactPersonEmail2,
-              company_name: this.companyDetail.nameOfEmployer,
-              agent_lic_no: this.companyDetail.businessLicense,
-              agent_type: this.companyDetail.partnerType,
+              country: this.selectedCountry,
+              payment_method: this.paymentMethodSelected,
+              service_charge_by: this.selectedServiceCharge,
+              service_charge: this.serviceCharge,
+              currency: this.selectedCurrency,
+              upper_limit: this.upperLimit,
+              is_active: this.active,
+              remarks: this.remarks,
+              pay_commission: 0,
             }
           }
       )
+    },
+    formatPartnerOptions() {
+      this.partnerType.push(...this.partnerLists.map(item => ({
+        value: item.agent_id,
+        text: item.contact_name1
+      })))
+    },
+    toggleUpperLimit() {
+      this.isDisableUpperLimit = this.selectedServiceCharge === "percentage";
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["partnerLists"]),
+  },
   async created() {
-
+    await this.fetchPartners();
+    await this.formatPartnerOptions();
   }
 }
 </script>

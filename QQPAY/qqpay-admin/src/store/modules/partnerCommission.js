@@ -28,20 +28,21 @@ const partnerCommissionStore = {
         })
       }
     },
-    async addPartner({commit}, {vm, data}) {
+    async addPartnerCommission({commit}, {vm, data}) {
       const formData = JSON.stringify(data)
-      const response = await postApiData(APIS.CREATE_PARTNER, formData);
+      console.log(formData, "form data")
+      const response = await postApiData(APIS.CREATE_PARTNER_COMMISSION, formData);
       if (response.data.status_code === 200) {
         commit("setPartnerCommission", response.data)
-        vm.$bvToast.toast('Partner Added Successfully', {
+        vm.$bvToast.toast('Partner Commission Added Successfully', {
           title: "Success",
           variant: "success",
           solid: true
         })
       } else {
         vm.$bvToast.toast('Something went wrong', {
-          title: "Success",
-          variant: "success",
+          title: "Error",
+          variant: "danger",
           solid: true
         })
       }
