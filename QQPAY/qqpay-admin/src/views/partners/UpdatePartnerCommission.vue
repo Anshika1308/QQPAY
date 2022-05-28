@@ -95,6 +95,7 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'UpdatePartnerCommission',
+  props: ["partner_commission_id"],
   data() {
     return {
       isDisableUpperLimit: false,
@@ -130,11 +131,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addPartnerCommission", "fetchPartners"]),
+    ...mapActions(["addPartnerCommission", "fetchPartnerCommission", "fetchPartners", "fetchPartnerCommissionSingle", "updatePartnerCommission"]),
 
     async handleSubmit() {
-      const res = await this.addPartnerCommission({
-            vm: this, data: {
+      const res = await this.updatePartnerCommission({
+            vm: this,
+            data: {
               partner_id: this.partnerSelected,
               country: this.selectedCountry,
               payment_method: this.paymentMethodSelected,
@@ -145,14 +147,13 @@ export default {
               is_active: this.active,
               remarks: this.remarks,
               pay_commission: 0,
-            }
+            },
+            id: this.partner_commission_id
           }
       )
       if (res.data.status_code === 200) {
-        setTimeout(function () {
-        }, 1000)
-        document.getElementsByClassName('close')[0].click();
-        await this.formatPartnerOptions();
+        this.$bvModal.hide("update-partner-commission-modal")
+        await this.fetchPartnerCommission();
       }
     },
     formatPartnerOptions() {
@@ -171,6 +172,18 @@ export default {
   async created() {
     await this.fetchPartners();
     await this.formatPartnerOptions();
+    const res = await this.fetchPartnerCommissionSingle(this.partner_commission_id)
+    if (res.data.status_code === 200) {
+      this.partnerSelected = res.data.data[0].partner_id
+      this.paymentMethodSelected = res.data.data[0].payment_method
+      this.selectedCountry = res.data.data[0].country
+      this.selectedServiceCharge = res.data.data[0].service_charge_by
+      this.serviceCharge = res.data.data[0].service_charge
+      this.selectedCurrency = res.data.data[0].currency
+      this.active = res.data.data[0].is_active
+      this.remarks = res.data.data[0].remarks
+      this.isDisableUpperLimit = res.data.data[0].service_charge_by === "percentage";
+    }
   }
 }
 </script>

@@ -62,7 +62,7 @@
       <AddPartnerCommission/>
     </b-modal>
     <b-modal id="update-partner-commission-modal" hide-footer size="xl" title="Update Partner Commission">
-      <UpdatePartnerCommission/>
+      <UpdatePartnerCommission :partner_commission_id="updatePartnerCommissionId"/>
     </b-modal>
   </div>
 </template>
@@ -125,6 +125,7 @@ export default {
         upper_limit: item.upper_limit,
         active: item.is_active,
         action: item.id,
+        remarks:item.remarks
       }))
     },
     handleOpenUpdatePartnerCommission(id) {
