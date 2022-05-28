@@ -94,7 +94,7 @@
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: 'AddPartnerCommission',
+  name: 'UpdatePartnerCommission',
   data() {
     return {
       isDisableUpperLimit: false,
@@ -149,7 +149,9 @@ export default {
           }
       )
       if (res.data.status_code === 200) {
-        this.$bvModal.hide("partner-commission-modal")
+        setTimeout(function () {
+        }, 1000)
+        document.getElementsByClassName('close')[0].click();
         await this.formatPartnerOptions();
       }
     },

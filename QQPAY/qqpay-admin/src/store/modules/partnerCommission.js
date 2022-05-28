@@ -46,6 +46,7 @@ const partnerCommissionStore = {
           solid: true
         })
       }
+      return response
     }
   },
   mutations: {

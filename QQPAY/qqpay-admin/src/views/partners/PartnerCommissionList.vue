@@ -29,8 +29,13 @@
         <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable">
           <template v-slot:cell(action)="row">
             <template v-if="row.item.action">
-              <b-icon class="btn" icon="pencil-square" variant="success"></b-icon>
-              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)"></b-icon>
+              <b-icon
+                  class="btn"
+                  icon="pencil-square"
+                  variant="success"
+                  @click="handleOpenUpdatePartnerCommission(row.item.action)"
+              />
+              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)"/>
             </template>
           </template>
         </b-table>
@@ -56,6 +61,9 @@
     <b-modal id="partner-commission-modal" hide-footer size="xl" title="Add Partner Commission">
       <AddPartnerCommission/>
     </b-modal>
+    <b-modal id="update-partner-commission-modal" hide-footer size="xl" title="Update Partner Commission">
+      <UpdatePartnerCommission/>
+    </b-modal>
   </div>
 </template>
 
@@ -63,13 +71,15 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
+import UpdatePartnerCommission from "@/views/partners/UpdatePartnerCommission";
 
 
 export default {
   name: "PartnerCommissions",
-  components: {AddPartnerCommission},
+  components: {UpdatePartnerCommission, AddPartnerCommission},
   data() {
     return {
+      updatePartnerCommissionId: null,
       togglePartnerFilter: false,
       deleteConfirm: false,
       processing: false,
@@ -116,6 +126,10 @@ export default {
         active: item.is_active,
         action: item.id,
       }))
+    },
+    handleOpenUpdatePartnerCommission(id) {
+      this.updatePartnerCommissionId = id
+      this.$bvModal.show("update-partner-commission-modal")
     },
     onSubmit(id) {
       this.deleteSelectedId = id
