@@ -16,163 +16,13 @@
         <b-row align-h="center my-5">
           <b-col col sm="12" md="12" lg="8">
             <div v-if="currentStep == 1">
-              <h4>{{ $t("fundTransfers.howMuchTransfer") }}</h4>
-              <b-input-group size="lg" class="mt-3">
-                <b-form-input
-                  placeholder="You Send"
-                  v-model="transaction_details.details.source_amount"
-                  class="converted"
-                ></b-form-input>
-                <template #append>
-                  <b-dropdown
-                    :text="transaction_details.details.source_country"
-                    right
-                    variant="primary"
-                  >
-                    <b-dropdown-item
-                      v-for="option in country_options"
-                      :key="option.value"
-                      :value="option.value"
-                      @click="
-                        transaction_details.details.source_country =
-                          option.value
-                      "
-                    >
-                      {{ option.text }}
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </template>
-              </b-input-group>
-              <b-list-group flush>
-                <b-list-group-item href="#">
-                  <b-row align-v="end">
-                    <div class="operations minus">-</div>
-                    <b-col cols="12">
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        :label="$t('fundTransfers.deliveryMethod')"
-                        label-for="input-relation"
-                        label-size="sm"
-                      >
-                        <b-dropdown
-                          id="input-relation"
-                          :text="transaction_details.details.delivery"
-                          variant="light"
-                          label-size="sm"
-                        >
-                          <b-dropdown-item
-                            v-for="option in delivery_options"
-                            :key="option.value"
-                            :value="option.value"
-                            @click="
-                              transaction_details.details.delivery =
-                                option.value
-                            "
-                            size="sm"
-                          >
-                            {{ option.text }}
-                          </b-dropdown-item>
-                        </b-dropdown>
-                      </b-form-group>
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        label="1,822.75 INR"
-                        label-size="sm"
-                      >
-                        <small>{{ $t("fundTransfers.ourFee") }}</small>
-                      </b-form-group>
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        label="1,822.75 INR"
-                        label-size="sm"
-                      >
-                        <small>{{ $t("fundTransfers.totalFee") }}</small>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-                <b-list-group-item href="#">
-                  <b-row align-v="end">
-                    <div class="operations operation-padding">=</div>
-                    <b-col cols="12">
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        label="98,177.25 INR"
-                        label-size="sm"
-                      >
-                        <small>{{ $t("fundTransfers.amountConvert") }}</small>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-                <b-list-group-item href="#">
-                  <b-row align-v="end">
-                    <div class="operations operation-padding">&#xf7;</div>
-                    <b-col cols="12">
-                      <b-row>
-                        <b-col cols="3">
-                          <small class="converted">74.6497</small>&nbsp;&nbsp;<b
-                            ><b-icon
-                              icon="graph-up"
-                              animation="fade"
-                              style="color: green"
-                            ></b-icon
-                          ></b>
-                        </b-col>
-                        <b-col cols="4">
-                          <small style="margin-left: -5px">{{
-                            $t("fundTransfers.guarantteRate")
-                          }}</small>
-                        </b-col>
-                      </b-row>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-              </b-list-group>
-              <b-input-group size="lg">
-                <b-form-input
-                  placeholder="They Receive"
-                  v-model="transaction_details.details.target_amount"
-                  class="converted"
-                ></b-form-input>
-                <template #append>
-                  <b-dropdown
-                    :text="transaction_details.details.target_country"
-                    right
-                    variant="primary"
-                  >
-                    <b-dropdown-item
-                      v-for="option in country_options"
-                      :key="option.value"
-                      :value="option.value"
-                      @click="
-                        transaction_details.details.target_country =
-                          option.value
-                      "
-                    >
-                      {{ option.text }}
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </template>
-              </b-input-group>
-              <b-button
-                class="float-right mt-5 px-5"
-                variant="primary"
-                @click="onClickNext"
-                >{{ $t("next") }}</b-button
-              >
+              <StepOne
+                :txnDetails="transaction_details"
+                :country_options="country_options"
+                :delivery_options="delivery_options"
+                @my-event="onClickNext"
+                v-model="transaction_details"
+              />
             </div>
             <div v-if="currentStep == 2">
               <h4>{{ $t("fundTransfers.isThisPersonalTransaction") }}</h4>
@@ -523,6 +373,7 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import TitleBar from "@/components/navigations/TitleBar.vue";
 import NavBarLeft from "@/components/navigations/NavBarLeft.vue";
 import StepProgress from "@/components/tools/StepProgress.vue";
+import StepOne from "@/components/transactions/stepOne.vue";
 
 export default {
   name: "Transaction",
@@ -531,6 +382,7 @@ export default {
     TitleBar,
     NavBarLeft,
     "step-progress": StepProgress,
+    StepOne
   },
   data () {
     return {
@@ -636,6 +488,7 @@ export default {
       console.log(this.transaction_details.beneficiary);
     },
     onClickNext: function () {
+      alert('hi')
       this.currentStep++;
     },
     onClickBack: function () {

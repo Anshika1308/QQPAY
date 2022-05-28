@@ -36,8 +36,8 @@ import axios from 'axios';
 export default {
   data () {
     return {
-      baserul: 'https://a803-183-83-163-96.in.ngrok.io',
-      token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTMzMTgzMjUsInN1YiI6Im5hcmVuZHJhQHNvZnRkZXZlbHMuY29tIn0.cXNCGtXxjF4t4WvoDrxGYXLubnRQWBVChWxTtdEj0jk'
+      baserul: 'https://94a5-183-83-163-96.in.ngrok.io',
+      token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTM1MDM4MzgsInN1YiI6Im5hcmVuZHJhQHNvZnRkZXZlbHMuY29tIn0.SZPefq1ChsfQEln6D3yeuVmgyBDNCVEDm8pwJAugXNA'
     }
   },
 
@@ -75,7 +75,7 @@ export default {
         })
     },
     getSrc () {
-      axios.get(`${this.baserul}/api/v1/qqpay/payment/DD/thisispaymentreason/2/MYR/${this.pay_UUID()}/`, {
+      axios.get(`${this.baserul}/api/v1/qqpay/payment/DD/thisispaymentreason/0.14/MYR/${this.pay_UUID()}/`, {
         headers: {
           'accept': '*/*',
           'Authorization': this.token
