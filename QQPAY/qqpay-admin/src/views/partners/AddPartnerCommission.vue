@@ -91,7 +91,9 @@
 
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {getApiData, postApiData} from "@/helpers/AxiosInstance";
+import APIS from "@/constants/EndPoint";
+import {responseHandler} from "@/helpers/globalFunctions";
 
 export default {
   name: 'AddPartnerCommission',
@@ -130,31 +132,29 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addPartnerCommission", "fetchPartners"]),
-
     async handleSubmit() {
-      const res = await this.addPartnerCommission({
-            vm: this, data: {
-              partner_id: this.partnerSelected,
-              country: this.selectedCountry,
-              payment_method: this.paymentMethodSelected,
-              service_charge_by: this.selectedServiceCharge,
-              service_charge: this.serviceCharge,
-              currency: this.selectedCurrency,
-              upper_limit: this.upperLimit,
-              is_active: this.active,
-              remarks: this.remarks,
-              pay_commission: 0,
-            }
-          }
-      )
+      const formData = JSON.stringify({
+        partner_id: this.partnerSelected,
+        country: this.selectedCountry,
+        payment_method: this.paymentMethodSelected,
+        service_charge_by: this.selectedServiceCharge,
+        service_charge: this.serviceCharge,
+        currency: this.selectedCurrency,
+        upper_limit: this.upperLimit,
+        is_active: this.active,
+        remarks: this.remarks,
+        pay_commission: 0,
+      })
+      const res = await postApiData(APIS.CREATE_PARTNER_COMMISSION, formData);
+      await responseHandler(res.data.status_code, this, res.data.message)
       if (res.data.status_code === 200) {
+        await this.$emit("getPartnerCommissions")
         this.$bvModal.hide("partner-commission-modal")
-        await this.formatPartnerOptions();
       }
     },
-    formatPartnerOptions() {
-      this.partnerType.push(...this.partnerLists.map(item => ({
+    async formatPartnerOptions() {
+      const res = await getApiData(APIS.GET_PARTNER_LIST);
+      this.partnerType.push(...res.data.data.map(item => ({
         value: item.agent_id,
         text: item.contact_name1
       })))
@@ -163,11 +163,8 @@ export default {
       this.isDisableUpperLimit = this.selectedServiceCharge === "percentage";
     }
   },
-  computed: {
-    ...mapGetters(["partnerLists"]),
-  },
+
   async created() {
-    await this.fetchPartners();
     await this.formatPartnerOptions();
   }
 }

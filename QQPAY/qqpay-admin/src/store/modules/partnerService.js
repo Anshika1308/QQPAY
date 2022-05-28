@@ -21,7 +21,7 @@ const partnerStore = {
       const response = await deleteApiData(`${APIS.DELETE_PARTNER}/${id}`);
       if (response.data.status_code === 200) {
         commit("removePartner", id)
-        vm.$bvToast.toast('Partner Deleted Successfully', {
+        vm.$bvToast.toast(response.data.message, {
           title: "Success",
           variant: "danger",
           solid: true

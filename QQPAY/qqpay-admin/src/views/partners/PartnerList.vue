@@ -84,7 +84,7 @@ Vue.directive("click-outside", {
 
 export default {
   name: "PartnerList",
-  components:{
+  components: {
     UpdatePartner
   },
   data() {
@@ -143,9 +143,9 @@ export default {
     onCancel() {
       this.deleteConfirm = false
     },
-    onOK() {
-      this.deletePartner({vm: this, id: this.deleteSelectedId})
-      this.fetchPartners()
+    async onOK() {
+      await this.deletePartner({vm: this, id: this.deleteSelectedId})
+      this.$store.dispatch("fetchPartners")
       this.deleteConfirm = false
     },
     onClickOutside() {

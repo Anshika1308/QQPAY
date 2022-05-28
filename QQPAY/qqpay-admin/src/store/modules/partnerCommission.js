@@ -13,26 +13,13 @@ const partnerCommissionStore = {
     },
 
     async fetchPartnerCommissionSingle({commit}, id) {
-      console.log(commit, "id from cunt")
+      console.log(commit, "id from count")
       return await getApiData(`${APIS.GET_PARTNER_COMMISSION}/${id}`);
     },
-    async deletePartnerCommission({commit}, {vm, id}) {
-      const response = await deleteApiData(`${APIS.DELETE_PARTNER_COMMISSION}/${id}`);
-      if (response.data.status_code === 200) {
-        commit("removePartnerCommission", id)
-        vm.$bvToast.toast('Partner Deleted Successfully', {
-          title: "Success",
-          variant: "danger",
-          solid: true
-        })
-      } else {
-        vm.$bvToast.toast('Unable to delete item', {
-          title: "Success",
-          variant: "success",
-          solid: true
-        })
-      }
-      return response
+    async deletePartnerCommission({commit}, {id}) {
+      console.log(commit)
+      commit("removePartnerCommission", id)
+      return await deleteApiData(`${APIS.DELETE_PARTNER_COMMISSION}/${id}`);
     },
     async addPartnerCommission({commit}, {vm, data}) {
       const formData = JSON.stringify(data)

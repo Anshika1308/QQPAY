@@ -59,19 +59,21 @@
       </b-overlay>
     </b-container>
     <b-modal id="partner-commission-modal" hide-footer size="xl" title="Add Partner Commission">
-      <AddPartnerCommission/>
+      <AddPartnerCommission  @getPartnerCommissions="getPartnerCommissions"/>
     </b-modal>
     <b-modal id="update-partner-commission-modal" hide-footer size="xl" title="Update Partner Commission">
-      <UpdatePartnerCommission :partner_commission_id="updatePartnerCommissionId"/>
+      <UpdatePartnerCommission :partner_commission_id="updatePartnerCommissionId" @getPartnerCommissions="getPartnerCommissions"/>
     </b-modal>
   </div>
 </template>
 
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
 import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
 import UpdatePartnerCommission from "@/views/partners/UpdatePartnerCommission";
+import {responseHandler} from "@/helpers/globalFunctions";
+import {deleteApiData, getApiData} from "@/helpers/AxiosInstance";
+import APIS from "@/constants/EndPoint";
 
 
 export default {
@@ -113,21 +115,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPartnerCommission", "deletePartnerCommission"]),
-    formatTableData() {
-      console.log(this.partnerCommissionList)
-      this.items = this.partnerCommissionList.map(item => ({
-        country: item.country,
-        partner: item.partner_id,
-        payment_method: item.payment_method,
-        comm_charge_by: item.service_charge_by,
-        comm_charge_ccy: item.service_charge_by,
-        upper_limit: item.upper_limit,
-        active: item.is_active,
-        action: item.id,
-        remarks:item.remarks
-      }))
-    },
     handleOpenUpdatePartnerCommission(id) {
       this.updatePartnerCommissionId = id
       this.$bvModal.show("update-partner-commission-modal")
@@ -140,21 +127,38 @@ export default {
     onCancel() {
       this.deleteConfirm = false
     },
-    onOK() {
-      this.deletePartnerCommission({vm: this, id: this.deleteSelectedId})
+    async onOK() {
       this.deleteConfirm = false
+      const response = await deleteApiData(`${APIS.DELETE_PARTNER_COMMISSION}/${this.deleteSelectedId}`);
+      await responseHandler(response.data.status_code, this, response.data.message)
+      if (response.data.status_code === 200) {
+        this.getPartnerCommissions()
+      }
     },
     onClickOutside() {
       if (this.togglePartnerFilter)
         this.togglePartnerFilter = !this.togglePartnerFilter
     },
-  },
-  computed: {
-    ...mapGetters(["partnerCommissionList"]),
+    async getPartnerCommissions() {
+      const response = await getApiData(APIS.GET_PARTNER_COMMISSION_LIST);
+      await responseHandler(response.data.status_code, this, response.data.message)
+      if (response.data.status_code === 200) {
+        this.items = response.data.data.map(item => ({
+          country: item.country,
+          partner: item.partner_id,
+          payment_method: item.payment_method,
+          comm_charge_by: item.service_charge_by,
+          comm_charge_ccy: item.service_charge_by,
+          upper_limit: item.upper_limit,
+          active: item.is_active,
+          action: item.id,
+          remarks: item.remarks
+        }))
+      }
+    },
   },
   async created() {
-    await this.fetchPartnerCommission()
-    this.formatTableData()
+    await this.getPartnerCommissions()
   }
 };
 </script>

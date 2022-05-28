@@ -91,7 +91,9 @@
 
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {getApiData, putApiData} from "@/helpers/AxiosInstance";
+import APIS from "@/constants/EndPoint";
+import {responseHandler} from "@/helpers/globalFunctions";
 
 export default {
   name: 'UpdatePartnerCommission',
@@ -131,31 +133,45 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["addPartnerCommission", "fetchPartnerCommission", "fetchPartners", "fetchPartnerCommissionSingle", "updatePartnerCommission"]),
 
     async handleSubmit() {
-      const res = await this.updatePartnerCommission({
-            vm: this,
-            data: {
-              partner_id: this.partnerSelected,
-              country: this.selectedCountry,
-              payment_method: this.paymentMethodSelected,
-              service_charge_by: this.selectedServiceCharge,
-              service_charge: this.serviceCharge,
-              currency: this.selectedCurrency,
-              upper_limit: this.upperLimit,
-              is_active: this.active,
-              remarks: this.remarks,
-              pay_commission: 0,
-            },
-            id: this.partner_commission_id
-          }
-      )
-      if (res.data.status_code === 200) {
+      const formData = JSON.stringify({
+        partner_id: this.partnerSelected,
+        country: this.selectedCountry,
+        payment_method: this.paymentMethodSelected,
+        service_charge_by: this.selectedServiceCharge,
+        service_charge: this.serviceCharge,
+        currency: this.selectedCurrency,
+        upper_limit: this.upperLimit,
+        is_active: this.active,
+        remarks: this.remarks,
+        pay_commission: 0,
+      })
+      console.log(formData, "form")
+      const response = await putApiData(`${APIS.UPDATE_PARTNER_COMMISSION}/${this.partner_commission_id}`, formData)
+      await responseHandler(response.data.status_code, this, response.data.message)
+      if (response.data.status_code === 200) {
+        await this.$emit("getPartnerCommissions")
         this.$bvModal.hide("update-partner-commission-modal")
-        await this.fetchPartnerCommission();
       }
     },
+
+    async getPartnerCommission() {
+      const res = await getApiData(`${APIS.GET_PARTNER_COMMISSION}/${this.partner_commission_id}`);
+      if (res.data.status_code === 200) {
+        this.partnerSelected = res.data.data[0].partner_id
+        this.paymentMethodSelected = res.data.data[0].payment_method
+        this.selectedCountry = res.data.data[0].country
+        this.selectedServiceCharge = res.data.data[0].service_charge_by
+        this.serviceCharge = res.data.data[0].service_charge
+        this.selectedCurrency = res.data.data[0].currency
+        this.active = res.data.data[0].is_active
+        this.remarks = res.data.data[0].remarks
+        this.isDisableUpperLimit = res.data.data[0].service_charge_by === "percentage";
+      }
+    },
+
+
     formatPartnerOptions() {
       this.partnerType.push(...this.partnerLists.map(item => ({
         value: item.agent_id,
@@ -166,24 +182,10 @@ export default {
       this.isDisableUpperLimit = this.selectedServiceCharge === "percentage";
     }
   },
-  computed: {
-    ...mapGetters(["partnerLists"]),
-  },
   async created() {
     await this.fetchPartners();
     await this.formatPartnerOptions();
-    const res = await this.fetchPartnerCommissionSingle(this.partner_commission_id)
-    if (res.data.status_code === 200) {
-      this.partnerSelected = res.data.data[0].partner_id
-      this.paymentMethodSelected = res.data.data[0].payment_method
-      this.selectedCountry = res.data.data[0].country
-      this.selectedServiceCharge = res.data.data[0].service_charge_by
-      this.serviceCharge = res.data.data[0].service_charge
-      this.selectedCurrency = res.data.data[0].currency
-      this.active = res.data.data[0].is_active
-      this.remarks = res.data.data[0].remarks
-      this.isDisableUpperLimit = res.data.data[0].service_charge_by === "percentage";
-    }
+    await this.getPartnerCommission()
   }
 }
 </script>
