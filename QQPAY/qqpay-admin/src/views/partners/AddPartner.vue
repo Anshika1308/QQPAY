@@ -48,7 +48,8 @@
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-contact-person-phone" label="Contact Person Phone"
                             label-for="input-contact-person-phone">
-                <b-form-input id="input-contact-person-phone" v-model="contactInformation.contactPersonPhone2" type="tel">
+                <b-form-input id="input-contact-person-phone" v-model="contactInformation.contactPersonPhone2"
+                              type="tel">
                 </b-form-input>
               </b-form-group>
             </b-col>
@@ -64,9 +65,18 @@
         <b-card class="mt-3" header="Company Details">
           <b-row class="mt-2">
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-              <b-form-group id="input-group-name-of-employee" label="Name of Employer" label-for="input-name-of-employee"
+              <b-form-group id="input-group-name-of-employee" label="Name of Employer"
+                            label-for="input-name-of-employee"
                             description="This field is required">
                 <b-form-input id="input-name-of-employee" v-model="companyDetail.nameOfEmployer" type="text"
+                              required></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
+              <b-form-group id="input-group-short-code" label="Short Code"
+                            label-for="input-name-of-employee"
+                            description="This field is required">
+                <b-form-input id="input-name-short-code" v-model="companyDetail.agentShortcode" type="text"
                               required></b-form-input>
               </b-form-group>
             </b-col>
@@ -78,11 +88,12 @@
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-partner-type" label="Partner Type" label-for="input-partner-type">
                 <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.partnerType"
-                              :options="companyDetail.partnerTypeOptions"></b-form-select>
+                               :options="companyDetail.partnerTypeOptions"></b-form-select>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-              <b-form-group id="input-group-business-license" label="Business License" label-for="input-business-license">
+              <b-form-group id="input-group-business-license" label="Business License"
+                            label-for="input-business-license">
                 <b-form-input id="input-business-license" v-model="companyDetail.businessLicense" type="text"
                               required></b-form-input>
               </b-form-group>
@@ -107,7 +118,7 @@
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-country" label="Country" label-for="input-country">
                 <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.country"
-                              :options="companyDetail.countryOptions"></b-form-select>
+                               :options="companyDetail.countryOptions"></b-form-select>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
@@ -218,7 +229,8 @@
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-mileage-defined" label="Mileage Defined" label-for="input-mileage-defined">
-                <b-form-input id="input-mileage-defined" v-model="bankAndBranchAccountDetail.mileageDefined" type="text">
+                <b-form-input id="input-mileage-defined" v-model="bankAndBranchAccountDetail.mileageDefined"
+                              type="text">
                 </b-form-input>
               </b-form-group>
             </b-col>
@@ -233,7 +245,8 @@
               <b-form-group id="input-group-max-payout-amt-per-txn" label="Max Payout Amt per TXN (AC Deposit)"
                             label-for="input-max-payout-amt-per-txn">
                 <b-form-input id="input-max-payout-amt-per-txn"
-                              v-model="bankAndBranchAccountDetail.maxPayoutAmtPerTXNACDeposit" type="text"></b-form-input>
+                              v-model="bankAndBranchAccountDetail.maxPayoutAmtPerTXNACDeposit"
+                              type="text"></b-form-input>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
@@ -281,19 +294,21 @@
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-risk-levels" label="Risk Levels" label-for="input-risk-levels">
-                <b-form-select class="form-control" id="input-risk-levels" v-model="bankAndBranchAccountDetail.riskLevels"
-                              :options="bankAndBranchAccountDetail.riskLevelsOptions"></b-form-select>
+                <b-form-select class="form-control" id="input-risk-levels"
+                               v-model="bankAndBranchAccountDetail.riskLevels"
+                               :options="bankAndBranchAccountDetail.riskLevelsOptions"></b-form-select>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-tax-type" label="Tax Type" label-for="input-tax-type">
                 <b-form-select class="form-control" id="input-tax-type" v-model="bankAndBranchAccountDetail.taxType"
-                              :options="bankAndBranchAccountDetail.taxTypeOptions"></b-form-select>
+                               :options="bankAndBranchAccountDetail.taxTypeOptions"></b-form-select>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-settlement-date" label="Settlement Date" label-for="input-settlement-date">
-                <b-form-input id="input-settlement-date" v-model="bankAndBranchAccountDetail.settlementDate" type="date">
+                <b-form-input id="input-settlement-date" v-model="bankAndBranchAccountDetail.settlementDate"
+                              type="date">
                 </b-form-input>
               </b-form-group>
             </b-col>
@@ -314,22 +329,23 @@
             <b-col md="12" sm="12" lg="12" xl="12" class="mb-4">
               <b-form-group id="input-group-remarks" label="Remarks" label-for="input-remarks">
                 <b-form-textarea id="input-remarks" v-model="bankAndBranchAccountDetail.remarks"
-                                rows="6"></b-form-textarea>
+                                 rows="6"></b-form-textarea>
               </b-form-group>
             </b-col>
             <b-col md="12" sm="12" lg="12" xl="12" class="mb-4">
               <b-form-group id="input-group-print-receipt-information" label="Print Receipt Information"
                             label-for="input-print-receipt-information">
                 <b-form-textarea id="input-print-receipt-information"
-                                v-model="bankAndBranchAccountDetail.printReceiptInformation" rows="6"></b-form-textarea>
+                                 v-model="bankAndBranchAccountDetail.printReceiptInformation"
+                                 rows="6"></b-form-textarea>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-fund-collection-day" label="Fund Collection Day"
                             label-for="input-fund-collection-day">
                 <b-form-select class="form-control" id="input-tax-type"
-                              v-model="bankAndBranchAccountDetail.fundCollectionDay"
-                              :options="bankAndBranchAccountDetail.fundCollectionDayOptions"></b-form-select>
+                               v-model="bankAndBranchAccountDetail.fundCollectionDay"
+                               :options="bankAndBranchAccountDetail.fundCollectionDayOptions"></b-form-select>
               </b-form-group>
             </b-col>
           </b-row>
@@ -356,13 +372,15 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-              <b-form-group id="input-group-mobile-digit-min" label="Mobile Digit Min" label-for="input-mobile-digit-min">
+              <b-form-group id="input-group-mobile-digit-min" label="Mobile Digit Min"
+                            label-for="input-mobile-digit-min">
                 <b-form-input id="input-mobile-digit-min" v-model="additionalDetails.mobileDigitMin" type="text">
                 </b-form-input>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-              <b-form-group id="input-group-mobile-digit-max" label="Mobile Digit Max" label-for="input-mobile-digit-max">
+              <b-form-group id="input-group-mobile-digit-max" label="Mobile Digit Max"
+                            label-for="input-mobile-digit-max">
                 <b-form-input id="input-mobile-digit-max" v-model="additionalDetails.mobileDigitMax" type="text">
                 </b-form-input>
               </b-form-group>
@@ -376,8 +394,8 @@
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-checkbox class="mt-5" id="checkbox-sms-notification-to-beneficiary" v-model="status"
-                              name="checkbox-sms-notification-to-beneficiary" value="accepted"
-                              unchecked-value="not_accepted">
+                               name="checkbox-sms-notification-to-beneficiary" value="accepted"
+                               unchecked-value="not_accepted">
                 SMS Notification To Beneficiary
               </b-form-checkbox>
             </b-col>
@@ -423,6 +441,7 @@
 
 <script>
 import {mapActions} from "vuex";
+import moment from "moment";
 
 export default {
   name: 'AddPartner',
@@ -451,6 +470,7 @@ export default {
       },
       companyDetail: {
         nameOfEmployer: "",
+        agentShortcode: "",
         partnerId: "",
         partnerType: null,
         partnerTypeOptions: [
@@ -517,11 +537,11 @@ export default {
         dateFormat: "",
         riskLevels: null,
         riskLevelsOptions: [
-          {value: 'a', text: 'Risk Level Type 1'},
-          {value: 'b', text: 'Risk Level Type 1'},
-          {value: 'c', text: 'Risk Level Type 2'},
-          {value: 'd', text: 'Risk Level Type 3'},
-          {value: 'e', text: 'Risk Level Type 4', disabled: true}
+          {value: '1', text: 'Risk Level Type 1'},
+          {value: '2', text: 'Risk Level Type 1'},
+          {value: '3', text: 'Risk Level Type 2'},
+          {value: '4', text: 'Risk Level Type 3'},
+          {value: '5', text: 'Risk Level Type 4', disabled: true}
         ],
         taxType: null,
         taxTypeOptions: [
@@ -614,7 +634,7 @@ export default {
               credit_bank_limit: 0,
               increased_credit_limit: 0,
               limit_for_customer: 0,
-              agent_short_code: "string",
+              agent_short_code: this.companyDetail.agentShortcode,
               current_commission: 0,
               door_to_door_charge: 0,
               trn_limit_per_day: 0,
@@ -623,7 +643,7 @@ export default {
               alert_balance_amount: 0,
               alert_balance_enable: false,
               receiver_mobile_format: "string",
-              date_format: "string",
+              date_format: this.bankAndBranchAccountDetail.dateFormat,
               cal_commission_daily: "string",
               max_payout_amt_per_trans: 0,
               ext_agent_code: "string",
@@ -633,7 +653,7 @@ export default {
               non_IRH_agent: "string",
               external_ledger_id: "string",
               super_agent_id: "string",
-              agent_settlement_date: "2022-05-22T16:15:32.452Z",
+              agent_settlement_date: moment(this.bankAndBranchAccountDetail.settlementDate).toDate(),
               helpdesk_detail: "string",
               settlement_calc_by: "string",
               is_uniteller_agent: false,
@@ -644,13 +664,13 @@ export default {
               fund_collect_nos_day: 0,
               generate_partner_pinno: false,
               img_name: "string",
-              lic_exp_date: "2022-05-22T16:15:32.452Z",
+              lic_exp_date: moment(this.companyDetail.licenseExpiryDate).toDate(),
               limit_per_tran_b2b: 0,
               mileage_points_per_txn: 0,
               payout_fund_limit: false,
               third_party_agent: false,
               disable_txn_approve: false,
-              agent_risk_score: 0,
+              agent_risk_score: this.bankAndBranchAccountDetail.riskLevels,
               tax_type: this.bankAndBranchAccountDetail.taxType,
               softex_id: "string",
               disable_api_send: false,
