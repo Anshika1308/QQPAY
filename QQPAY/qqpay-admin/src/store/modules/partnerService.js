@@ -10,6 +10,12 @@ const partnerStore = {
     async fetchPartners({commit}) {
       const response = await getApiData(APIS.GET_PARTNER_LIST);
       commit("setPartners", response.data.data)
+      return response
+    },
+    async fetchPartner({commit}, id) {
+      const response = await getApiData(`${APIS.GET_PARTNER}/${id}`);
+      commit("setPartners", response.data.data)
+      return response
     },
     async deletePartner({commit}, {vm, id}) {
       const response = await deleteApiData(`${APIS.DELETE_PARTNER}/${id}`);

@@ -31,8 +31,9 @@
         <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable">
           <template v-slot:cell(action)="row">
             <template v-if="row.item.action">
-              <b-icon class="btn" icon="pencil-square" variant="success"></b-icon>
-              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)"></b-icon>
+              <b-icon class="btn" icon="pencil-square" variant="success"
+                      @click="handleOpenUpdatePartner(row.item.action)"/>
+              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)"/>
             </template>
           </template>
         </b-table>
@@ -55,6 +56,9 @@
         </template>
       </b-overlay>
     </b-container>
+    <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner Commission">
+      <UpdatePartner :partner_id="updateSelectedPartner"/>
+    </b-modal>
   </div>
 </template>
 
@@ -62,6 +66,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import Vue from "vue";
+import UpdatePartner from "@/views/partners/UpdatePartner";
 
 Vue.directive("click-outside", {
   bind(el, binding, vnode) {
@@ -79,8 +84,12 @@ Vue.directive("click-outside", {
 
 export default {
   name: "PartnerList",
+  components:{
+    UpdatePartner
+  },
   data() {
     return {
+      updateSelectedPartner: null,
       togglePartnerFilter: false,
       deleteConfirm: false,
       processing: false,
@@ -143,6 +152,10 @@ export default {
       if (this.togglePartnerFilter)
         this.togglePartnerFilter = !this.togglePartnerFilter
     },
+    handleOpenUpdatePartner(id) {
+      this.updateSelectedPartner = id
+      this.$bvModal.show("update-partner-modal")
+    }
   },
   computed: {
     ...mapGetters(["partnerLists"]),

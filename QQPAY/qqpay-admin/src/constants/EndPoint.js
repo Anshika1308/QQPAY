@@ -8,6 +8,7 @@ const APIS = {
 
   // PARTNER SERVICE
   GET_PARTNER_LIST: '/partner_details/get_partners',
+  GET_PARTNER: `/partner_details/get_partner_by_id`,
   DELETE_PARTNER: '/partner_details/delete_partner_by_id',
   CREATE_PARTNER: '/partner_details/create-partner',
 
