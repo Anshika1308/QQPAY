@@ -23,7 +23,7 @@
             <b-button class="search-btn">Search</b-button>
           </b-col>
           <b-col cols='2'>
-            <b-button class="status-btn" @click="$emit('openTab', 'add_partner')">Add Partner</b-button>
+            <b-button class="status-btn" v-b-modal.add-partner-modal>Add Partner</b-button>
           </b-col>
         </b-row>
       </div>
@@ -56,17 +56,23 @@
         </template>
       </b-overlay>
     </b-container>
+    <b-modal id="add-partner-modal" hide-footer size="xl" title="Add Partner">
+      <AddPartner @getPartners="getPartners"/>
+    </b-modal>
     <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner Commission">
-      <UpdatePartner :partner_id="updateSelectedPartner"/>
+      <UpdatePartner :partner_id="updateSelectedPartner" @getPartners="getPartners"/>
     </b-modal>
   </div>
 </template>
 
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
 import Vue from "vue";
 import UpdatePartner from "@/views/partners/UpdatePartner";
+import {deleteApiData, getApiData} from "@/helpers/AxiosInstance";
+import APIS from "@/constants/EndPoint";
+import {responseHandler} from "@/helpers/globalFunctions";
+import AddPartner from "@/views/partners/AddPartner";
 
 Vue.directive("click-outside", {
   bind(el, binding, vnode) {
@@ -85,6 +91,7 @@ Vue.directive("click-outside", {
 export default {
   name: "PartnerList",
   components: {
+    AddPartner,
     UpdatePartner
   },
   data() {
@@ -122,19 +129,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPartners", "deletePartner"]),
-    formatTableData() {
-      this.items = this.partnerLists.map(item => ({
-        partner_name: item.contact_name1,
-        id: item.agent_id,
-        contact_person: item.contact_name2,
-        number: item.phone1,
-        email: item.email1,
-        country: item.country,
-        partner_type: item.agent_type,
-        action: item.agent_id,
-      }))
-    },
     onSubmit(id) {
       this.deleteSelectedId = id
       this.processing = false
@@ -144,9 +138,12 @@ export default {
       this.deleteConfirm = false
     },
     async onOK() {
-      await this.deletePartner({vm: this, id: this.deleteSelectedId})
-      this.$store.dispatch("fetchPartners")
       this.deleteConfirm = false
+      const response = await deleteApiData(`${APIS.DELETE_PARTNER}/${this.deleteSelectedId}`);
+      await responseHandler(response.data.status_code, this, response.data.message)
+      if (response.data.status_code === 200) {
+        this.getPartners()
+      }
     },
     onClickOutside() {
       if (this.togglePartnerFilter)
@@ -155,14 +152,28 @@ export default {
     handleOpenUpdatePartner(id) {
       this.updateSelectedPartner = id
       this.$bvModal.show("update-partner-modal")
-    }
+    },
+
+    async getPartners() {
+      const response = await getApiData(APIS.GET_PARTNER_LIST);
+      await responseHandler(response.data.status_code, this, response.data.message)
+      if (response.data.status_code === 200) {
+        this.items = response.data.data.map(item => ({
+          partner_name: item.contact_name1,
+          id: item.agent_id,
+          contact_person: item.contact_name2,
+          number: item.phone1,
+          email: item.email1,
+          country: item.country,
+          partner_type: item.agent_type,
+          action: item.agent_id,
+        }))
+      }
+    },
   },
-  computed: {
-    ...mapGetters(["partnerLists"]),
-  },
+
   async created() {
-    await this.fetchPartners()
-    this.formatTableData()
+    await this.getPartners()
   }
 };
 </script>
