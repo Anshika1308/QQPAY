@@ -488,7 +488,7 @@ export default {
       console.log(this.transaction_details.beneficiary);
     },
     onClickNext: function () {
-      alert('hi')
+      // alert('hi')
       this.currentStep++;
     },
     onClickBack: function () {
