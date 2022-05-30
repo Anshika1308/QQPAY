@@ -110,8 +110,12 @@
       </b-col>
     </b-row>
     <div>
-      <b-tabs content-class="mt-3">
-        <b-tab title="Selected Countries" active>
+      <b-tabs
+        content-class="mt-3"
+        active-nav-item-class="text-warning"
+        active-tab-class="text-warning"
+      >
+        <b-tab title="Selected Countries">
           <b-table
             :items="items"
             :fields="fields"
@@ -399,6 +403,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss" scoped>
 @import "@/global.scss";
 .menu-sec {
@@ -464,5 +469,62 @@ export default {
 }
 ::v-deep .col-form-label {
   color: $dimgrey;
+}
+.my-tab {
+  color: #ff6b00 !important;
+}
+
+.nav-tabs .nav-link.active {
+  color: #495057;
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.tabs a:hover,
+.tabs a.active {
+  background-color: rgb(231, 8, 8);
+}
+
+.nav .nav-tabs .nav-item .nav-link {
+  color: #ff6b00 !important;
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.tab-title-class {
+  color: #ff6b00 !important;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  color: #ff6b00 !important;
+}
+
+.a {
+  color: #ff6b00 !important;
+}
+.nav-pills .mytab .nav-link:not(.active) {
+  background-color: red !important;
+}
+
+.nav-pills .mytab .nav-link {
+  background-color: rgb(34, 189, 52) !important;
+}
+
+.nav-link {
+  color: #ff6b00 !important;
+}
+
+.tab-content > .tab-pane {
+  border: 1px solid;
+  border-left: 0px none;
+}
+
+.ul .li .a {
+  color: #ff6b00 !important;
+}
+
+text-warning {
+  color: #ff6b00 !important;
 }
 </style>

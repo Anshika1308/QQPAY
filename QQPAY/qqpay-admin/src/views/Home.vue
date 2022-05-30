@@ -228,6 +228,25 @@
                       </template>
                       <PPComm
                     /></b-tab>
+                    <b-tab
+                      v-if="tab_show.complianceSettings"
+                      :active="tab_active.complianceSettings"
+                    >
+                      <template #title>
+                        <b-icon icon="graph-up" aria-hidden="true"></b-icon>
+                        Compliance Settings
+                        <b-button
+                          variant="outline-light"
+                          size="sm"
+                          @click="closeTab('complianceSettings')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <ComplianceSettings
+                    /></b-tab>
                   </b-tabs>
                 </b-card>
               </b-col>
@@ -253,6 +272,7 @@ import SpecialRates from "@/views/setup/SpecialRates.vue";
 import ManageScore from "@/views/setup/ManageScore.vue";
 import Service from "./ServiceCharge/Service.vue";
 import PPComm from "./ServiceCharge/PPComm.vue";
+import ComplianceSettings from "@/views/setup/ComplianceSettings.vue";
 export default {
   name: "Home",
   components: {
@@ -267,6 +287,7 @@ export default {
     ManageScore,
     Service,
     PPComm,
+    ComplianceSettings,
   },
   data() {
     return {
@@ -389,6 +410,10 @@ export default {
             {
               title: "Manage Score",
               value: "manageScore",
+            },
+            {
+              title: "Compliance Settings",
+              value: "complianceSettings",
             },
           ],
         },
