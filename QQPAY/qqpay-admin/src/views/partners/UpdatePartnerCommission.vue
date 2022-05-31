@@ -172,19 +172,22 @@ export default {
     },
 
 
-    formatPartnerOptions() {
-      this.partnerType.push(...this.partnerLists.map(item => ({
-        value: item.agent_id,
-        text: item.contact_name1
-      })))
-    },
     toggleUpperLimit() {
       this.isDisableUpperLimit = this.selectedServiceCharge === "percentage";
-    }
+    },
+
+    async getPartners() {
+      const response = await getApiData(APIS.GET_PARTNER_LIST);
+      if (response.data.status_code === 200) {
+        this.partnerType = response?.data?.data?.map(item => ({
+          value: item.agent_id,
+          text: item.contact_name1
+        }))
+      }
+    },
   },
   async created() {
-    await this.fetchPartners();
-    await this.formatPartnerOptions();
+    await this.getPartners();
     await this.getPartnerCommission()
   }
 }
