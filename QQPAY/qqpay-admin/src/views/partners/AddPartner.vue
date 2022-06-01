@@ -190,7 +190,7 @@
                   v-model="bankAndBranchAccountDetail.doNotAllowSameUserToApprove"
                   name="checkbox-block-this-user"
                   value="accepted"
-                  unchecked-value="not_accepted">
+                  unchecked-value="false">
                 Do not Allow Same User To Approve Transaction
               </b-form-checkbox>
             </b-col>
@@ -230,7 +230,7 @@
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-group id="input-group-mileage-defined" label="Mileage Defined" label-for="input-mileage-defined">
                 <b-form-input id="input-mileage-defined" v-model="bankAndBranchAccountDetail.mileageDefined"
-                              type="text">
+                              type="number">
                 </b-form-input>
               </b-form-group>
             </b-col>
@@ -395,7 +395,7 @@
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
               <b-form-checkbox class="mt-5" id="checkbox-sms-notification-to-beneficiary" v-model="status"
                                name="checkbox-sms-notification-to-beneficiary" value="accepted"
-                               unchecked-value="not_accepted">
+                               unchecked-value="false">
                 SMS Notification To Beneficiary
               </b-form-checkbox>
             </b-col>
@@ -416,7 +416,7 @@
                 <b-form-input
                     id="input-alert-notification"
                     v-model="additionalDetails.alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent"
-                    type="text"></b-form-input>
+                    type="number"></b-form-input>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
@@ -451,7 +451,7 @@ export default {
     return {
       text: '',
       selected: null,
-      status: 'not_accepted',
+      status: false,
       options: [
         {value: null, text: 'Please select an option'},
         {value: 'a', text: 'This is First option'},
@@ -575,21 +575,21 @@ export default {
         printReceiptInformation: "",
         fundCollectionDay: null,
         fundCollectionDayOptions: [
-          {value: 'a', text: 'Fund Collection Type 1'},
-          {value: 'b', text: 'Fund Collection Type 1'},
-          {value: 'c', text: 'Fund Collection Type 2'},
-          {value: 'd', text: 'Fund Collection Type 3'},
-          {value: 'e', text: 'Fund Collection Type 4', disabled: true}
+          {value: '1', text: 'Fund Collection Type 1'},
+          {value: '2', text: 'Fund Collection Type 1'},
+          {value: '3', text: 'Fund Collection Type 2'},
+          {value: '4', text: 'Fund Collection Type 3'},
+          {value: '5', text: 'Fund Collection Type 4', disabled: true}
         ],
 
       },
       additionalDetails: {
-        smsNotificationToSender: "",
+        smsNotificationToSender: false,
         mobileFormat: "",
         mobileDigitMin: "",
         mobileDigitMax: "",
         mobileCountryCode: "",
-        smsNotificationToBeneficiary: "",
+        smsNotificationToBeneficiary: false,
         isThisAPreFundingPartner: false,
         alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent: "",
         branchLimitToMakeAPayment: ""
@@ -633,7 +633,7 @@ export default {
         mobile_digit_max: this.additionalDetails.mobileDigitMax,
         credit_bank_limit: 0,
         increased_credit_limit: 0,
-        limit_for_customer: 0,
+        limit_for_customer: this.bankAndBranchAccountDetail.limitForACustomerPerDay,
         agent_short_code: this.companyDetail.agentShortcode,
         current_commission: 0,
         door_to_door_charge: 0,
@@ -644,29 +644,29 @@ export default {
         alert_balance_enable: false,
         receiver_mobile_format: "string",
         date_format: this.bankAndBranchAccountDetail.dateFormat,
-        cal_commission_daily: "string",
+        cal_commission_daily: this.bankAndBranchAccountDetail.calculatePayoutCommissionDaily,
         max_payout_amt_per_trans: 0,
         ext_agent_code: "string",
         settlement_type: "string",
         approve_by: "string",
         approve_date: "2022-05-22T16:15:32.452Z",
-        non_IRH_agent: "string",
+        non_IRH_agent: this.bankAndBranchAccountDetail.isThisNonIRHPartner,
         external_ledger_id: "string",
         super_agent_id: "string",
         agent_settlement_date: moment(this.bankAndBranchAccountDetail.settlementDate).toDate(),
         helpdesk_detail: "string",
-        settlement_calc_by: "string",
+        settlement_calc_by: this.bankAndBranchAccountDetail.partnerSettlementIn,
         is_uniteller_agent: false,
         max_payout_amt_per_trans_deposit: 0,
         ext_settlement_clm: "string",
         consolidate_balance: "string",
         enable_txn_password: false,
-        fund_collect_nos_day: 0,
+        fund_collect_nos_day: this.bankAndBranchAccountDetail.fundCollectionDay,
         generate_partner_pinno: false,
         img_name: "string",
         lic_exp_date: moment(this.companyDetail.licenseExpiryDate).toDate(),
         limit_per_tran_b2b: 0,
-        mileage_points_per_txn: 0,
+        mileage_points_per_txn: this.bankAndBranchAccountDetail.mileageDefined,
         payout_fund_limit: false,
         third_party_agent: false,
         disable_txn_approve: false,
@@ -674,9 +674,19 @@ export default {
         tax_type: this.bankAndBranchAccountDetail.taxType,
         softex_id: "string",
         disable_api_send: false,
-        company_licence_number: "string",
+        company_licence_number: this.companyDetail.businessLicense,
         limit_approved: false,
-        is_ir_hub_partner: false
+        is_ir_hub_partner: false,
+        is_this_is_pre_funding_partner: this.additionalDetails.isThisAPreFundingPartner,
+        sms_notification_to_benificiary: this.additionalDetails.smsNotificationToBeneficiary,
+        branch_limit_to_make_payment: this.additionalDetails.branchLimitToMakeAPayment,
+        alert_notification_balance_below: this.additionalDetails.alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent,
+        payment_mode: this.bankAndBranchAccountDetail.paymentMethodAllowedOptions.toString(),
+        print_receipt_information: this.bankAndBranchAccountDetail.printReceiptInformation,
+        sms_to_sender: this.additionalDetails.smsNotificationToSender,
+        partner_rights: this.bankAndBranchAccountDetail.partnerRights,
+        do_not_allow_same_user_to_approve_transaction: this.bankAndBranchAccountDetail.doNotAllowSameUserToApprove,
+        is_block_partner: this.companyDetail.blockThisPartner
       })
       const res = await postApiData(APIS.CREATE_PARTNER, formData);
       await responseHandler(res.data.status_code, this, res.data.message)

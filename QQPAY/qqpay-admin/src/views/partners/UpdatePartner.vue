@@ -645,29 +645,29 @@ export default {
               alert_balance_enable: false,
               receiver_mobile_format: "string",
               date_format: this.bankAndBranchAccountDetail.dateFormat,
-              cal_commission_daily: "string",
+              cal_commission_daily: this.bankAndBranchAccountDetail.calculatePayoutCommissionDaily,
               max_payout_amt_per_trans: 0,
               ext_agent_code: "string",
               settlement_type: "string",
               approve_by: "string",
               approve_date: "2022-05-22T16:15:32.452Z",
-              non_IRH_agent: "string",
+              non_IRH_agent: this.bankAndBranchAccountDetail.isThisNonIRHPartner,
               external_ledger_id: "string",
               super_agent_id: "string",
               agent_settlement_date: moment(this.bankAndBranchAccountDetail.settlementDate).toDate(),
               helpdesk_detail: "string",
-              settlement_calc_by: "string",
+              settlement_calc_by: this.bankAndBranchAccountDetail.partnerSettlementIn,
               is_uniteller_agent: false,
               max_payout_amt_per_trans_deposit: 0,
               ext_settlement_clm: "string",
               consolidate_balance: "string",
               enable_txn_password: false,
-              fund_collect_nos_day: 0,
+              fund_collect_nos_day: this.bankAndBranchAccountDetail.fundCollectionDay,
               generate_partner_pinno: false,
               img_name: "string",
               lic_exp_date: moment(this.companyDetail.licenseExpiryDate).toDate(),
               limit_per_tran_b2b: 0,
-              mileage_points_per_txn: 0,
+              mileage_points_per_txn: this.bankAndBranchAccountDetail.mileageDefined,
               payout_fund_limit: false,
               third_party_agent: false,
               disable_txn_approve: false,
@@ -675,9 +675,19 @@ export default {
               tax_type: this.bankAndBranchAccountDetail.taxType,
               softex_id: "string",
               disable_api_send: false,
-              company_licence_number: "string",
+              company_licence_number: this.companyDetail.businessLicense,
               limit_approved: false,
-              is_ir_hub_partner: false
+              is_ir_hub_partner: false,
+              is_this_is_pre_funding_partner: this.additionalDetails.isThisAPreFundingPartner,
+              sms_notification_to_benificiary: this.additionalDetails.smsNotificationToBeneficiary,
+              branch_limit_to_make_payment: this.additionalDetails.branchLimitToMakeAPayment,
+              alert_notification_balance_below: this.additionalDetails.alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent,
+              payment_mode: this.bankAndBranchAccountDetail.paymentMethodAllowedOptions.toString(),
+              print_receipt_information: this.bankAndBranchAccountDetail.printReceiptInformation,
+              sms_to_sender: this.additionalDetails.smsNotificationToSender,
+              partner_rights: this.bankAndBranchAccountDetail.partnerRights,
+              do_not_allow_same_user_to_approve_transaction: this.bankAndBranchAccountDetail.doNotAllowSameUserToApprove,
+              is_block_partner: this.companyDetail.blockThisPartner
             }
           }
       )
@@ -686,9 +696,9 @@ export default {
   computed: {},
   async created() {
     const res = await this.fetchPartner(this.partner_id)
-    console.log(res)
     if (res.data.status_code === 200) {
       this.contactInformation = {
+        ...this.contactInformation,
         contactPerson1: res.data.data[0].contact_name1,
         post1: res.data.data[0].designation1,
         contactPersonEmail1: res.data.data[0].email1,
@@ -698,10 +708,11 @@ export default {
         contactPersonEmail2: res.data.data[0].email2,
         contactPersonPhone2: res.data.data[0].phone1,
       }
-      this.companyDetail =  {
-        nameOfEmployer: res.data.data[0].name,
+      this.companyDetail = {
+        ...this.companyDetail,
+        nameOfEmployer: res.data.data[0].company_name,
         agentShortcode: res.data.data[0].agent_short_code,
-        partnerId: res.data.data[0].agent_id,
+        partnerId: res.data.data[0].partner_id,
         partnerType: res.data.data[0].test,
         businessLicense: res.data.data[0].license,
         address: res.data.data[0].address,
@@ -713,10 +724,46 @@ export default {
         email: res.data.data[0].email,
         website: res.data.data[0].website,
         zipCode: res.data.data[0].zip_code,
-        blockThisPartner: res.data.data[0].block_this_user,
-        isThisNonIRHPartner: res.data.data[0].is_this_non_irh_partner,
+        blockThisPartner: res.data.data[0].is_block_partner,
+        isThisNonIRHPartner: res.data.data[0].non_IRH_agent,
+      }
+      this.bankAndBranchAccountDetail = {
+        ...this.bankAndBranchAccountDetail,
+        calculatePayoutCommissionDaily: res.data.data[0].cal_commission_daily,
+        doNotAllowSameUserToApprove: res.data.data[0].do_not_allow_same_user_to_approve_transaction,
+        creditLimitToSDNTRN: res.data.data[0].credit_bank_limit,
+        creditLimitToSBNTRN: res.data.data[0].limit_per_tran_b2b,
+        localCurrency: res.data.data[0].currency_type,
+        mileageDefined: res.data.data[0].mileage_points_per_txn,
+        maxPayoutAmtPerTXNCashPay: res.data.data[0].max_payout_amt_per_trans,
+        maxPayoutAmtPerTXNACDeposit: res.data.data[0].max_payout_amt_per_trans_deposit,
+        partnerSettlementIn: res.data.data[0].settlement_type,
+        limitForACustomerPerDay: res.data.data[0].limit_for_customer,
+        partnerRights: res.data.data[0].partner_rights,
+        localTime: res.data.data[0].gmt_value,
+        dateFormat: res.data.data[0].date_format,
+        riskLevels: res.data.data[0].agent_risk_score,
+        taxType: res.data.data[0].tax_type,
+        settlementDate: res.data.data[0].agent_settlement_date,
+        paymentMethodAllowedSelected: res.data.data[0].payment_mode.split(","),
+        remarks: res.data.data[0].remarks,
+        printReceiptInformation: res.data.data[0].print_receipt_information,
+        fundCollectionDay: res.data.data[0].fund_collect_nos_day,
+      }
+      this.additionalDetails = {
+        ...this.additionalDetails,
+        smsNotificationToSender: res.data.data[0].sms_to_sender,
+        mobileFormat: res.data.data[0].mobile_no_format,
+        mobileDigitMin: res.data.data[0].mobile_digit_min,
+        mobileDigitMax: res.data.data[0].mobile_digit_max,
+        mobileCountryCode: "",
+        smsNotificationToBeneficiary: res.data.data[0].sms_notification_to_benificiary,
+        isThisAPreFundingPartner: res.data.data[0].is_this_is_pre_funding_partner,
+        alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent: res.data.data[0].alert_notification_balance_below,
+        branchLimitToMakeAPayment: res.data.data[0].branch_limit_to_make_payment
       }
     }
+    console.log(this.bankAndBranchAccountDetail)
   }
 }
 </script>
