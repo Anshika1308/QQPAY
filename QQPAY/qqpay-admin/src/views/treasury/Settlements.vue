@@ -277,6 +277,7 @@
               <b-form-input
                 v-model="temp_settlement.credit_amount"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -289,6 +290,7 @@
               <b-form-input
                 v-model="temp_settlement.swift_charge"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -297,6 +299,7 @@
               <b-form-input
                 v-model="temp_settlement.coll_ccy_pay_ccy_wrong"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -305,6 +308,7 @@
               <b-form-input
                 v-model="temp_settlement.tax"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -740,6 +744,13 @@ export default {
       console.log(selectedRow);
       this.$emit('openTab', 'funding')
       this.$store.commit("set_selected_Settlement", selectedRow);
+    },
+    isNumber(e) {
+      let char = String.fromCharCode(e.keyCode); // Get the character
+      let val = e.target.value; // Get the value
+      if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
+      // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
+      else e.preventDefault(); // If not match, don't add to input text
     }
     
   },

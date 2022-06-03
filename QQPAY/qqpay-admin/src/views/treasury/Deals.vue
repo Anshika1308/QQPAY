@@ -5,7 +5,7 @@
       <b-col>
         <div>
           <b-button-group size="sm">
-            <b-button variant="outline-light" v-b-modal.add-deal @click="updateTrigger = false;">
+            <b-button variant="outline-light" v-b-modal.add-deal @click="newDealClicked()">
               <b-icon
                 icon="file-earmark-plus-fill"
                 
@@ -250,8 +250,7 @@
               <b-form-input
                 v-model="temp_deal.fcy_amount"
                 size="sm"
-                type="text"
-                pattern="[0-9]+"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -260,6 +259,7 @@
               <b-form-input
                 v-model="temp_deal.fcy_deal_rate"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -269,6 +269,7 @@
               <b-form-input
                 v-model="temp_deal.lcy_amount"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -301,6 +302,7 @@
                 id="input-1"
                 v-model="temp_deal.bank_charge"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -326,6 +328,7 @@
               <b-form-input
                 v-model="temp_deal.tax"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -556,7 +559,7 @@ export default {
       const req = this.temp_deal;
       for (const key of Object.keys(req)) {
         console.log(key, req[key]);
-        if (key === 'deal_date' || key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
+        if (key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
           if (req[key]) {
             req[key] = new Date(req[key]);
           }
@@ -590,6 +593,9 @@ export default {
         return date.getDate() + ' ' + month + ' ' + date.getFullYear();
       }
     },
+    newDealClicked() {
+      this.updateTrigger = false;
+    },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
       console.log('slected', selectedRow)
@@ -600,6 +606,13 @@ export default {
       console.log('new clicked',  this.$emit('openTab', 'settlements'));
       this.$emit('openTab', 'settlements')
       this.$store.commit("set_selected_deal", selectedRow);
+    },
+    isNumber(e) {
+      let char = String.fromCharCode(e.keyCode); // Get the character
+      let val = e.target.value; // Get the character
+      if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
+      // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
+      else e.preventDefault(); // If not match, don't add to input text
     }
   },
 };
