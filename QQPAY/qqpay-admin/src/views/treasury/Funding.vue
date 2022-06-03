@@ -1,24 +1,48 @@
 <template>
   <div class="home">
     <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
-    <b-card>
+    <b-card v-if="selected_Settlement">
       <b-row>
         <b-col
           sm="12"
           md="6"
           lg="4"
-          v-for="deal in deal_details"
-          :key="deal.id"
         >
           <div class="menu-sec">
             <b-list-group flush>
               <b-list-group-item
                 class="d-flex justify-content-between align-items-center"
-                v-for="details in deal.details"
-                :key="details.value"
               >
-                <small>{{ details.text }}</small>
-                <small>{{ details.value }}</small>
+                <small>Deal Type</small>
+                <small>{{ selected_Settlement.deal_type }}</small>
+              </b-list-group-item>
+              <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+              >
+                <small>Deal Number</small>
+                <small>{{ selected_Settlement.deal_no }}</small>
+              </b-list-group-item>
+            </b-list-group>
+          </div>
+        </b-col>
+        <b-col
+          sm="12"
+          md="6"
+          lg="4"
+        >
+          <div class="menu-sec">
+            <b-list-group flush>
+              <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+              >
+                <small>Fund in  MYR</small>
+                <small>{{ selected_Settlement.lcy_amount }} MYR</small>
+              </b-list-group-item>
+              <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+              >
+                <small>Fund in USD</small>
+                <small>{{ selected_Settlement.fcy_amount }} USD</small>
               </b-list-group-item>
             </b-list-group>
           </div>
@@ -28,7 +52,7 @@
             class="menu-sec d-flex justify-content-between align-items-center"
           >
             Balance:
-            <h3>10,000 INR</h3>
+            <h3>{{ selected_Settlement.fcy_amount }} USD</h3>
           </div>
         </b-col>
       </b-row>
@@ -119,73 +143,84 @@
       </template>
       <template #row-details="row">
         <b-card>
-          <b-row>
-            <b-col sm="12" md="6" lg="4">
-              <div class="menu-sec">
-                <label class="title-lbl">Additional Info</label>
-                <b-list-group flush>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Contract Number</label>
-                    <label>{{ row.item.contract_no }}</label>
-                  </b-list-group-item>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>USD_PPCCY</label>
-                    <label>{{ row.item.USD_PPCCY }}</label>
-                  </b-list-group-item>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>FeesCCY_Type</label>
-                    <label>{{ row.item.FeesCCY_Type }}</label>
-                  </b-list-group-item>
+          <b-row align-h="between">
+            <b-col sm="12" md="6" lg="9">
+              <label class="title-lbl">Additional Info</label>
+              <b-row align-h="between">
+                <b-col sm="12" md="6" lg="6">
+                  <div class="menu-sec">
+                    <b-list-group flush>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <label>Contract Number</label>
+                        <label>{{ row.item.contract_no }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <label>USD_PPCCY</label>
+                        <label>{{ row.item.USD_PPCCY }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <label>FeesCCY_Type</label>
+                        <label>{{ row.item.FeesCCY_Type }}</label>
+                      </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
 
-                  <label>Fees</label>
-                    <label>{{ row.item.Fees }}</label>
-                  </b-list-group-item>
+                      <label>Fees</label>
+                        <label>{{ row.item.Fees }}</label>
+                      </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                     
+                    </b-list-group>
+                  </div>
+                </b-col>
+                <b-col sm="12" md="6" lg="6">
+                  <div class="menu-sec">
+                    <b-list-group flush>
+                      
 
-                  <label>created_by</label>
-                    <label>{{ row.item.created_by }}</label>
-                  </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                      <label>created_by</label>
+                        <label>{{ row.item.created_by }}</label>
+                      </b-list-group-item>
 
-                  <label>MY_RPPCY</label>
-                    <label>{{ row.item.MY_RPPCY }}</label>
-                  </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                      <label>MY_RPPCY</label>
+                        <label>{{ row.item.MY_RPPCY }}</label>
+                      </b-list-group-item>
 
-                  <label>edited_by</label>
-                    <label>{{ row.item.edited_by }}</label>
-                  </b-list-group-item>
-                </b-list-group>
-              </div>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+
+                      <label>edited_by</label>
+                        <label>{{ row.item.edited_by }}</label>
+                      </b-list-group-item>
+                    </b-list-group>
+                  </div>
+                </b-col>
+
+              </b-row>
             </b-col>
-            <b-col sm="12" md="6" lg="6" align-h="center">
-              <TreasuryFlow />
-            </b-col>
-            <b-col sm="12" md="6" lg="2">
+            <b-col sm="12" md="6" lg="3">
               <div class="menu-sec">
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
                   Update
@@ -193,7 +228,7 @@
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="plus-circle" aria-hidden="true"></b-icon> New
                   Funding
@@ -201,13 +236,14 @@
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                 </b-button>
               </div>
             </b-col>
           </b-row>
+ 
         </b-card>
       </template>
     </b-table>
@@ -366,14 +402,24 @@
 </template>
 
 <script>
-import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
 import CountryFlag from "vue-country-flag";
+import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   name: "Funding",
   components: {
-    TreasuryFlow,
     CountryFlag,
+  },
+  created() {
+    this.getFunds();
+  },
+  computed: {
+    ...mapGetters([
+      "token",
+      "base_url",
+      "selected_Settlement"
+    ]),
   },
   data() {
     return {
@@ -434,6 +480,7 @@ export default {
           Bank_POC: "",
           Bank: "",
           edited_by: "",
+          settl_id: ""
       },
       menu_hierarchy: [
         {
@@ -479,9 +526,84 @@ export default {
     nav_update() {
       console.log('nav update')
     },
-    submit(){
-      this.items.push(this.temp_funding);
-    }
+    async getFunds() {
+      console.log('selected_Settlement', this.selected_Settlement);
+      console.log("token", this.token);
+
+      axios
+        .get(this.base_url + "prefund/get-all-prefunds", {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+          console.log("this.items", this.items);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    format(date) {
+      if (date) {
+        date = new Date(date);
+        let month = date.toLocaleString("en-US", { month: 'short' })
+        return date.getDate() + ' ' + month + ' ' + date.getFullYear();
+      }
+    },
+
+    submit() {
+      const request = this.getRequest();
+      // console.log('req', JSON.parse(JSON.stringify(request)))
+      if (this.updateTrigger) {
+        axios.put(this.base_url + "prefund/update-prefund/" + request.fund_id, request, {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          })
+          .then((response) => {
+            console.log(response.data.data);
+            const index = this.items.findIndex(ele => ele.fund_id === this.temp_funding.fund_id);
+            this.items[index] = response.data.data[0];
+          })
+          .catch((err) => {
+            console.log('Deal not posted', err);
+        });
+
+      } else {
+        request.settl_id = this.selected_Settlement.settl_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
+        axios.post(this.base_url + "prefund/prefund-partner", request, {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          })
+          .then((response) => {
+            console.log(response.data.data)
+            this.items.push(response.data.data[0]);
+          })
+          .catch((err) => {
+            console.log('Deal not posted', err);
+        });
+        
+      }
+    },
+    getRequest() {
+      const req = this.temp_funding;
+      for (const key of Object.keys(req)) {
+        console.log(key, req[key]);
+        if (key === 'deal_date' || key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
+          if (req[key]) {
+            req[key] = new Date(req[key]);
+          }
+        }
+      }
+      return req;
+    },
+    onclickUpdate(selectedRow) {
+      this.updateTrigger = true;
+      console.log('slected', selectedRow)
+      this.temp_funding = selectedRow;
+    },
   },
 };
 </script>
@@ -554,5 +676,11 @@ export default {
 }
 ::v-deep .col-form-label {
   color: $dimgrey;
+}
+.btn-light {
+  border-color: $primary;
+  width: 100%;
+  background: transparent !important;
+  color: $primary !important;
 }
 </style>

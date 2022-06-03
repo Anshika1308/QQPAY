@@ -112,7 +112,7 @@
               <b-form-select
                 v-model="row.item.risk_status"
                 :options="riskStatusOptions"
-                v-on:change.prevent="onChangeRiskStatus($event)"
+                @change="onChangeRiskStatus($event)"
               ></b-form-select>
               <b-button size="sm" @click="row.toggleDetails" class="mr-2 apply-btn">
                 {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
@@ -160,7 +160,7 @@
       <UserDetails />  
     </div>
 
-    <b-modal ref="risk-status-modal" hide-footer modal-class="risk-status-model">
+    <b-modal ref="risk-status-modal" hide-footer modal-class="risk-status-modal">
       <b-container fluid>
         <b-row>
           <b-col><h3>Please add your comments: </h3></b-col>
@@ -328,7 +328,8 @@ export default {
       this.riskStatus.critical = this.riskStatus.all
     },
     onChangeRiskStatus(eve) {
-      eve.preventDefault();
+      console.log(eve);
+      // eve.preventDefault();
       this.$refs["risk-status-modal"].show();
 
     },

@@ -5,7 +5,7 @@
       <b-col>
         <div>
           <b-button-group size="sm">
-            <b-button variant="outline-light" v-b-modal.add-deal @click="updateTrigger = true;">
+            <b-button variant="outline-light" v-b-modal.add-deal @click="updateTrigger = false;">
               <b-icon
                 icon="file-earmark-plus-fill"
                 
@@ -77,83 +77,99 @@
       <template #row-details="row">
         <b-card>
           <b-row align-h="between">
-            <b-col sm="12" md="6" lg="6">
-              <div class="menu-sec">
-                <label class="title-lbl">Additional Info</label>
-                <b-list-group flush>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Contract Number</label>
-                    <label>{{ row.item.deal_no }}</label>
-                  </b-list-group-item>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Purchase Date</label>
-                    <label>{{ format(row.item.purchase_date) }}</label>
-                  </b-list-group-item>
+            <b-col sm="12" md="6" lg="9">
+              <b-row align-h="between">
+              <label class="title-lbl">Additional Info</label>
+              <b-col sm="12" md="6" lg="6">
+                <div class="menu-sec">
+                  <b-list-group flush>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Contract Number</label>
+                      <label>{{ row.item.deal_no }}</label>
+                    </b-list-group-item>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Purchase Date</label>
+                      <label>{{ format(row.item.purchase_date) }}</label>
+                    </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Created by</label>
-                    <label>{{ row.item.created_by }}</label>
-                  </b-list-group-item>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Created by</label>
+                      <label>{{ row.item.created_by }}</label>
+                    </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>NoOfSetle</label>
-                    <label>{{ row.item.NoOf_Setle }}</label>
-                  </b-list-group-item>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Settlements</label>
+                      <label>{{ row.item.NoOf_Setle }}</label>
+                    </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Bank POC</label>
-                    <label>{{ row.item.bank_poc }}</label>
-                  </b-list-group-item>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Bank POC</label>
+                      <label>{{ row.item.bank_poc }}</label>
+                    </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Target of funds</label>
-                    <label>{{ row.item.TOF }}</label>
-                  </b-list-group-item>
+                  </b-list-group>
+                </div>
+              </b-col>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Edited by</label>
-                    <label>{{ row.item.edited_by }}</label>
-                  </b-list-group-item>
+              <b-col sm="12" md="6" lg="6">
+                <div class="menu-sec">
+                  <b-list-group flush>
+                    
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Service Charge</label>
-                    <label>{{ row.item.bank_charge }}</label>
-                  </b-list-group-item>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Target of funds</label>
+                      <label>{{ row.item.TOF }}</label>
+                    </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Service Tax</label>
-                    <label>{{ row.item.tax }}</label>
-                  </b-list-group-item>
-                </b-list-group>
-              </div>
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Edited by</label>
+                      <label>{{ row.item.edited_by }}</label>
+                    </b-list-group-item>
+
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Service Charge</label>
+                      <label>{{ row.item.bank_charge }}</label>
+                    </b-list-group-item>
+
+                    <b-list-group-item
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <label>Service Tax</label>
+                      <label>{{ row.item.tax }}</label>
+                    </b-list-group-item>
+                  </b-list-group>
+                </div>
+              </b-col>
+
+              <!-- <b-col sm="12" md="6" lg="6" align-h="center">
+                <TreasuryFlow />
+              </b-col> -->
+
+              </b-row>
             </b-col>
-            <!-- <b-col sm="12" md="6" lg="6" align-h="center">
-              <TreasuryFlow />
-            </b-col> -->
             <b-col sm="12" md="6" lg="3">
+                          <!-- <b-col > -->
               <div class="menu-sec">
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                   @click="onclickUpdate(row.item)"
                   v-b-modal.add-deal
                 >
@@ -163,7 +179,8 @@
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
+                  @click="newSettlementClicked(row.item)"
                 >
                   <b-icon icon="plus-circle" aria-hidden="true"></b-icon> New
                   Settlement
@@ -171,13 +188,15 @@
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                 </b-button>
               </div>
+            <!-- </b-col> -->
             </b-col>
           </b-row>
+
         </b-card>
       </template>
     </b-table>
@@ -231,6 +250,8 @@
               <b-form-input
                 v-model="temp_deal.fcy_amount"
                 size="sm"
+                type="text"
+                pattern="[0-9]+"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -328,6 +349,7 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   name: "Deals",
   components: {
@@ -337,6 +359,10 @@ export default {
     this.getContract();
   },
   computed: {
+    ...mapGetters([
+      "token",
+      "base_url",
+    ]),
     getAmtAndRate() {
       return { 
         amt: this.temp_deal.fcy_amount,
@@ -358,9 +384,6 @@ export default {
   
   data() {
     return {
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTM1ODg2MjMsInN1YiI6Im1vYXp6YW0xMzExMDIzQGdtYWlsLmNvbSJ9.RXuz6sKykSzMSMQodWzFWGscsNCJ4qVD41FoAc7ZT4o",
-      base_url: 'http://3.111.140.40:8001/api/v1/',
       filter: null,
       dealsTableData: null,
       updateTrigger: false,
@@ -374,28 +397,6 @@ export default {
         { value: 'type2', text: 'Fund 2' },        
       ],
 /*       temp_deal: {
-        i_o_IRH: "",
-        deal_date: "",
-        source_of_funds: "",
-        amount_in_USD: "",
-        exchange_rate: "",
-        amount_in_MYR: "",
-        deal_no: "",
-        NoOf_Setle: "",
-        bank_poc: "",
-        TOF: "",
-        bank_charge: "",
-        tax: "",
-     
-        purchase_date: "",
-        status: "",
-        created_by: "",
-        break_down: "",
-        edited_by: "",
-        comment: "",
-
-      }, */
-      temp_deal: {
         approved_aate: null,
         approved_by: "",
         authorization_flag: false,
@@ -427,6 +428,23 @@ export default {
         updated_by: "",
         updated_date: null,
         voucher_no: "",
+      }, */
+      temp_deal: {
+        deal_type: "",
+        deal_date: "",
+        deal_no: "",
+        fcy_amount: "",  // USD Amt
+        fcy_deal_rate: "",
+        lcy_amount: "",    //MYR Amt
+        source_of_funds: "",
+
+        purchase_date: "",
+        bank_charge: "",
+        TOF: "",          // Target of fund
+        bank_poc: "",
+        tax: "",
+        remarks: "",
+
       },
       menu_hierarchy: [
         {
@@ -506,13 +524,13 @@ export default {
       if (this.updateTrigger) {
         axios.put(this.base_url + "new-contract/update-contract/" + request.deal_id, request, {
             headers: {
-              Authorization: `Token ${this.token}`,
+              Authorization: `Bearer ${this.token}`,
             },
           })
           .then((response) => {
             console.log(response.data.data);
             const index = this.items.findIndex(ele => ele.deal_id === this.temp_deal.deal_id);
-            this.items[index] = this.temp_deal;
+            this.items[index] = response.data.data[0];
           })
           .catch((err) => {
             console.log('Deal not posted', err);
@@ -521,12 +539,12 @@ export default {
       } else {
         axios.post(this.base_url + "new-contract/new-contract", request, {
             headers: {
-              Authorization: `Token ${this.token}`,
+              Authorization: `Bearer ${this.token}`,
             },
           })
           .then((response) => {
             console.log(response.data.data)
-            this.items.push(this.temp_deal);
+            this.items.push(response.data.data[0]);
           })
           .catch((err) => {
             console.log('Deal not posted', err);
@@ -576,6 +594,12 @@ export default {
       this.updateTrigger = true;
       console.log('slected', selectedRow)
       this.temp_deal = selectedRow;
+    },
+    newSettlementClicked(selectedRow) {
+      console.log(selectedRow);
+      console.log('new clicked',  this.$emit('openTab', 'settlements'));
+      this.$emit('openTab', 'settlements')
+      this.$store.commit("set_selected_deal", selectedRow);
     }
   },
 };
@@ -661,5 +685,11 @@ export default {
 
 ::v-deep .col-form-label {
   color: $dimgrey;
+}
+.btn-light {
+  border-color: $primary;
+  width: 100%;
+  background: transparent !important;
+  color: $primary !important;
 }
 </style>

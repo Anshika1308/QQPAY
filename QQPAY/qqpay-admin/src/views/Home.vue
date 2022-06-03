@@ -126,7 +126,7 @@
                           ></b-icon
                         ></b-button>
                       </template>
-                      <Deals
+                      <Deals @openTab="openTab"
                     /></b-tab>
                     <b-tab
                       v-if="tab_show.settlements"
@@ -148,7 +148,7 @@
                           ></b-icon
                         ></b-button>
                       </template>
-                      <Settlements
+                      <Settlements @openTab="openTab"
                     /></b-tab>
                     <b-tab v-if="tab_show.funding" :active="tab_active.funding">
                       <template #title>
@@ -205,25 +205,7 @@
                       <Deals
                     /></b-tab>
 
-                    <b-tab
-                      v-if="tab_show.UserDetails"
-                      :active="tab_active.UserDetails"
-                    >
-                      <template #title>
-                        <b-icon icon="cash-stack" aria-hidden="true"></b-icon>
-                        UserDetails
-                        <b-button
-                          variant="outline-light"
-                          size="sm"
-                          @click="closeTab('UserDetails')"
-                          ><b-icon
-                            icon="x-circle-fill"
-                            aria-hidden="true"
-                          ></b-icon
-                        ></b-button>
-                      </template>
-                      <userDetails
-                    /></b-tab>
+                    
 
                     <b-tab v-if="tab_show.Service" :active="tab_active.Service">
                       <template #title>
@@ -277,8 +259,7 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import Deals from "@/views/treasury/Deals.vue";
 import Settlements from "@/views/treasury/Settlements.vue";
 import Funding from "@/views/treasury/Funding.vue";
-
-import UserDetails from "./compilance/UserDetails.vue";
+import ComplianceUser from "@/views/compilance/ComplianceUser.vue";
 import Service from "./ServiceCharge/Service.vue";
 import PPComm from "./ServiceCharge/PPComm.vue"
 export default {
@@ -288,7 +269,7 @@ export default {
     Deals,
     Settlements,
     Funding,
-    UserDetails,
+    ComplianceUser,
     Service,
     PPComm
   },
@@ -296,22 +277,20 @@ export default {
     return {
       deals: "Deals",
       tab_show: {
-        deals: false,
+        deals: true,
         settlements: false,
         funding: false,
         forex: false,
         statement: false,
-        UserDetails: true,
-        Service: true,
-        PPComm: true,
+        Service: false,
+        PPComm: false,
       },
       tab_active: {
-        deals: false,
+        deals: true,
         settlements: false,
         funding: false,
         forex: false,
         statement: false,
-        UserDetails: false,
         Service: false,
         PPComm: false
       },
@@ -398,6 +377,9 @@ export default {
   },
   methods: {
     openTab(sub_menu) {
+      if (sub_menu === 'settlements') {
+        this.$store.commit("set_selected_deal", null);
+      }
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;
       Object.keys(this.tab_active).forEach((v) => (this.tab_active[v] = false));
