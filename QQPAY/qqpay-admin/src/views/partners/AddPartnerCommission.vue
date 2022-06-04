@@ -5,7 +5,7 @@
         <b-card class="mt-3" header="Add Partner Commission">
           <b-row class="mt-2">
             <b-col md="6" sm="12" lg="6" xl="6">
-              <UpdateLabel label="Partner" />
+              <UpdateLabel label="Partner"  :error="errors.partner_id"/>
               <b-form-group id="input-group-partner-type" label="Partner" required label-for="input-partner-type">
                 <b-form-select v-model="partnerSelected" :options="partnerType" class="mb-3 form-control" />
               </b-form-group>
@@ -60,7 +60,6 @@
             <b-col md="12" sm="12" lg="12" xl="12">
               <b-form-group id="input-group-remarks" label="Remarks" label-for="input-remarks">
                 <b-form-textarea id="input-remarks" v-model="remarks" rows="6" />
-                <b-form-invalid-feedback>{{ errors }}</b-form-invalid-feedback>
               </b-form-group>
             </b-col>
           </b-row>
@@ -87,9 +86,7 @@ export default {
   },
   data() {
     return {
-      errors: {
-        partner_id: ""
-      },
+      errors: {},
       isDisableUpperLimit: false,
       partnerSelected: null,
       partnerType: [

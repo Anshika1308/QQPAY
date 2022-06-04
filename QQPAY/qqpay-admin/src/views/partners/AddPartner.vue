@@ -547,7 +547,7 @@ export default {
   methods: {
     async handleSubmit() {
       const formData = JSON.stringify({
-        agent_code: this.companyDetail.agent_code,
+        agent_code: this.companyDetail.agentCode,
         contact_name1: this.contactInformation.contactPerson1,
         designation1: this.contactInformation.post1,
         email1: this.contactInformation.contactPersonEmail1,

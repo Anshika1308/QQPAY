@@ -27,6 +27,6 @@ export const accessToken = () => {
   const authToken = JSON.parse(getKey('userAuth'));
   console.log(authToken);
   // let {accessToken} = authToken;
-  let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQzMzMyMzQsInN1YiI6InNhbmRlZXBAZ21haWwuY29tIn0._nT1dGP7sslfo2kLPQTTmc1T90VkrfzrbeN-YOaWDZE"
+  let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQzNTIxMTcsInN1YiI6InNhbmRlZXBAZ21haWwuY29tIn0.uUe6KYhxLaZFyxe-LzCe5zYjHiKDYWatrCy9sQ9xcCI"
   return accessToken
 }
