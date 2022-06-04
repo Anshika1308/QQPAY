@@ -5,78 +5,62 @@
         <b-card class="mt-3" header="Add Partner Commission">
           <b-row class="mt-2">
             <b-col md="6" sm="12" lg="6" xl="6">
-              <b-form-group id="input-group-partner-type" label="Partner" label-for="input-partner-type">
-                <b-form-select
-                    v-model="partnerSelected"
-                    :options="partnerType"
-                    class="mb-3 form-control"
-                />
+              <UpdateLabel label="Partner" />
+              <b-form-group id="input-group-partner-type" label="Partner" required label-for="input-partner-type">
+                <b-form-select v-model="partnerSelected" :options="partnerType" class="mb-3 form-control" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
-              <b-form-group id="input-group-payment-method" label="Payment Method" label-for="input-payment-method">
-                <b-form-select
-                    v-model="paymentMethodSelected"
-                    :options="paymentMethodOptions"
-                    class="mb-3 form-control"
-                />
+              <UpdateLabel label="Payment Method" />
+              <b-form-group id="input-group-payment-method" label="Payment Method" required
+                label-for="input-payment-method">
+                <b-form-select v-model="paymentMethodSelected" :options="paymentMethodOptions"
+                  class="mb-3 form-control" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
+              <UpdateLabel label="Service Charge Type" />
               <b-form-group id="input-group-service-charge-typ" label="Service Charge Type"
-                            label-for="input-service-charge-type">
-                <b-form-select
-                    v-model="selectedServiceCharge"
-                    :options="selectedServiceChargeType"
-                    class="mb-3 form-control"
-                    @change="toggleUpperLimit"
-                />
+                label-for="input-service-charge-type">
+                <b-form-select v-model="selectedServiceCharge" :options="selectedServiceChargeType"
+                  class="mb-3 form-control" @change="toggleUpperLimit" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
+              <UpdateLabel label="Service Charge" />
               <b-form-group id="input-group-service-charge" label="Service Charge" label-for="input-service-charge">
-                <b-form-input id="input-contact-service-charge" v-model="serviceCharge" type="text"/>
+                <b-form-input id="input-contact-service-charge" v-model="serviceCharge" type="number" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
+              <UpdateLabel label="Country" />
               <b-form-group id="input-group-currency" label="Country" label-for="input-currency">
-                <b-form-select
-                    v-model="selectedCountry"
-                    :options="countryOptions"
-                    class="mb-3 form-control"
-                />
+                <b-form-select v-model="selectedCountry" :options="countryOptions" class="mb-3 form-control" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
+              <UpdateLabel label="Currency" />
               <b-form-group id="input-group-currency" label="Currency" label-for="input-currency">
-                <b-form-select
-                    v-model="selectedCurrency"
-                    :options="selectedCurrencyType"
-                    class="mb-3 form-control"
-                />
+                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
+              <UpdateLabel label="Upper Limit" />
               <b-form-group id="input-group-upper-limit" label="Upper Limit" label-for="input-group-upper-limit">
                 <b-form-input id="input-group-upper-limit" v-model="upperLimit" type="number"
-                              :disabled="isDisableUpperLimit"/>
+                  :disabled="isDisableUpperLimit" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
-              <b-form-checkbox
-                  class="mt-5"
-                  id="checkbox-active-status"
-                  v-model="active"
-                  name="checkbox-active-status"
-                  value="true"
-                  unchecked-value="false"
-              >
+              <b-form-checkbox class="mt-5" id="checkbox-active-status" v-model="active" name="checkbox-active-status"
+                value="true" unchecked-value="false">
                 Active Status
               </b-form-checkbox>
             </b-col>
             <b-col md="12" sm="12" lg="12" xl="12">
               <b-form-group id="input-group-remarks" label="Remarks" label-for="input-remarks">
-                <b-form-textarea id="input-remarks" v-model="remarks" rows="6"/>
+                <b-form-textarea id="input-remarks" v-model="remarks" rows="6" />
+                <b-form-invalid-feedback>{{ errors }}</b-form-invalid-feedback>
               </b-form-group>
             </b-col>
           </b-row>
@@ -91,39 +75,46 @@
 
 
 <script>
-import {getApiData, postApiData} from "@/helpers/AxiosInstance";
+import { getApiData, postApiData } from "@/helpers/AxiosInstance";
 import APIS from "@/constants/EndPoint";
-import {responseHandler} from "@/helpers/globalFunctions";
+import { responseHandler } from "@/helpers/globalFunctions";
+import UpdateLabel from "@/components/reusable/UpdateLabel";
 
 export default {
   name: 'AddPartnerCommission',
+  components: {
+    UpdateLabel,
+  },
   data() {
     return {
+      errors: {
+        partner_id: ""
+      },
       isDisableUpperLimit: false,
       partnerSelected: null,
       partnerType: [
-        {value: null, text: 'Please select an option', disabled: true}
+        { value: null, text: 'Please select an option', disabled: true }
       ],
       paymentMethodSelected: null,
       paymentMethodOptions: [
-        {value: "cash_payment", text: 'Cash Payment'},
-        {value: 'account_deposit', text: 'Account Payment'},
+        { value: "cash_payment", text: 'Cash Payment' },
+        { value: 'account_deposit', text: 'Account Payment' },
       ],
       selectedCountry: null,
       countryOptions: [
-        {value: "nepal", text: 'Nepal'},
-        {value: 'country', text: 'Country'},
+        { value: "nepal", text: 'Nepal' },
+        { value: 'country', text: 'Country' },
       ],
       selectedServiceCharge: null,
       selectedServiceChargeType: [
-        {value: 'percentage', text: 'Percentage'},
-        {value: 'flat', text: 'Flat'},
+        { value: 'percentage', text: 'Percentage' },
+        { value: 'flat', text: 'Flat' },
       ],
       serviceCharge: "",
       selectedCurrency: null,
       selectedCurrencyType: [
-        {value: 'local_currency', text: 'Local Currency'},
-        {value: 'usd', text: 'USD Dollar'},
+        { value: 'local_currency', text: 'Local Currency' },
+        { value: 'usd', text: 'USD Dollar' },
       ],
       upperLimit: null,
       payCommission: "",
@@ -150,6 +141,11 @@ export default {
       if (res.data.status_code === 200) {
         await this.$emit("getPartnerCommissions")
         this.$bvModal.hide("partner-commission-modal")
+      } else {
+        res.data.detail?.map((value) => {
+          this.errors[`${value.loc[1]}`] = `${value.msg}`
+        })
+        console.log(this.errors);
       }
     },
     async formatPartnerOptions() {
