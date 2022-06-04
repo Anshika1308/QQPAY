@@ -75,8 +75,7 @@
         ></b-form-group>
       </b-col>
       <b-col cols="3">
-        <b-form-group
-        >
+        <b-form-group>
           <b-dropdown
             block
             id="input-relation"
@@ -97,8 +96,7 @@
         </b-form-group>
       </b-col>
       <b-col cols="3">
-        <b-form-group
-        >
+        <b-form-group>
           <b-dropdown
             block
             id="input-relation"
@@ -123,7 +121,7 @@
           class="float-left"
           variant="primary"
           size="sm"
-          @click="submitValue()"
+          @click="submitValue(value_form)"
           >Save</b-button
         >
       </b-col>
@@ -185,7 +183,8 @@ export default {
       value_form: {
         name: null,
         parameter_name: "Source of Income",
-        score: "1"
+        score: "1",
+        is_active: "True",
       },
       menu_hierarchy: [
         {
@@ -282,6 +281,14 @@ export default {
           text: "3",
           value: "3",
         },
+         {
+          text: "4",
+          value: "4",
+        },
+         {
+          text: "5",
+          value: "5",
+        },
       ],
     };
   },
@@ -297,10 +304,12 @@ export default {
       this.showValue = true;
     },
     EditValue(item) {
-      this.value_form = item
+      this.value_form = item;
       this.showValue = true;
     },
-    submitValue() {
+    submitValue(item) {
+      debugger  // eslint-disable-line no-debugger
+      this.values.push(item);
       this.showValue = false;
     },
     onChangeActive(item) {

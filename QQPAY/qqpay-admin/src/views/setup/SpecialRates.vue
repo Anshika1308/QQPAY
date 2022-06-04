@@ -16,12 +16,12 @@
           <b-input-group size="md" class="mt-3">
             <b-form-input
               placeholder="Search for user"
-              v-model="special_rates.search_user"
+              v-model="defaultForm.search_user"
               class="converted"
             ></b-form-input>
             <template #append>
               <b-dropdown
-                :text="special_rates.filter_option"
+                :text="defaultForm.filter_option"
                 right
                 variant="light"
               >
@@ -51,7 +51,7 @@
           >
         </div>
       </b-col>
-       <b-col cols="2">
+      <b-col cols="2">
         <div class="float-right mt-3">
           <b-button-group size="md">
             <b-button variant="outline-light">
@@ -81,11 +81,29 @@
       title="Special Rates"
       size="md"
       variant="primary"
+      hide-footer
     >
       <b-card no-body class="my-custom-class">
         <b-row>
           <b-col cols="12">
-            <b-form-group
+            <v-select
+              :options="companyList"
+              label="country_name"
+              v-model="specialRatesForm.company"
+              :reduce="(item) => item.country_name"
+              placeholder="Available options here"
+              required
+              :clearable="false"
+              :class="{
+                'is-invalid': $v.specialRatesForm.company.$error,
+              }"
+              aria-describedby="company-live-feedback"
+            >
+            </v-select>
+            <b-form-invalid-feedback id="company-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group
               label-cols-sm="12"
               label-cols-lg="12"
               content-cols-sm="12"
@@ -94,7 +112,7 @@
               <b-dropdown
                 block
                 id="input-relation"
-                :text="scs_country_wise.company"
+                :text="specialRatesForm.company"
                 variant="light"
                 label-size="sm"
               >
@@ -107,10 +125,27 @@
                   {{ option.text }}
                 </b-dropdown-item>
               </b-dropdown>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="12">
-            <b-form-group
+            <v-select
+              :options="currencyTypeList"
+              label="country_name"
+              v-model="specialRatesForm.currency_type"
+              :reduce="(item) => item.country_name"
+              placeholder="Available options here"
+              required
+              :clearable="false"
+              :class="{
+                'is-invalid': $v.specialRatesForm.currency_type.$error,
+              }"
+              aria-describedby="currency_type-live-feedback"
+            >
+            </v-select>
+            <b-form-invalid-feedback id="currency_type-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group
               label-cols-sm="12"
               label-cols-lg="12"
               content-cols-sm="12"
@@ -119,7 +154,7 @@
               <b-dropdown
                 block
                 id="input-relation"
-                :text="scs_country_wise.currency_type"
+                :text="specialRatesForm.currency_type"
                 variant="light"
                 label-size="sm"
               >
@@ -132,66 +167,160 @@
                   {{ option.text }}
                 </b-dropdown-item>
               </b-dropdown>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="6">
-            <b-form-group>
+            <b-form-input
+              type="number"
+              id="special_rate"
+              name="special_rate"
+              class="mt-3"
+              placeholder="Service Rate"
+              v-model="specialRatesForm.special_rate"
+              size="md"
+              @keypress="onlyForDecimal($event, specialRatesForm.special_rate)"
+              required
+              :class="{
+                'is-invalid': $v.specialRatesForm.special_rate.$error,
+              }"
+              aria-describedby="special_rate-live-feedback"
+            ></b-form-input>
+            <b-form-invalid-feedback id="special_rate-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group>
               <b-form-input
                 class="mt-3"
                 placeholder="Special Rate"
-                v-model="scs_country_wise.special_rate"
+                v-model="specialRatesForm.special_rate"
                 size="sm"
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="6">
-            <b-form-group>
+            <b-form-input
+              type="number"
+              id="publish_Rate"
+              name="publish_Rate"
+              class="mt-3"
+              placeholder="Publish Rate"
+              v-model="specialRatesForm.publish_Rate"
+              size="md"
+              @keypress="onlyForDecimal($event, specialRatesForm.publish_Rate)"
+              required
+              :class="{
+                'is-invalid': $v.specialRatesForm.publish_Rate.$error,
+              }"
+              aria-describedby="publish_Rate-live-feedback"
+            ></b-form-input>
+            <b-form-invalid-feedback id="publish_Rate-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group>
               <b-form-input
                 class="mt-3"
                 placeholder="Publish Rate"
-                v-model="scs_country_wise.publish_Rate"
+                v-model="specialRatesForm.publish_Rate"
                 size="sm"
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="6">
-            <b-form-group>
+            <b-form-input
+              type="number"
+              id="reuters_rate"
+              name="reuters_rate"
+              class="mt-3"
+              placeholder="Reuters Rate"
+              v-model="specialRatesForm.reuters_rate"
+              size="md"
+              @keypress="onlyForDecimal($event, specialRatesForm.reuters_rate)"
+              required
+              :class="{
+                'is-invalid': $v.specialRatesForm.reuters_rate.$error,
+              }"
+              aria-describedby="reuters_rate-live-feedback"
+            ></b-form-input>
+            <b-form-invalid-feedback id="reuters_rate-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group>
               <b-form-input
                 class="mt-3"
                 placeholder="Reuters Rate"
-                v-model="scs_country_wise.reuters_rate"
+                v-model="specialRatesForm.reuters_rate"
                 size="sm"
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="6">
-            <b-form-group>
+            <b-form-input
+              type="number"
+              id="paying_amount_min"
+              name="paying_amount_min"
+              class="mt-3"
+              placeholder="Paying Amount(min)"
+              v-model="specialRatesForm.paying_amount_min"
+              size="md"
+              @keypress="
+                onlyForDecimal($event, specialRatesForm.paying_amount_min)
+              "
+              required
+              :class="{
+                'is-invalid': $v.specialRatesForm.paying_amount_min.$error,
+              }"
+              aria-describedby="paying_amount_min-live-feedback"
+            ></b-form-input>
+            <b-form-invalid-feedback id="paying_amount_min-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group>
               <b-form-input
                 class="mt-3"
                 placeholder="Paying Amount(min)"
-                v-model="scs_country_wise.paying_amount_min"
+                v-model="specialRatesForm.paying_amount_min"
                 size="sm"
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="6">
-            <b-form-group>
+            <b-form-input
+              type="number"
+              id="service_charge"
+              name="service_charge"
+              class="mt-3"
+              placeholder="Service Charge"
+              v-model="specialRatesForm.service_charge"
+              size="md"
+              @keypress="
+                onlyForDecimal($event, specialRatesForm.service_charge)
+              "
+              required
+              :class="{
+                'is-invalid': $v.specialRatesForm.service_charge.$error,
+              }"
+              aria-describedby="service_charge-live-feedback"
+            ></b-form-input>
+            <b-form-invalid-feedback id="service_charge-live-feedback">
+              This is a required field.
+            </b-form-invalid-feedback>
+            <!-- <b-form-group>
               <b-form-input
                 class="mt-3"
                 placeholder="Paying Amount(max)"
-                v-model="scs_country_wise.paying_amount_max"
+                v-model="specialRatesForm.paying_amount_max"
                 size="sm"
                 rows="3"
                 max-rows="6"
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>
           <b-col cols="6">
             <b-form-group id="fieldset-1" label-for="example-datepicker">
               <b-form-datepicker
                 class="mt-3"
                 id="example-datepicker"
-                v-model="scs_country_wise.processing_date"
+                v-model="specialRatesForm.processing_date"
                 size="sm"
               ></b-form-datepicker>
             </b-form-group>
@@ -208,20 +337,21 @@
 </template>
 
 <script>
-//import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
+import { required } from "vuelidate/lib/validators";
+import { validationMixin } from "@/mixins";
+import { getAll } from "@/api/country";
+import {
+  getServiceChargeType,
+  getPaymentMode,
+  getAll as list,
+  getById,
+  save,
+  update,
+} from "@/api/serviceCharge";
 export default {
-  name: "Special Rates",
-  components: {
-    //TreasuryFlow,
-  },
+  mixins: [validationMixin],
   data() {
     return {
-      special_rates: {
-        country_name: "Malaysia",
-        search_user: "",
-        filter_option: "Filter",
-      },
-      filter: null,
       menu_hierarchy: [
         {
           text: "Setup",
@@ -232,16 +362,29 @@ export default {
           active: true,
         },
       ],
-      scs_country_wise: {
-        company: "Company",
-        currency_type: "Currency",
-        special_rate: "",
-        publish_Rate: "",
-        reuters_rate: "",
-        paying_amount_min: "",
-        paying_amount_max: "",
-        processing_date: "",
+      special_rates: {
+        country_name: null,
+        search_user: null,
+        filter_option: null,
       },
+      filter: null,
+      countryList: [],
+      serviceChargeTypeList: [],
+      payoutPartnerList: [],
+      paymentModeList: [],
+      items: [],
+      specialRatesDefaultForm: {
+        id: 0,
+        company: null,
+        currency_type: null,
+        special_rate: null,
+        publish_Rate: null,
+        reuters_rate: null,
+        paying_amount_min: null,
+        paying_amount_max: null,
+        processing_date: null,
+      },
+      specialRatesForm: null,
       fields: [
         { key: "id", label: "SNO" },
         { key: "company_name", label: "Company Name" },
@@ -254,44 +397,44 @@ export default {
         { key: "processing_date", label: "Processing Date" },
         { key: "created_by", label: "Created By" },
       ],
-      items: [
-        {
-          id: "1",
-          company_name: "ABC Company",
-          currency_type: "INR",
-          special_rate: "17.80",
-          publish_rate: "17.60",
-          reuters_rate: "18.05",
-          paying_amount_min: "50,000 MYR",
-          paying_amount_max: "50,500 MYR",
-          processing_date: "5th Feb 2022",
-          created_by: "Izhar",
-        },
-        {
-          id: "2",
-          company_name: "XYZ Company",
-          currency_type: "NPR",
-          special_rate: "27.90",
-          publish_rate: "27.70",
-          reuters_rate: "28.10",
-          paying_amount_min: "6500 MYR",
-          paying_amount_max: "6510 MYR",
-          processing_date: "5th Feb 2022",
-          created_by: "Siva",
-        },
-        {
-          id: "3",
-          company_name: "Al Zira Company",
-          currency_type: "BDT",
-          special_rate: "19.90",
-          publish_rate: "19.70",
-          reuters_rate: "20.27",
-          paying_amount_min: "1,10,000 MYR",
-          paying_amount_max: "1,11,000 MYR",
-          processing_date: "5th Feb 2022",
-          created_by: "Machel",
-        },
-      ],
+      // items: [
+      //   {
+      //     id: "1",
+      //     company_name: "ABC Company",
+      //     currency_type: "INR",
+      //     special_rate: "17.80",
+      //     publish_rate: "17.60",
+      //     reuters_rate: "18.05",
+      //     paying_amount_min: "50,000 MYR",
+      //     paying_amount_max: "50,500 MYR",
+      //     processing_date: "5th Feb 2022",
+      //     created_by: "Izhar",
+      //   },
+      //   {
+      //     id: "2",
+      //     company_name: "XYZ Company",
+      //     currency_type: "NPR",
+      //     special_rate: "27.90",
+      //     publish_rate: "27.70",
+      //     reuters_rate: "28.10",
+      //     paying_amount_min: "6500 MYR",
+      //     paying_amount_max: "6510 MYR",
+      //     processing_date: "5th Feb 2022",
+      //     created_by: "Siva",
+      //   },
+      //   {
+      //     id: "3",
+      //     company_name: "Al Zira Company",
+      //     currency_type: "BDT",
+      //     special_rate: "19.90",
+      //     publish_rate: "19.70",
+      //     reuters_rate: "20.27",
+      //     paying_amount_min: "1,10,000 MYR",
+      //     paying_amount_max: "1,11,000 MYR",
+      //     processing_date: "5th Feb 2022",
+      //     created_by: "Machel",
+      //   },
+      // ],
       company_options: [
         {
           text: "ABC Company",
@@ -320,9 +463,122 @@ export default {
       ],
     };
   },
+  validations: {
+    countryWiseForm: {
+      company: {
+        required,
+      },
+      currency_type: {
+        required,
+      },
+      special_rate: {
+        required,
+      },
+      publish_Rate: {
+        required,
+      },
+      reuters_rate: {
+        required,
+      },
+      paying_amount_min: {
+        required,
+      },
+      paying_amount_max: {
+        required,
+      },
+      processing_date: {
+        required,
+      },
+    },
+  },
   methods: {
-    onSearch: function () {},
-    submitPopup: function () {},
+    onlyForDecimal($event, val) {
+      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+
+      if (
+        (keyCode < 48 || keyCode > 57) &&
+        (keyCode !== 46 || val.toString().indexOf(".") != -1)
+      ) {
+        $event.preventDefault();
+      }
+
+      if (
+        val != null &&
+        val.toString().indexOf(".") != -1 &&
+        val.toString().split(".")[1].length > 1
+      ) {
+        $event.preventDefault();
+      }
+    },
+    resetForm() {
+      this.specialRatesForm = Object.assign({}, this.specialRatesDefaultForm);
+      this.onSearch();
+    },
+    onSearch() {
+      list().then((res) => {
+        this.items = res.data[0];
+        debugger; // eslint-disable-line no-debugger
+      });
+    },
+    edit(item) {
+      if (item.id > 0) {
+        getById(item.id)
+          .then((res) => {
+            this.countryWiseForm = Object.assign({}, res.data);
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    manage() {
+      console.log(this.countryWiseForm);
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      if (this.countryWiseForm.id > 0) {
+        update(this.countryWiseForm)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        save(this.countryWiseForm)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            //done()
+          });
+      }
+    },
+  },
+  async created() {
+    this.resetForm();
+    await Promise.all([
+      getAll().then((res) => {
+        this.countryList = res.data;
+      }),
+
+      getServiceChargeType().then((res) => {
+        this.serviceChargeTypeList = res.data;
+      }),
+
+      getPaymentMode().then((res) => {
+        this.paymentModeList = res.data;
+      }),
+      this.onSearch(),
+    ]);
   },
 };
 </script>

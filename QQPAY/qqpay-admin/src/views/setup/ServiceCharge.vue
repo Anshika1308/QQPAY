@@ -18,12 +18,12 @@
           <b-input-group size="md" class="mt-3">
             <b-form-input
               placeholder="Search for user"
-              v-model="daily_forex.search_user"
+              v-model="defaultForm.search_user"
               class="converted"
             ></b-form-input>
             <template #append>
               <b-dropdown
-                :text="daily_forex.filter_option"
+                :text="defaultForm.filter_option"
                 right
                 variant="light"
               >
@@ -70,14 +70,20 @@
       responsive
       class="align-middle mt-4"
     >
+      <template #cell(id)="row">
+        {{ row.index + 1 }}
+      </template>
       <template #cell(remarks)="row" size="sm">
         <div class="action-div">
           <b-icon
-            v-if="row.item.remarks == '1'"
+            v-if="row.item.remarks != null && row.item.remarks != ''"
             style="color: green"
             icon="square-fill"
           ></b-icon>
-          <b-icon v-if="row.item.remarks == '0'" icon="square"></b-icon>
+          <b-icon
+            v-if="row.item.remarks == null || row.item.remarks == ''"
+            icon="square"
+          ></b-icon>
         </div>
       </template>
     </b-table>
@@ -87,289 +93,394 @@
       title="Service Charge Setup"
       size="md"
       variant="primary"
+      hide-footer
     >
       <b-card no-body class="my-custom-class">
         <b-tabs pills card variant="primary">
           <b-tab title="Country Wise" active style="background-color: #ff6b00"
             ><b-card-text>
               <b-card>
-                <b-row>
-                  <b-col cols="12">
-                    <b-form-group
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
-                    >
-                      <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="scs_country_wise.charge_type"
-                        variant="light"
-                        label-size="sm"
+                <b-form>
+                  <div class="row">
+                    <div class="col">
+                      <v-select
+                        :options="paymentModeList"
+                        label="value"
+                        v-model="countryWiseForm.payment_mode"
+                        :reduce="(item) => item.id"
+                        placeholder="Available options here"
+                        required
+                        :clearable="false"
+                        :class="{
+                          'is-invalid': $v.countryWiseForm.payment_mode.$error,
+                        }"
+                        aria-describedby="payment_mode-live-feedback"
                       >
-                        <b-dropdown-item
-                          v-for="option in charge_type_options"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
-                        >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="12">
-                    <b-form-group
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
-                    >
-                      <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="scs_country_wise.country"
-                        variant="light"
-                        label-size="sm"
+                      </v-select>
+                      <b-form-invalid-feedback id="payment_mode-live-feedback">
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </div>
+                    <b-col cols="12" class="mt-3">
+                      <v-select
+                        :options="countryList"
+                        label="country_name"
+                        v-model="countryWiseForm.country"
+                        :reduce="(item) => item.country_name"
+                        placeholder="Available options here"
+                        required
+                        :clearable="false"
+                        :class="{
+                          'is-invalid': $v.countryWiseForm.country.$error,
+                        }"
+                        aria-describedby="country-live-feedback"
                       >
-                        <b-dropdown-item
-                          v-for="option in country_options"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
-                        >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-form-group
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
-                    >
-                      <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="scs_country_wise.service_charge_by"
-                        variant="light"
-                        label-size="sm"
+                      </v-select>
+                      <b-form-invalid-feedback id="country-live-feedback">
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </b-col>
+                    <b-col cols="6" class="mt-3">
+                      <v-select
+                        :options="serviceChargeTypeList"
+                        label="value"
+                        v-model="countryWiseForm.service_charge_type"
+                        :reduce="(item) => item.id"
+                        placeholder="Available options here"
+                        required
+                        :clearable="false"
+                        :class="{
+                          'is-invalid':
+                            $v.countryWiseForm.service_charge_type.$error,
+                        }"
+                        aria-describedby="service_charge_type-live-feedback"
                       >
-                        <b-dropdown-item
-                          v-for="option in service_charge_by_options"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
-                        >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-form-group>
+                      </v-select>
+                      <b-form-invalid-feedback
+                        id="service_charge_type-live-feedback"
+                      >
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </b-col>
+                    <b-col cols="6">
                       <b-form-input
+                        type="number"
+                        id="service_charge"
+                        name="service_charge"
                         class="mt-3"
                         placeholder="Service Charge"
-                        v-model="scs_country_wise.service_charge"
-                        size="sm"
+                        v-model="countryWiseForm.service_charge"
+                        size="md"
+                        @keypress="
+                          onlyForDecimal($event, countryWiseForm.service_charge)
+                        "
+                        required
+                        :class="{
+                          'is-invalid':
+                            $v.countryWiseForm.service_charge.$error,
+                        }"
+                        aria-describedby="service_charge-live-feedback"
                       ></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <small class="ml-3 mt-3"
-                    >if <strong>percentage</strong> selected then Upper Limit
-                    will be disabled.</small
-                  >
-                  <b-col cols="12">
-                    <b-form-group>
+                      <b-form-invalid-feedback
+                        id="service_charge-live-feedback"
+                      >
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </b-col>
+                    <small class="ml-3 mt-3"
+                      >if <strong>percentage</strong> selected then Upper Limit
+                      will be disabled.</small
+                    >
+                    <b-col cols="12">
                       <b-form-input
+                        type="number"
+                        id="upper_limit"
+                        name="upper_limit"
+                        class="mt-3"
                         placeholder="Upper Limit"
-                        v-model="scs_country_wise.upper_limit"
-                        size="sm"
+                        v-model="countryWiseForm.upper_limit"
+                        size="md"
+                        @keypress="
+                          onlyForDecimal($event, countryWiseForm.upper_limit)
+                        "
+                        required
+                        :class="{
+                          'is-invalid': $v.countryWiseForm.upper_limit.$error,
+                        }"
+                        aria-describedby="upper_limit-live-feedback"
                       ></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-form-group>
+                      <b-form-invalid-feedback id="upper_limit-live-feedback">
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </b-col>
+                    <b-col cols="6">
                       <b-form-input
+                        type="number"
+                        id="qqpay_commission"
+                        name="qqpay_commission"
                         class="mt-3"
                         placeholder="Total Commission"
-                        v-model="scs_country_wise.total_commission"
-                        size="sm"
+                        v-model="countryWiseForm.qqpay_commission"
+                        size="md"
+                        @keypress="
+                          onlyForDecimal(
+                            $event,
+                            countryWiseForm.qqpay_commission
+                          )
+                        "
+                        :class="{
+                          'is-invalid':
+                            $v.countryWiseForm.qqpay_commission.$error,
+                        }"
+                        aria-describedby="qqpay_commission-live-feedback"
                       ></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-form-group>
+                      <b-form-invalid-feedback
+                        id="qqpay_commission-live-feedback"
+                      >
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </b-col>
+                    <b-col cols="6">
                       <b-form-input
+                        type="number"
+                        id="payout_partner_commission"
+                        name="payout_partner_commission"
                         class="mt-3"
                         placeholder="Pay Commission"
-                        v-model="scs_country_wise.pay_commission"
-                        size="sm"
+                        v-model="countryWiseForm.payout_partner_commission"
+                        size="md"
+                        @keypress="
+                          onlyForDecimal(
+                            $event,
+                            countryWiseForm.payout_partner_commission
+                          )
+                        "
+                        required
+                        :class="{
+                          'is-invalid':
+                            $v.countryWiseForm.payout_partner_commission.$error,
+                        }"
+                        aria-describedby="payout_partner_commission-live-feedback"
                       ></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="12">
-                    <b-form-group>
+                      <b-form-invalid-feedback
+                        id="payout_partner_commission-live-feedback"
+                      >
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                    </b-col>
+                    <b-col cols="12">
                       <b-form-textarea
+                        id="remarks"
                         class="mt-3"
                         placeholder="Remarks"
-                        v-model="scs_country_wise.remarks"
+                        v-model="countryWiseForm.remarks"
                         size="sm"
                         rows="3"
                         max-rows="6"
                       ></b-form-textarea>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-card> </b-card-text
-          ></b-tab>
+                    </b-col>
+                  </div>
+                  <b-row class="float-right">
+                    <b-button size="lg" variant="primary" @click="manage()">
+                      Add Service Charge Setup
+                    </b-button>
+                  </b-row>
+                </b-form>
+              </b-card>
+            </b-card-text></b-tab
+          >
           <b-tab title="Payout Partner Wise"
             ><b-card-text>
               <b-card>
                 <b-row>
                   <b-col cols="12">
-                    <b-form-group
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
+                    <v-select
+                      :options="paymentModeList"
+                      label="value"
+                      v-model="countryWiseForm.payment_mode"
+                      :reduce="(item) => item.id"
+                      placeholder="Available options here"
+                      required
+                      :clearable="false"
+                      :class="{
+                        'is-invalid': $v.countryWiseForm.payment_mode.$error,
+                      }"
+                      aria-describedby="payment_mode-live-feedback"
                     >
-                      <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="scs_payout_partner_wise.charge_type"
-                        variant="light"
-                        label-size="sm"
-                      >
-                        <b-dropdown-item
-                          v-for="option in charge_type_options"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
-                        >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown>
-                    </b-form-group>
+                    </v-select>
+                    <b-form-invalid-feedback id="payment_mode-live-feedback">
+                      This is a required field.
+                    </b-form-invalid-feedback>
                   </b-col>
-                  <b-col cols="6">
-                    <b-form-group
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
+                  <b-col
+                    cols="6"
+                    label-cols-sm="12"
+                    label-cols-lg="12"
+                    content-cols-sm="12"
+                    content-cols-lg="12"
+                  >
+                    <b-dropdown
+                      block
+                      id="input-relation"
+                      :text="countryWiseDefaultForm.payout_partner"
+                      variant="light"
+                      label-size="sm"
                     >
-                      <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="scs_payout_partner_wise.payout_partner"
-                        variant="light"
-                        label-size="sm"
-                      >
-                        <b-dropdown-item
-                          v-for="option in payout_partner_options"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
-                        >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-form-group>
-                      <b-form-input
-                        class="mt-3"
-                        placeholder="Receive Country"
-                        v-model="scs_payout_partner_wise.receive_country"
+                      <b-dropdown-item
+                        v-for="option in payoutPartnerList"
+                        :key="option.value"
+                        :value="option.value"
                         size="sm"
-                      ></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col cols="6">
-                    <b-form-group
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
-                    >
-                      <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="scs_payout_partner_wise.service_charge_by"
-                        variant="light"
-                        label-size="sm"
                       >
-                        <b-dropdown-item
-                          v-for="option in service_charge_by_options"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
-                        >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown>
-                    </b-form-group>
+                        {{ option.text }}
+                      </b-dropdown-item>
+                    </b-dropdown>
                   </b-col>
                   <b-col cols="6">
-                    <b-form-group>
-                      <b-form-input
-                        class="mt-3"
-                        placeholder="Service Charge"
-                        v-model="scs_payout_partner_wise.service_charge"
-                        size="sm"
-                      ></b-form-input>
-                    </b-form-group>
+                    <b-form-input
+                      class="mt-3"
+                      placeholder="Receive Country"
+                      v-model="countryWiseDefaultForm.receive_country"
+                      size="sm"
+                    ></b-form-input>
+                  </b-col>
+                  <b-col cols="6">
+                    <v-select
+                      :options="serviceChargeTypeList"
+                      label="value"
+                      v-model="countryWiseForm.service_charge_type"
+                      :reduce="(item) => item.id"
+                      placeholder="Available options here"
+                      required
+                      :clearable="false"
+                      :class="{
+                        'is-invalid':
+                          $v.countryWiseForm.service_charge_type.$error,
+                      }"
+                      aria-describedby="service_charge_type-live-feedback"
+                    >
+                    </v-select>
+                    <b-form-invalid-feedback
+                      id="service_charge_type-live-feedback"
+                    >
+                      This is a required field.
+                    </b-form-invalid-feedback>
+                  </b-col>
+                  <b-col cols="6">
+                    <b-form-input
+                      type="number"
+                      id="service_charge"
+                      name="service_charge"
+                      class="mt-3"
+                      placeholder="Service Charge"
+                      v-model="countryWiseForm.service_charge"
+                      size="md"
+                      @keypress="
+                        onlyForDecimal($event, countryWiseForm.service_charge)
+                      "
+                      required
+                      :class="{
+                        'is-invalid': $v.countryWiseForm.service_charge.$error,
+                      }"
+                      aria-describedby="service_charge-live-feedback"
+                    >
+                    </b-form-input>
+                    <b-form-invalid-feedback id="service_charge-live-feedback">
+                      This is a required field.
+                    </b-form-invalid-feedback>
                   </b-col>
                   <small class="ml-3 mt-3"
                     >if <strong>percentage</strong> selected then Upper Limit
                     will be disabled.</small
                   >
                   <b-col cols="12">
-                    <b-form-group>
-                      <b-form-input
-                        placeholder="Upper Limit"
-                        v-model="scs_payout_partner_wise.upper_limit"
-                        size="sm"
-                      ></b-form-input>
-                    </b-form-group>
+                    <b-form-input
+                      type="number"
+                      id="upper_limit"
+                      name="upper_limit"
+                      class="mt-3"
+                      placeholder="Upper Limit"
+                      v-model="countryWiseForm.upper_limit"
+                      size="md"
+                      @keypress="
+                        onlyForDecimal($event, countryWiseForm.upper_limit)
+                      "
+                      required
+                      :class="{
+                        'is-invalid': $v.countryWiseForm.upper_limit.$error,
+                      }"
+                      aria-describedby="upper_limit-live-feedback"
+                    >
+                    </b-form-input>
+                    <b-form-invalid-feedback id="upper_limit-live-feedback">
+                      This is a required field.
+                    </b-form-invalid-feedback>
                   </b-col>
                   <b-col cols="6">
-                    <b-form-group>
-                      <b-form-input
-                        class="mt-3"
-                        placeholder="Total Commission"
-                        v-model="scs_payout_partner_wise.total_commission"
-                        size="sm"
-                      ></b-form-input>
-                    </b-form-group>
+                    <b-form-input
+                      type="number"
+                      id="qqpay_commission"
+                      name="qqpay_commission"
+                      class="mt-3"
+                      placeholder="Total Commission"
+                      v-model="countryWiseForm.qqpay_commission"
+                      size="md"
+                      @keypress="
+                        onlyForDecimal($event, countryWiseForm.qqpay_commission)
+                      "
+                      required
+                      :class="{
+                        'is-invalid':
+                          $v.countryWiseForm.qqpay_commission.$error,
+                      }"
+                      aria-describedby="qqpay_commission-live-feedback"
+                    >
+                    </b-form-input>
+                    <b-form-invalid-feedback
+                      id="qqpay_commission-live-feedback"
+                    >
+                      This is a required field.
+                    </b-form-invalid-feedback>
                   </b-col>
                   <b-col cols="6">
-                    <b-form-group>
-                      <b-form-input
-                        class="mt-3"
-                        placeholder="Pay Commission"
-                        v-model="scs_payout_partner_wise.pay_commission"
-                        size="sm"
-                      ></b-form-input>
-                    </b-form-group>
+                    <b-form-input
+                      type="number"
+                      id="payout_partner_commission"
+                      name="payout_partner_commission"
+                      class="mt-3"
+                      placeholder="Pay Commission"
+                      v-model="countryWiseForm.payout_partner_commission"
+                      size="md"
+                      @keypress="
+                        onlyForDecimal(
+                          $event,
+                          countryWiseForm.payout_partner_commission
+                        )
+                      "
+                      required
+                      :class="{
+                        'is-invalid':
+                          $v.countryWiseForm.payout_partner_commission.$error,
+                      }"
+                      aria-describedby="payout_partner_commission-live-feedback"
+                    >
+                    </b-form-input>
+                    <b-form-invalid-feedback
+                      id="payout_partner_commission-live-feedback"
+                    >
+                      This is a required field.
+                    </b-form-invalid-feedback>
                   </b-col>
                   <b-col cols="12">
-                    <b-form-group>
-                      <b-form-textarea
-                        class="mt-3"
-                        placeholder="Remarks"
-                        v-model="scs_payout_partner_wise.remarks"
-                        size="sm"
-                        rows="3"
-                        max-rows="6"
-                      ></b-form-textarea>
-                    </b-form-group>
+                    <b-form-textarea
+                      id="remarks"
+                      class="mt-3"
+                      placeholder="Remarks"
+                      v-model="countryWiseForm.remarks"
+                      size="sm"
+                      rows="3"
+                      max-rows="6"
+                    ></b-form-textarea>
                   </b-col>
                 </b-row>
               </b-card>
@@ -377,8 +488,8 @@
           </b-tab>
         </b-tabs>
       </b-card>
-      <template #modal-footer="{ submitPopup }">
-        <b-button size="lg" variant="primary" @click="submitPopup()">
+      <template #modal-footer="{ manage }">
+        <b-button size="lg" variant="primary" @click="manage()">
           Add Service Charge Setup
         </b-button>
       </template>
@@ -388,19 +499,22 @@
 
 <script>
 //import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
+import { required, minLength } from "vuelidate/lib/validators";
+import { validationMixin } from "@/mixins";
+import { getAll } from "@/api/country";
+import {
+  getServiceChargeType,
+  getPaymentMode,
+  getAll as list,
+  getById,
+  save,
+  update,
+} from "@/api/serviceCharge";
 export default {
-  name: "Service Charge",
-  components: {
-    //TreasuryFlow,
-  },
+  components: {},
+  mixins: [validationMixin],
   data() {
     return {
-      daily_forex: {
-        country_name: "Malaysia",
-        search_user: "",
-        filter_option: "Filter",
-      },
-      filter: null,
       menu_hierarchy: [
         {
           text: "Setup",
@@ -411,112 +525,128 @@ export default {
           active: true,
         },
       ],
-      scs_country_wise: {
-        charge_type: "Cash Payment",
-        country: "India",
-        service_charge_by: "F",
-        service_charge: "",
-        upper_limit: "",
-        total_commission: "",
-        pay_commission: "",
-        remarks: "",
+      defaultForm: {
+        country_name: null,
+        search_user: null,
+        filter_option: null,
       },
-      scs_payout_partner_wise: {
-        charge_type: "Cash Payment",
-        payout_partner: "ICICI",
-        receive_country: "",
-        service_charge_by: "F",
-        service_charge: "",
-        upper_limit: "",
-        total_commission: "",
-        pay_commission: "",
-        remarks: "",
+      form: null,
+      countryList: [],
+      serviceChargeTypeList: [],
+      payoutPartnerList: [],
+      paymentModeList: [],
+      items: [],
+      filter: null,
+      countryWiseDefaultForm: {
+        id: 0,
+        payment_mode: null,
+        country: null,
+        service_charge_type: null,
+        service_charge: null,
+        upper_limit: null,
+        qqpay_commission: null,
+        payout_partner_commission: null,
+        remarks: null,
       },
+      countryWiseForm: null,
+      // scs_payout_partner_wise: {
+      //   id: null,
+      //   charge_type: "Cash Payment",
+      //   payout_partner: "ICICI",
+      //   receive_country: "",
+      //   service_charge_by: ,
+      //   service_charge: "",
+      //   upper_limit: "",
+      //   total_commission: "",
+      //   pay_commission: "",
+      //   remarks: "",
+      // },
       fields: [
+        {key: 'id', label: 'S/N'},
         { key: "country", label: "Country" },
         { key: "payout_partner", label: "Payout Partner" },
-        { key: "charge_type", label: "Charge Type" },
-        { key: "upper_limit_myr", label: "Upper Limit MYR" },
-        { key: "service_charge_by", label: "Service Charge By" },
-        { key: "service_charge_myr", label: "Service Charge MYR" },
-        { key: "pay_commission", label: "Pay Commission" },
-        { key: "receive_commission", label: "Receive Commission" },
+        { key: "service_charge_type", label: "Charge Type" },
+        { key: "upper_limit", label: "Upper Limit MYR" },
+        { key: "created_by", label: "Service Charge By" },
+        { key: "service_charge", label: "Service Charge MYR" },
+        { key: "payout_partner_commission", label: "Pay Commission" },
+        { key: "qqpay_commission", label: "Receive Commission" },
         { key: "remarks", label: "Remarks" },
       ],
-      items: [
-        {
-          country: "India",
-          payout_partner: "ICICI",
-          charge_type: "Cash Payment",
-          upper_limit_myr: "No Limit",
-          service_charge_by: "F",
-          service_charge_myr: "15",
-          pay_commission: "7.5",
-          receive_commission: "7.5",
-          remarks: "1",
-        },
-        {
-          country: "India",
-          payout_partner: "ICICI",
-          charge_type: "Account Deposit",
-          upper_limit_myr: "5,000",
-          service_charge_by: "F",
-          service_charge_myr: "12",
-          pay_commission: "7.5",
-          receive_commission: "4.5",
-          remarks: "1",
-        },
-        {
-          country: "India",
-          payout_partner: "ICICI",
-          charge_type: "Account Deposit",
-          upper_limit_myr: "50,000",
-          service_charge_by: "F",
-          service_charge_myr: "20",
-          pay_commission: "10",
-          receive_commission: "10",
-          remarks: "0",
-        },
-        {
-          country: "India",
-          payout_partner: "ICICI",
-          charge_type: "Account Deposit",
-          upper_limit_myr: "2,00,000",
-          service_charge_by: "F",
-          service_charge_myr: "30",
-          pay_commission: "15",
-          receive_commission: "15",
-          remarks: "1",
-        },
-        {
-          country: "Nepal",
-          payout_partner: "",
-          charge_type: "Cash Payment",
-          upper_limit_myr: "50,000",
-          service_charge_by: "F",
-          service_charge_myr: "15",
-          pay_commission: "7.5",
-          receive_commission: "7.5",
-          remarks: "1",
-        },
-      ],
-      country_options: [
-        {
-          text: "Malaysia",
-          value: "Malaysia",
-        },
-        {
-          text: "India",
-          value: "India ",
-        },
-      ],
+      // items: [
+      //   {
+      //     country: "India",
+      //     payout_partner: "ICICI",
+      //     charge_type: "Cash Payment",
+      //     upper_limit_myr: "No Limit",
+      //     service_charge_by: "F",
+      //     service_charge_myr: "15",
+      //     pay_commission: "7.5",
+      //     receive_commission: "7.5",
+      //     remarks: "1",
+      //   },
+      //   {
+      //     country: "India",
+      //     payout_partner: "ICICI",
+      //     charge_type: "Account Deposit",
+      //     upper_limit_myr: "5,000",
+      //     service_charge_by: "F",
+      //     service_charge_myr: "12",
+      //     pay_commission: "7.5",
+      //     receive_commission: "4.5",
+      //     remarks: "1",
+      //   },
+      //   {
+      //     country: "India",
+      //     payout_partner: "ICICI",
+      //     charge_type: "Account Deposit",
+      //     upper_limit_myr: "50,000",
+      //     service_charge_by: "F",
+      //     service_charge_myr: "20",
+      //     pay_commission: "10",
+      //     receive_commission: "10",
+      //     remarks: "0",
+      //   },
+      //   {
+      //     country: "India",
+      //     payout_partner: "ICICI",
+      //     charge_type: "Account Deposit",
+      //     upper_limit_myr: "2,00,000",
+      //     service_charge_by: "F",
+      //     service_charge_myr: "30",
+      //     pay_commission: "15",
+      //     receive_commission: "15",
+      //     remarks: "1",
+      //   },
+      //   {
+      //     country: "Nepal",
+      //     payout_partner: "",
+      //     charge_type: "Cash Payment",
+      //     upper_limit_myr: "50,000",
+      //     service_charge_by: "F",
+      //     service_charge_myr: "15",
+      //     pay_commission: "7.5",
+      //     receive_commission: "7.5",
+      //     remarks: "1",
+      //   },
+      // ],
+      // country_options: [
+      //   {
+      //     text: "Malaysia",
+      //     value: "Malaysia",
+      //   },
+      //   {
+      //     text: "India",
+      //     value: "India ",
+      //   },
+      // ],
       filter_options: [
         {
           text: "Filter",
           value: "Filter",
         },
       ],
-      charge_options: [
+      chargeList: [
         {
           text: "Final",
           value: "Final",
@@ -526,41 +656,160 @@ export default {
           value: "Half",
         },
       ],
-      payout_partner_options: [
-        {
-          text: "ICICI",
-          value: "ICICI",
-        },
-        {
-          text: "SBI",
-          value: "SBI",
-        },
-      ],
-      service_charge_by_options: [
-        {
-          text: "F",
-          value: "F",
-        },
-        {
-          text: "J",
-          value: "J",
-        },
-      ],
-      charge_type_options: [
-        {
-          text: "Cash Payment",
-          value: "Cash Payment",
-        },
-        {
-          text: "Account Deposit",
-          value: "Account Deposit",
-        },
-      ],
+      // payoutPartnerList: [
+      //   {
+      //     text: "ICICI",
+      //     value: "ICICI",
+      //   },
+      //   {
+      //     text: "SBI",
+      //     value: "SBI",
+      //   },
+      // ],
+      // service_charge_type_options: [
+      //   {
+      //     text: "F",
+      //     value: "F",
+      //   },
+      //   {
+      //     text: "J",
+      //     value: "J",
+      //   },
+      // ],
+      // charge_type_options: [
+      //   {
+      //     text: "Cash Payment",
+      //     value: "Cash Payment",
+      //   },
+      //   {
+      //     text: "Account Deposit",
+      //     value: "Account Deposit",
+      //   },
+      // ],
     };
   },
+  validations: {
+    countryWiseForm: {
+      payment_mode: {
+        required,
+      },
+      country: {
+        required,
+      },
+      service_charge_type: {
+        required,
+      },
+      service_charge: {
+        required,
+        minLength: minLength(1),
+      },
+      upper_limit: {
+        required,
+        minLength: minLength(1),
+      },
+      qqpay_commission: {
+        required,
+        minLength: minLength(1),
+      },
+      payout_partner_commission: {
+        required,
+        minLength: minLength(1),
+      },
+    },
+  },
   methods: {
-    onSearch: function () {},
-    submitPopup: function () {},
+    onlyForDecimal($event, val) {
+      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+
+      if (
+        (keyCode < 48 || keyCode > 57) &&
+        (keyCode !== 46 || val.toString().indexOf(".") != -1)
+      ) {
+        $event.preventDefault();
+      }
+
+      if (
+        val != null &&
+        val.toString().indexOf(".") != -1 &&
+        val.toString().split(".")[1].length > 1
+      ) {
+        $event.preventDefault();
+      }
+    },
+    resetForm() {
+      this.countryWiseForm = Object.assign({}, this.countryWiseDefaultForm);
+      this.$v.$reset()
+      this.onSearch()
+    },
+    onSearch() {
+      list().then((res) => {
+        this.items = res.data.data[0];
+        debugger; // eslint-disable-line no-debugger
+      });
+    },
+    edit(item) {
+      if (item.id > 0) {
+        getById(item.id)
+          .then((res) => {
+            this.countryWiseForm = Object.assign({}, res.data);
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    manage() {
+      console.log(this.countryWiseForm);
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      if (this.countryWiseForm.id > 0) {
+        update(this.countryWiseForm)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            console.log(error);
+            this.resetForm();
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        save(this.countryWiseForm)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            console.log(error);
+            this.resetForm();
+          })
+          .finally(() => {
+            //done()
+          });
+      }
+    },
+  },
+  async created() {
+    this.resetForm();
+    await Promise.all([
+      getAll().then((res) => {
+        this.countryList = res.data;
+      }),
+
+      getServiceChargeType().then((res) => {
+        this.serviceChargeTypeList = res.data;
+      }),
+
+      getPaymentMode().then((res) => {
+        this.paymentModeList = res.data;
+      }),
+      this.onSearch(),
+    ]);
   },
 };
 </script>

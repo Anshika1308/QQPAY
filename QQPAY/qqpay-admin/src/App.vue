@@ -1,8 +1,27 @@
 <template>
   <div id="app">
-    <router-view />
+    <div v-if="$store.getters.isAppLoaded">
+      <router-view />
+    </div>
+    
   </div>
 </template>
+
+<script>
+export default{
+  name: 'App',
+  methods: {
+    async getConfig(){
+      const runtimeConfig = await fetch('../../static/config.json')
+      return await runtimeConfig.json()
+    }
+  },
+  async created(){
+    const config = await this.getConfig()
+    this.$store.dispatch('app/setConfig', config)
+  }
+}
+</script>
 <style>
 #app {
   font-family: "Avenir",Helvetica,Arial,sans-serif;
