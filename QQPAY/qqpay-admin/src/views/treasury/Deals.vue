@@ -107,7 +107,7 @@
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Settlements</label>
-                      <label>{{ row.item.NoOf_Setle }}</label>
+                      <label>{{ row.item.no_of_settlements }}</label>
                     </b-list-group-item>
 
                     <b-list-group-item
@@ -130,7 +130,7 @@
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Target of funds</label>
-                      <label>{{ row.item.TOF }}</label>
+                      <label>{{ row.item.tof }}</label>
                     </b-list-group-item>
 
                     <b-list-group-item
@@ -308,7 +308,7 @@
           </b-col>
           <b-col sm="12" md="4" lg="4">
             <b-form-group label="Target of Fund">
-              <b-form-input v-model="temp_deal.TOF" size="sm"></b-form-input>
+              <b-form-input v-model="temp_deal.tof" size="sm"></b-form-input>
             </b-form-group>
           </b-col>          
 
@@ -443,10 +443,12 @@ export default {
 
         purchase_date: "",
         bank_charge: "",
-        TOF: "",          // Target of fund
+        tof: "",          // Target of fund
         bank_poc: "",
         tax: "",
         remarks: "",
+        no_of_settlements: "",
+        status: ""
 
       },
       menu_hierarchy: [
@@ -547,6 +549,8 @@ export default {
           })
           .then((response) => {
             console.log(response.data.data)
+            // response.data.data[0]['status'] = "open";
+            // response.data.data[0]['no_of_settlements'] = 1;
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
@@ -595,6 +599,8 @@ export default {
     },
     newDealClicked() {
       this.updateTrigger = false;
+      this.temp_deal.status = "open";
+      this.temp_deal.no_of_settlements = 1;
     },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;

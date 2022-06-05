@@ -165,7 +165,7 @@
                           class="d-flex justify-content-between align-items-center"
                         >
                           <label>Purchase Date</label>
-                          <label>{{ format(row.item.created_date) }}</label>
+                          <label>{{ format(row.item.deal_date) }}</label>
                         </b-list-group-item>
                         <b-list-group-item
                           class="d-flex justify-content-between align-items-center"
@@ -534,7 +534,7 @@ export default {
         lcy_amount: null,
 
         ccy_cd: "",
-        created_date: "",
+        deal_date: "",
         swift_charge: "",
         coll_ccy_pay_ccy_wrong: "",  // Need to capture
         created_by: "",

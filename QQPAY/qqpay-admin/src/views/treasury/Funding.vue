@@ -496,7 +496,7 @@ export default {
           bank_poc: "",
           coll_ccy_pay_ccy: "",
 
-          deal_no: "",
+          // deal_no: "",
           dollar_lcy_rate: "",
           parent_lcy_rate: "",
 
@@ -627,6 +627,8 @@ export default {
 
     submit() {
       const request = this.getRequest();
+      // request.deal_no = this.selected_Settlement.settle_srl_num;
+      request.funding_number = Number(request.funding_number);
       // console.log('req', JSON.parse(JSON.stringify(request)))
       if (this.updateTrigger) {
         axios.put(this.base_url + "prefund/update-prefund/" + request.fund_id, request, {
