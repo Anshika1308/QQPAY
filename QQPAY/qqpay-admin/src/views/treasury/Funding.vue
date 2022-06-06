@@ -133,14 +133,46 @@
                   <b-list-group-item
                     class="d-flex justify-content-between align-items-center"
                   >
-                    <label>Purchase Date</label>
-                    <label>{{ row.item.purchase_date }}</label>
+                    <label>USD_PPCCY</label>
+                    <label>{{ row.item.USD_PPCCY }}</label>
                   </b-list-group-item>
                   <b-list-group-item
                     class="d-flex justify-content-between align-items-center"
                   >
-                    <label>Created by</label>
+                    <label>FeesCCY_Type</label>
+                    <label>{{ row.item.FeesCCY_Type }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+
+                  <label>Fees</label>
+                    <label>{{ row.item.Fees }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+
+                  <label>created_by</label>
                     <label>{{ row.item.created_by }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+
+                  <label>MY_RPPCY</label>
+                    <label>{{ row.item.MY_RPPCY }}</label>
+                  </b-list-group-item>
+
+                  <b-list-group-item
+                    class="d-flex justify-content-between align-items-center"
+                  >
+
+                  <label>edited_by</label>
+                    <label>{{ row.item.edited_by }}</label>
                   </b-list-group-item>
                 </b-list-group>
               </div>
@@ -417,17 +449,11 @@ export default {
         "payout_partner",
         "PPCCY_Type",
         "USD_Amt",
-        "USD_PPCCY",
         "PP_Amt",
         "Funding No",
         "Purchase_DT",
-        "FeesCCY_Type",
-        "Fees",
-        "Created_By",
-        "MY_RPPCY",
         "Bank_POC",
-        "Bank",
-        "Edited_By",
+        
         { key: "actions", label: "" },
       ],
       items: [
@@ -435,23 +461,22 @@ export default {
           payout_partner: "axis",
           PPCCY_Type: "INR",
           USD_Amt: "19,970",
-          USD_PPCCY: "75",
           PP_Amt: "1,497,750",
           Funding_No: " ",
           purchase_DT: " ",
-          FeesCCY_Type: "USD",
-          Fees: "20",
-          created_by : " ",
-          MY_RPPCY: "17.4",
           Bank_POC: "",
-          Bank: "",
-          edited_by: "",
-          comment: "This is a sample Funding",
+          
+          
+      
         },
       ],
     };
   },
-  methods: {},
+  methods: {
+    submit(){
+      this.items.push(this.temp_funding);
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>
