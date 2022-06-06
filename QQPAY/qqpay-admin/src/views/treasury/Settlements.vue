@@ -379,7 +379,7 @@
           <b-col>
             <b-form-group label="PP Bank POC">
               <b-form-input
-                v-model="temp_settlement.PP_Bank_POC"
+                v-model="temp_settlement.pp_bank_poc"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -644,8 +644,6 @@ export default {
       console.log('nav update')
     },
     async getSelecedDealSetlement() {
-      console.log('selected_deal', this.selected_deal);
-
       axios
         .get(this.base_url + "deal-settlement/get-settlement_belong/" + this.selected_deal.deal_id, {
           headers: {
@@ -655,7 +653,6 @@ export default {
         .then(response => {
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
         })
         .catch((e) => {
           console.log(e);
@@ -698,7 +695,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.data);
             const index = this.items.findIndex(ele => ele.settl_id === this.temp_settlement.settl_id);
             this.items[index] = response.data.data[0];
           })
@@ -714,7 +710,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.data)
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
@@ -726,7 +721,6 @@ export default {
     getRequest() {
       const req = this.temp_settlement;
       for (const key of Object.keys(req)) {
-        console.log(key, req[key]);
         if (key === 'deal_date' || key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
           if (req[key]) {
             req[key] = new Date(req[key]);
@@ -737,11 +731,9 @@ export default {
     },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
-      console.log('slected', selectedRow)
       this.temp_settlement = selectedRow;
     },
     newFundClicked(selectedRow) {
-      console.log(selectedRow);
       this.$emit('openTab', 'funding')
       this.$store.commit("set_selected_Settlement", selectedRow);
     },

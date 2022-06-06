@@ -277,22 +277,24 @@ export default {
     return {
       deals: "Deals",
       tab_show: {
-        deals: true,
+        deals: false,
         settlements: false,
         funding: false,
         forex: false,
         statement: false,
         Service: false,
         PPComm: false,
+        user: true,
       },
       tab_active: {
-        deals: true,
+        deals: false,
         settlements: false,
         funding: false,
         forex: false,
         statement: false,
         Service: false,
-        PPComm: false
+        PPComm: false,
+        user: true
       },
       menus: [
         {
@@ -379,6 +381,9 @@ export default {
     openTab(sub_menu) {
       if (sub_menu === 'settlements') {
         this.$store.commit("set_selected_deal", null);
+      }
+      if (sub_menu === 'funding') {
+        this.$store.commit("set_selected_Settlement", null);
       }
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;

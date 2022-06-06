@@ -533,7 +533,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.data);
             const index = this.items.findIndex(ele => ele.deal_id === this.temp_deal.deal_id);
             this.items[index] = response.data.data[0];
           })
@@ -548,7 +547,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.data)
             // response.data.data[0]['status'] = "open";
             // response.data.data[0]['no_of_settlements'] = 1;
             this.items.push(response.data.data[0]);
@@ -562,7 +560,6 @@ export default {
     getRequest() {
       const req = this.temp_deal;
       for (const key of Object.keys(req)) {
-        console.log(key, req[key]);
         if (key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
           if (req[key]) {
             req[key] = new Date(req[key]);
@@ -604,12 +601,9 @@ export default {
     },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
-      console.log('slected', selectedRow)
       this.temp_deal = selectedRow;
     },
     newSettlementClicked(selectedRow) {
-      console.log(selectedRow);
-      console.log('new clicked',  this.$emit('openTab', 'settlements'));
       this.$emit('openTab', 'settlements')
       this.$store.commit("set_selected_deal", selectedRow);
     },

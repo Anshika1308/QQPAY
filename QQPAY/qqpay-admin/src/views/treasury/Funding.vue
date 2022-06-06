@@ -122,8 +122,8 @@
       responsive
       class="align-middle"
     >
-      <template #cell(payout_partner_id)="row">
-        <b>{{ row.item.payout_partner_id }} </b>
+      <template #cell(payout_partner)="row">
+        <b>{{ row.item.payout_partner }} </b>
       </template>
       <template #cell(funding_date)="row"
         ><b>{{ row.item.funding_date }}</b>
@@ -260,7 +260,7 @@
           <b-col>
                <b-form-group label="Payout Partner">
               <b-form-input
-                v-model="temp_funding.Payout_partner"
+                v-model="temp_funding.payout_partner"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -488,7 +488,8 @@ export default {
           Bank: "",
           edited_by: "",
           settl_id: "" */
-          payout_partner_id: "",
+          payout_partner: "",
+          payout_partner_id: 1000,
           fund_date: "",
           lcy_amount: "",
           pp_amount: "",
@@ -526,7 +527,7 @@ export default {
         "Bank_POC", */
 
         {
-          key: 'payout_partner_id',
+          key: 'payout_partner',
           label: 'Payout Partner'
         },
         {
@@ -582,8 +583,6 @@ export default {
       console.log('nav update')
     },
     async getSelectedSettlemntFunds() {
-      console.log('selected_Settlement', this.selected_Settlement);
-      console.log("token", this.token);
 
       axios
         .get(this.base_url + "prefund/get-prefund_belong/" + this.selected_Settlement.settl_id, {
@@ -593,15 +592,12 @@ export default {
         })
         .then(response => {
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
         })
         .catch((e) => {
           console.log(e);
         });
     },
     async getFunds() {
-      console.log('selected_Settlement', this.selected_Settlement);
-      console.log("token", this.token);
 
       axios
         .get(this.base_url + "prefund/get-all-prefunds", {
@@ -611,7 +607,6 @@ export default {
         })
         .then(response => {
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
         })
         .catch((e) => {
           console.log(e);
@@ -637,7 +632,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.data);
             const index = this.items.findIndex(ele => ele.fund_id === this.temp_funding.fund_id);
             this.items[index] = response.data.data[0];
           })
@@ -653,7 +647,6 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response.data.data)
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
@@ -665,7 +658,6 @@ export default {
     getRequest() {
       const req = this.temp_funding;
       for (const key of Object.keys(req)) {
-        console.log(key, req[key]);
         if (key === 'deal_date' || key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
           if (req[key]) {
             req[key] = new Date(req[key]);
@@ -676,7 +668,6 @@ export default {
     },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
-      console.log('slected', selectedRow)
       this.temp_funding = selectedRow;
     },
     isNumber(e) {
