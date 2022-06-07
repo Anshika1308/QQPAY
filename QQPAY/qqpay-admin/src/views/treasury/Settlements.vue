@@ -321,10 +321,10 @@
             <b-form-group
               id="fieldset-1"
               label="Transaction Date"
-              label-for="example-datepicker"
+              label-for="settl-date-id"
             >
               <b-form-datepicker
-                id="example-datepicker"
+                id="settl-date-id"
                 v-model="temp_settlement.settl_date"
                 class="mb-2"
                 size="sm"
@@ -566,7 +566,7 @@ export default {
       
       fields: [
         {
-          key: 'payout_partner_id',
+          key: 'payout_partner',
           label: 'Payout Partner'
         },
         {
@@ -703,6 +703,7 @@ export default {
         });
 
       } else {
+        request.deal_date = this.selected_deal.deal_date
         request.deal_id = this.selected_deal.deal_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
         axios.post(this.base_url + "deal-settlement/new-deal-settlement", request, {
             headers: {

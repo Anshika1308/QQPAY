@@ -221,18 +221,20 @@
                   variant="outline-light"
                   size="sm"
                   class="wd-100p mb-2 btn-light"
+                  @click="onclickUpdate(row.item)"
+                  v-b-modal.add-funding
                 >
                   <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
                   Update
                 </b-button>
-                <b-button
+                <!-- <b-button
                   variant="outline-light"
                   size="sm"
                   class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="plus-circle" aria-hidden="true"></b-icon> New
                   Funding
-                </b-button>
+                </b-button> -->
                 <b-button
                   variant="outline-light"
                   size="sm"
