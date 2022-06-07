@@ -1,34 +1,58 @@
 <template>
   <div class="home">
     <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
-    <b-card>
+    <b-card v-if="selected_Settlement">
       <b-row>
         <b-col
           sm="12"
           md="6"
           lg="4"
-          v-for="deal in deal_details"
-          :key="deal.id"
         >
           <div class="menu-sec">
             <b-list-group flush>
+              <!-- <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+              >
+                <small>Deal Type</small>
+                <small>{{ selected_Settlement.deal_type }}</small>
+              </b-list-group-item> -->
               <b-list-group-item
                 class="d-flex justify-content-between align-items-center"
-                v-for="details in deal.details"
-                :key="details.value"
               >
-                <small>{{ details.text }}</small>
-                <small>{{ details.value }}</small>
+                <small>Settlement Number</small>
+                <small>{{ selected_Settlement.settle_srl_num }}</small>
+              </b-list-group-item>
+            </b-list-group>
+          </div>
+        </b-col>
+        <b-col
+          sm="12"
+          md="6"
+          lg="4"
+        >
+          <div class="menu-sec">
+            <b-list-group flush>
+              <!-- <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+              >
+                <small>Fund in  MYR</small>
+                <small>{{ selected_Settlement.lcy_amount }} MYR</small>
+              </b-list-group-item> -->
+              <b-list-group-item
+                class="d-flex justify-content-between align-items-center"
+              >
+                <small>Fund in USD</small>
+                <small>{{ selected_Settlement.lcy_amount }} USD</small>
               </b-list-group-item>
             </b-list-group>
           </div>
         </b-col>
         <b-col sm="12" md="6" lg="4">
           <div
-            class="menu-sec d-flex justify-content-between align-items-center"
+            class="menu-sec d-flex justify-content-between "
           >
             Balance:
-            <h3>10,000 INR</h3>
+            <h3>{{ selected_Settlement.credit_amount }} USD</h3>
           </div>
         </b-col>
       </b-row>
@@ -53,7 +77,7 @@
       <b-col class="col-p5">
         <div>
           <b-button-group size="sm">
-            <b-button variant="outline-light" v-b-modal.add-funding>
+            <b-button v-if="selected_Settlement" @click="updateTrigger = false;" variant="outline-light" v-b-modal.add-funding>
               <b-icon icon="file-earmark-plus-fill"></b-icon> New Funding
             </b-button>
             <b-button variant="outline-light">
@@ -98,7 +122,7 @@
       responsive
       class="align-middle"
     >
-      <template #cell(Payout_partner)="row">
+      <template #cell(payout_partner)="row">
         <b>{{ row.item.payout_partner }} </b>
       </template>
       <template #cell(funding_date)="row"
@@ -119,95 +143,109 @@
       </template>
       <template #row-details="row">
         <b-card>
-          <b-row>
-            <b-col sm="12" md="6" lg="4">
-              <div class="menu-sec">
-                <label class="title-lbl">Additional Info</label>
-                <b-list-group flush>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>Contract Number</label>
-                    <label>{{ row.item.contract_no }}</label>
-                  </b-list-group-item>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>USD_PPCCY</label>
-                    <label>{{ row.item.USD_PPCCY }}</label>
-                  </b-list-group-item>
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <label>FeesCCY_Type</label>
-                    <label>{{ row.item.FeesCCY_Type }}</label>
-                  </b-list-group-item>
+          <b-row align-h="between">
+            <b-col sm="12" md="6" lg="9">
+              <label class="title-lbl">Additional Info</label>
+              <b-row align-h="between">
+                <b-col sm="12" md="6" lg="6">
+                  <div class="menu-sec">
+                    <b-list-group flush>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <label>Contract Number</label>
+                        <label>{{ row.item.deal_no }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <label>USD Rate</label>
+                        <label>{{ row.item.dollar_lcy_rate }}</label>
+                      </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
 
-                  <label>Fees</label>
-                    <label>{{ row.item.Fees }}</label>
-                  </b-list-group-item>
+                      <label>MYR Rate</label>
+                        <label>{{ row.item.parent_lcy_rate }}</label>
+                      </b-list-group-item>                      
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <label>CCY Type</label>
+                        <label>{{ row.item.lcy_ccy }}</label>
+                      </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                     
+                    </b-list-group>
+                  </div>
+                </b-col>
+                <b-col sm="12" md="6" lg="6">
+                  <div class="menu-sec">
+                    <b-list-group flush>
+                      
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
 
-                  <label>created_by</label>
-                    <label>{{ row.item.created_by }}</label>
-                  </b-list-group-item>
+                      <label>Bank Charges</label>
+                        <label>{{ row.item.bank_charges }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                      <label>created_by</label>
+                        <label>{{ row.item.created_by }}</label>
+                      </b-list-group-item>
 
-                  <label>MY_RPPCY</label>
-                    <label>{{ row.item.MY_RPPCY }}</label>
-                  </b-list-group-item>
 
-                  <b-list-group-item
-                    class="d-flex justify-content-between align-items-center"
-                  >
 
-                  <label>edited_by</label>
-                    <label>{{ row.item.edited_by }}</label>
-                  </b-list-group-item>
-                </b-list-group>
-              </div>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+
+                      <label>edited_by</label>
+                        <label>{{ row.item.edited_by }}</label>
+                      </b-list-group-item>
+                    </b-list-group>
+                  </div>
+                </b-col>
+
+              </b-row>
             </b-col>
-            <b-col sm="12" md="6" lg="6" align-h="center">
-              <TreasuryFlow />
-            </b-col>
-            <b-col sm="12" md="6" lg="2">
+            <b-col sm="12" md="6" lg="3">
               <div class="menu-sec">
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
+                  @click="onclickUpdate(row.item)"
+                  v-b-modal.add-funding
                 >
                   <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
                   Update
                 </b-button>
-                <b-button
+                <!-- <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="plus-circle" aria-hidden="true"></b-icon> New
                   Funding
-                </b-button>
+                </b-button> -->
                 <b-button
                   variant="outline-light"
                   size="sm"
-                  class="wd-100p mb-2"
+                  class="wd-100p mb-2 btn-light"
                 >
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                 </b-button>
               </div>
             </b-col>
           </b-row>
+ 
         </b-card>
       </template>
     </b-table>
@@ -224,7 +262,7 @@
           <b-col>
                <b-form-group label="Payout Partner">
               <b-form-input
-                v-model="temp_funding.Payout_partner"
+                v-model="temp_funding.payout_partner"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -233,7 +271,7 @@
           <b-col>
             <b-form-group label="PPCCY Type">
               <b-form-input
-                v-model="temp_funding.PPCCY_Type"
+                v-model="temp_funding.coll_ccy_pay_ccy"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -241,8 +279,9 @@
           <b-col>
             <b-form-group label="USD Amt">
               <b-form-input
-                v-model="temp_funding.USD_Amt"
+                v-model="temp_funding.lcy_amount"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -253,7 +292,7 @@
 
          <b-form-group label="USD PPCCY">
               <b-form-input
-                v-model="temp_funding.USD_PPCCY"
+                v-model="temp_funding.dollar_lcy_rate"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -262,8 +301,9 @@
              <b-col>
             <b-form-group label="PP Amt">
               <b-form-input
-                v-model="temp_funding.PP_Amt"
+                v-model="temp_funding.pp_amount"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             
             </b-form-group>
@@ -273,7 +313,7 @@
             <b-form-group label="Funding No" label-for="input-1">
               <b-form-input
                 id="input-1"
-                v-model="temp_funding.Funding_No"
+                v-model="temp_funding.funding_number"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -288,13 +328,11 @@
         <b-card header="Purchase Details" header-tag="header">
       
         <b-row>
-
-
            <b-col>
             
               <b-form-group label="Purchase DT">
               <b-form-datepicker
-                v-model="temp_funding.Purchase_DT"
+                v-model="temp_funding.fund_date"
                 class="mb-2"
                 size="sm"
               ></b-form-datepicker>
@@ -305,19 +343,20 @@
          
           
           <b-col>
-            <b-form-group label="Fees CCY Type">
+            <b-form-group label="CCY Type">
               <b-form-input
-                v-model="temp_funding.FeesCCY_Type"
+                v-model="temp_funding.lcy_ccy"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
 
           <b-col>
-                <b-form-group label="Fees">
+                <b-form-group label="Bank Charges">
               <b-form-input
-                v-model="temp_funding.Fees"
+                v-model="temp_funding.bank_charges"
                 size="sm"
+                v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -326,9 +365,9 @@
             <b-row>
            
            <b-col>
-            <b-form-group label="MY RPPCCY">
+            <b-form-group label="MYR Rate">
               <b-form-input
-                v-model="temp_funding.MY_RPPCCY"
+                v-model="temp_funding.parent_lcy_rate"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -337,7 +376,7 @@
            <b-col>
             <b-form-group label="Bank POC">
               <b-form-input
-                v-model="temp_funding.Bank_POC"
+                v-model="temp_funding.bank_poc"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -359,24 +398,39 @@
       
         
       <template #modal-footer="{ ok }">
-        <b-button variant="primary" @click="ok()"> SUBMIT </b-button>
+        <b-button variant="primary" @click="ok(); submit()"> SUBMIT </b-button>
       </template>
     </b-modal>
   </div>
 </template>
 
 <script>
-import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
 import CountryFlag from "vue-country-flag";
+import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   name: "Funding",
   components: {
-    TreasuryFlow,
     CountryFlag,
+  },
+  created() {
+    if (this.selected_Settlement) {
+      this.getSelectedSettlemntFunds()
+    } else {
+      this.getFunds();
+    }
+  },
+  computed: {
+    ...mapGetters([
+      "token",
+      "base_url",
+      "selected_Settlement"
+    ]),
   },
   data() {
     return {
+      updateTrigger: false,
       filter: null,
       deal_details: [
         {
@@ -420,20 +474,40 @@ export default {
         },
       ],
       temp_funding: {
-          payout_partner: "axis",
-          PPCCY_Type: "INR",
+/*           payout_partner: "axis",
+          purchase_DT: " ",
           USD_Amt: "19,970",
-          USD_PPCCY: "75",
           PP_Amt: "1,497,750",
           Funding_No: " ",
-          purchase_DT: " ",
+          Bank_POC: "",
+          PPCCY_Type: "INR",
+          // Additonal details: 
           FeesCCY_Type: "USD",
+          USD_PPCCY: "75",
+          MY_RPPCY: "17.4",
           Fees: "20",
           created_by : " ",
-          MY_RPPCY: "17.4",
-          Bank_POC: "",
           Bank: "",
           edited_by: "",
+          settl_id: "" */
+          payout_partner: "",
+          payout_partner_id: 1000,
+          fund_date: "",
+          lcy_amount: "",
+          pp_amount: "",
+          funding_number: "",
+          bank_poc: "",
+          coll_ccy_pay_ccy: "",
+
+          // deal_no: "",
+          dollar_lcy_rate: "",
+          parent_lcy_rate: "",
+
+          bank_charges: "",
+
+
+
+
       },
       menu_hierarchy: [
         {
@@ -446,18 +520,49 @@ export default {
         },
       ],
       fields: [
-        "payout_partner",
+/*         "payout_partner",
         "PPCCY_Type",
         "USD_Amt",
         "PP_Amt",
         "Funding No",
         "Purchase_DT",
-        "Bank_POC",
+        "Bank_POC", */
+
+        {
+          key: 'payout_partner',
+          label: 'Payout Partner'
+        },
+        {
+          key: 'fund_date',
+          label: 'Purchase Date'
+        },
+        {
+          key: 'lcy_amount',
+          label: 'USD Amt'
+        },
+        {
+          key: 'pp_amount',
+          label: 'PP Amt'
+        },
+        {
+          key: 'funding_number',  //  Need to check that
+          label: 'Funding Number'
+        },
+        {
+          key: 'bank_poc',
+          label: 'Bank POC' 
+        },
+        {
+          key: 'coll_ccy_pay_ccy',
+          label: 'PP CCY Type'
+        },
+
+
         
         { key: "actions", label: "" },
       ],
       items: [
-        {
+/*         {
           payout_partner: "axis",
           PPCCY_Type: "INR",
           USD_Amt: "19,970",
@@ -468,13 +573,111 @@ export default {
           
           
       
-        },
+        }, */
       ],
     };
   },
   methods: {
-    submit(){
-      this.items.push(this.temp_funding);
+    ok() {
+      console.log('ok')
+    },
+    nav_update() {
+      console.log('nav update')
+    },
+    async getSelectedSettlemntFunds() {
+
+      axios
+        .get(this.base_url + "prefund/get-prefund_belong/" + this.selected_Settlement.settl_id, {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    async getFunds() {
+
+      axios
+        .get(this.base_url + "prefund/get-all-prefunds", {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    format(date) {
+      if (date) {
+        date = new Date(date);
+        let month = date.toLocaleString("en-US", { month: 'short' })
+        return date.getDate() + ' ' + month + ' ' + date.getFullYear();
+      }
+    },
+
+    submit() {
+      const request = this.getRequest();
+      // request.deal_no = this.selected_Settlement.settle_srl_num;
+      request.funding_number = Number(request.funding_number);
+      // console.log('req', JSON.parse(JSON.stringify(request)))
+      if (this.updateTrigger) {
+        axios.put(this.base_url + "prefund/update-prefund/" + request.fund_id, request, {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          })
+          .then((response) => {
+            const index = this.items.findIndex(ele => ele.fund_id === this.temp_funding.fund_id);
+            this.items[index] = response.data.data[0];
+          })
+          .catch((err) => {
+            console.log('Deal not posted', err);
+        });
+
+      } else {
+        request.settl_id = this.selected_Settlement.settl_id; 
+        axios.post(this.base_url + "prefund/prefund-partner", request, {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          })
+          .then((response) => {
+            this.items.push(response.data.data[0]);
+          })
+          .catch((err) => {
+            console.log('Deal not posted', err);
+        });
+        
+      }
+    },
+    getRequest() {
+      const req = this.temp_funding;
+      for (const key of Object.keys(req)) {
+        if (key === 'deal_date' || key === 'purchase_date' || key === 'updated_date' || key === 'approved_aate' || key === 'authorized_date') {
+          if (req[key]) {
+            req[key] = new Date(req[key]);
+          }
+        }
+      }
+      return req;
+    },
+    onclickUpdate(selectedRow) {
+      this.updateTrigger = true;
+      this.temp_funding = selectedRow;
+    },
+    isNumber(e) {
+      let char = String.fromCharCode(e.keyCode); // Get the character
+      let val = e.target.value; // Get the value
+      if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
+      // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
+      else e.preventDefault(); // If not match, don't add to input text
     }
   },
 };
@@ -548,5 +751,11 @@ export default {
 }
 ::v-deep .col-form-label {
   color: $dimgrey;
+}
+.btn-light {
+  border-color: $primary;
+  width: 100%;
+  background: transparent !important;
+  color: $primary !important;
 }
 </style>

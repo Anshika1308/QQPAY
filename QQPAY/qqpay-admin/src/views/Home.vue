@@ -41,7 +41,75 @@
               <b-col col sm="12" md="12" lg="12">
                 <b-card no-body>
                   <b-tabs pills card>
-                    <b-tab v-if="tab_show.deals" :active="tab_active.deals">
+                    <b-tab
+                      v-if="tab_show.user"
+                      :active="tab_active.user"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                          ></b-icon
+                        >
+                        User
+                        <b-button variant="outline-light" size="sm"
+                          @click="closeTab('user')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <ComplianceUser
+                    /></b-tab>
+
+                    <b-tab
+                      v-if="tab_show.business"
+                      :active="tab_active.business"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                          ></b-icon
+                        >
+                        Business
+                        <b-button variant="outline-light" size="sm"
+                          @click="closeTab('business')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <Business
+                    /></b-tab>
+
+                    <b-tab
+                      v-if="tab_show.fraud_users"
+                      :active="tab_active.fraud_users"
+                    >
+                      <template #title>
+                        <b-icon
+                            icon="journal-check"
+                            aria-hidden="true"
+                          ></b-icon
+                        >
+                        Fraud Users
+                        <b-button variant="outline-light" size="sm"
+                          @click="closeTab('fraud_users')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <FruadUsers
+                    /></b-tab>                                        
+                    <b-tab
+                      v-if="tab_show.deals"
+                      :active="tab_active.deals"
+                    >
                       <template #title>
                         <b-icon
                           icon="journal-check"
@@ -58,7 +126,7 @@
                           ></b-icon
                         ></b-button>
                       </template>
-                      <Deals
+                      <Deals @openTab="openTab"
                     /></b-tab>
                     <b-tab
                       v-if="tab_show.settlements"
@@ -80,7 +148,7 @@
                           ></b-icon
                         ></b-button>
                       </template>
-                      <Settlements
+                      <Settlements @openTab="openTab"
                     /></b-tab>
                     <b-tab v-if="tab_show.funding" :active="tab_active.funding">
                       <template #title>
@@ -256,6 +324,7 @@
       </b-row>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -264,6 +333,7 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import Deals from "@/views/treasury/Deals.vue";
 import Settlements from "@/views/treasury/Settlements.vue";
 import Funding from "@/views/treasury/Funding.vue";
+import ComplianceUser from "@/views/compilance/ComplianceUser.vue";
 //import Business from "./compilance/Business.vue";
 import DailyForex from "@/views/treasury/DailyForex.vue";
 //import { component } from 'vue/types/umd';
@@ -280,6 +350,7 @@ export default {
     Deals,
     Settlements,
     Funding,
+    ComplianceUser,
     //Business,
     DailyForex,
     ServiceCharge,
@@ -293,20 +364,20 @@ export default {
     return {
       deals: "Deals",
       tab_show: {
-        deals: true,
+        deals: false,
         settlements: false,
         funding: false,
         dailyForex: false,
         statement: false,
+        user: false,
         serviceCharge: false,
         specialRates: false,
         manageScore: false,
-        UserDetails: true,
         Service: true,
         PPComm: true,
       },
       tab_active: {
-        deals: true,
+        deals: false,
         settlements: false,
         funding: false,
         dailyForex: false,
@@ -314,9 +385,9 @@ export default {
         serviceCharge: false,
         specialRates: false,
         manageScore: false,
-        UserDetails: false,
         Service: false,
         PPComm: false,
+        user: false
       },
       menus: [
         {
@@ -339,9 +410,9 @@ export default {
           title: "Compliance",
           sub_menus: [
             {
-              title: "UserDetails",
-              value: "UserDetails",
-            },
+              title: "User",
+              value: "user",
+            }
           ],
         },
         {
@@ -422,6 +493,12 @@ export default {
   },
   methods: {
     openTab(sub_menu) {
+      if (sub_menu === 'settlements') {
+        this.$store.commit("set_selected_deal", null);
+      }
+      if (sub_menu === 'funding') {
+        this.$store.commit("set_selected_Settlement", null);
+      }
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;
       Object.keys(this.tab_active).forEach((v) => (this.tab_active[v] = false));

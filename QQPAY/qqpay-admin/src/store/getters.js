@@ -2,5 +2,18 @@ export const getters = {
     isAppLoaded: (state) => {
         return state.app.config != null
     },
-    config: (state) => state.app?.config
+    config: (state) => state.app ? state.app.config : '',
+    token: state => {
+        return state.app.token;
+    },
+    base_url: state => {
+        console.log('state', state)
+        return state.app.base_url;
+    },
+    selected_deal: state => {
+        return state.app.selected_deal;
+    },
+    selected_Settlement: state => {
+        return state.app.selected_Settlement;
+    },
 }
