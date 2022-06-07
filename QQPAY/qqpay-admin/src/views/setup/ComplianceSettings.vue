@@ -19,16 +19,6 @@
           <b-button
             class="float-right"
             variant="primary"
-            @click="showParameterForm()"
-            >Add Parameter</b-button
-          >
-        </div>
-      </b-col>
-      <b-col cols="2">
-        <div class="mt-3">
-          <b-button
-            class="float-right"
-            variant="primary"
             @click="showValueForm()"
             >Add Value</b-button
           >
@@ -44,84 +34,69 @@
         </div>
       </b-col>
     </b-row>
-    <b-row v-if="this.showParameter" class="mt-3">
-      <b-col cols="3">
-        <b-form-group>
-          <b-form-input
-            placeholder="Name"
-            v-model="parameter_form.name"
-            size="sm"
-          ></b-form-input
-        ></b-form-group>
-      </b-col>
-      <b-col cols="3">
-        <b-button
-          class="float-left"
-          variant="primary"
-          size="sm"
-          @click="submitParameter()"
-          >Save</b-button
-        >
-      </b-col>
-    </b-row>
     <b-row v-if="this.showValue" class="mt-3">
       <b-col cols="3">
-        <b-form-group>
-          <b-form-input
-            placeholder="Name"
-            v-model="value_form.name"
-            size="sm"
-          ></b-form-input
-        ></b-form-group>
+        <b-form-input
+          id="reuters_rate"
+          name="reuters_rate"
+          class="mt-3"
+          placeholder="Reuters Rate"
+          v-model="form.value"
+          size="md"
+          required
+          :class="{
+            'is-invalid': $v.form.value.$error,
+          }"
+          aria-describedby="value-live-feedback"
+        ></b-form-input>
+        <b-form-invalid-feedback id="value-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
-        <b-form-group>
-          <b-dropdown
-            block
-            id="input-relation"
-            :text="value_form.parameter_name"
-            variant="light"
-            label-size="sm"
-            size="sm"
-          >
-            <b-dropdown-item
-              v-for="option in parameter_name_options"
-              :key="option.value"
-              :value="option.value"
-              size="sm"
-            >
-              {{ option.text }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
+        <v-select
+          :options="parameterList"
+          label="value"
+          v-model="form.parameter_name"
+          :reduce="(item) => item.id"
+          placeholder="Available options here"
+          required
+          :clearable="false"
+          :class="{
+            'is-invalid': $v.form.parameter_name.$error,
+          }"
+          aria-describedby="parameter_name-live-feedback"
+        >
+        </v-select>
+        <b-form-invalid-feedback id="parameter_name-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
-        <b-form-group>
-          <b-dropdown
-            block
-            id="input-relation"
-            :text="value_form.score"
-            variant="light"
-            label-size="sm"
-            size="sm"
-          >
-            <b-dropdown-item
-              v-for="option in score_options"
-              :key="option.value"
-              :value="option.value"
-              size="sm"
-            >
-              {{ option.text }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
+         <v-select
+          :options="scoreList"
+          label="value"
+          v-model="form.score"
+          :reduce="(item) => item.id"
+          placeholder="Available options here"
+          required
+          :clearable="false"
+          :class="{
+            'is-invalid': $v.form.score.$error,
+          }"
+          aria-describedby="score-live-feedback"
+        >
+        </v-select>
+        <b-form-invalid-feedback id="score-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
         <b-button
           class="float-left"
           variant="primary"
           size="sm"
-          @click="submitValue(value_form)"
+          @click="manage()"
           >Save</b-button
         >
       </b-col>
@@ -171,21 +146,14 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
+import { validationMixin } from "@/mixins";
+import { getAll } from "@/api/country";
+import { getAll as list, getById, save, update } from "@/api/serviceCharge";
 export default {
-  components: {},
+  mixins: [validationMixin],
   data() {
     return {
-      showParameter: false,
-      showValue: false,
-      parameter_form: {
-        name: null,
-      },
-      value_form: {
-        name: null,
-        parameter_name: "Source of Income",
-        score: "1",
-        is_active: "True",
-      },
       menu_hierarchy: [
         {
           text: "Setup",
@@ -196,6 +164,17 @@ export default {
           active: true,
         },
       ],
+      showValue: false,
+      defaultForm: {
+        name: null,
+        parameter_name: "Source of Income",
+        score: "1",
+        is_active: "True",
+      },
+      form: null,
+      parameterList: [],
+      items: [],
+      filter: null,
       fields: [
         { key: "id", label: "SNO" },
         { key: "parameter_name", label: "Parameter" },
@@ -204,71 +183,7 @@ export default {
         { key: "is_active", label: "Active" },
         { key: "actions", label: "Action", class: "text-right" },
       ],
-      values: [
-        {
-          id: "1",
-          parameter_id: "1",
-          parameter_name: "Payment Mode",
-          name: "Bank Transfer",
-          score: "3",
-          is_active: "True",
-        },
-        {
-          id: "2",
-          parameter_id: "1",
-          parameter_name: "Payment Mode",
-          name: "Cash Payment",
-          score: "2",
-          is_active: "True",
-        },
-        {
-          id: "3",
-          parameter_id: "2",
-          parameter_name: "Source of Income",
-          name: "Salary",
-          score: "3",
-          is_active: "True",
-        },
-        {
-          id: "4",
-          parameter_id: "2",
-          parameter_name: "Source of Income",
-          name: "Business Income",
-          score: "1",
-          is_active: "True",
-        },
-        {
-          id: "5",
-          parameter_id: "3",
-          parameter_name: "Sender Occupation",
-          name: "Government",
-          score: "3",
-          is_active: "True",
-        },
-        {
-          id: "6",
-          parameter_id: "3",
-          parameter_name: "Sender Occupation",
-          name: "Self Service",
-          score: "1",
-          is_active: "True",
-        },
-      ],
-      parameter_name_options: [
-        {
-          text: "Payment Mode",
-          value: "1",
-        },
-        {
-          text: "Source of Income",
-          value: "2",
-        },
-        {
-          text: "Sender Occupation",
-          value: "3",
-        },
-      ],
-      score_options: [
+      scoreList: [
         {
           text: "1",
           value: "1",
@@ -281,41 +196,96 @@ export default {
           text: "3",
           value: "3",
         },
-         {
+        {
           text: "4",
           value: "4",
         },
-         {
+        {
           text: "5",
           value: "5",
         },
       ],
     };
   },
+  validations: {
+    countryWiseForm: {
+      value: {
+        required,
+      },
+      parameter_name: {
+        required,
+        minLength: []
+      },
+      score: {
+        required,
+      },
+    },
+  },
   methods: {
-    onSearch() {},
-    showParameterForm() {
-      this.showParameter = true;
-    },
-    submitParameter() {
-      this.showParameter = false;
-    },
     showValueForm() {
       this.showValue = true;
     },
-    EditValue(item) {
-      this.value_form = item;
-      this.showValue = true;
+    resetForm() {
+      this.specialRatesForm = Object.assign({}, this.specialRatesDefaultForm);
+      this.onSearch();
     },
-    submitValue(item) {
-      debugger  // eslint-disable-line no-debugger
-      this.values.push(item);
-      this.showValue = false;
+    onSearch() {
+      list().then((res) => {
+        this.items = res.data[0];
+        debugger; // eslint-disable-line no-debugger
+      });
     },
-    onChangeActive(item) {
-      console.log(item);
+    edit(item) {
+      if (item.id > 0) {
+        getById(item.id)
+          .then((res) => {
+            this.countryWiseForm = Object.assign({}, res.data);
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
-    deleteValue() {},
+    manage() {
+      console.log(this.countryWiseForm);
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      if (this.countryWiseForm.id > 0) {
+        update(this.countryWiseForm)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        save(this.countryWiseForm)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {
+            //done()
+          });
+      }
+    },
+  },
+  async created() {
+    this.resetForm();
+    this.onSearch();
+    await Promise.all([
+      getAll().then((res) => {
+        this.countryList = res.data;
+      }),
+    ]);
   },
 };
 </script>

@@ -340,14 +340,7 @@
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll } from "@/api/country";
-import {
-  getServiceChargeType,
-  getPaymentMode,
-  getAll as list,
-  getById,
-  save,
-  update,
-} from "@/api/serviceCharge";
+import { getAll as list, getByCompany, save, update } from "@/api/specialRates";
 export default {
   mixins: [validationMixin],
   data() {
@@ -522,7 +515,7 @@ export default {
     },
     edit(item) {
       if (item.id > 0) {
-        getById(item.id)
+        getByCompany(item.id)
           .then((res) => {
             this.countryWiseForm = Object.assign({}, res.data);
             console.log(res);
@@ -564,20 +557,12 @@ export default {
     },
   },
   async created() {
-    this.resetForm();
+    this.resetForm()
+    this.onSearch()
     await Promise.all([
       getAll().then((res) => {
         this.countryList = res.data;
-      }),
-
-      getServiceChargeType().then((res) => {
-        this.serviceChargeTypeList = res.data;
-      }),
-
-      getPaymentMode().then((res) => {
-        this.paymentModeList = res.data;
-      }),
-      this.onSearch(),
+      })
     ]);
   },
 };
