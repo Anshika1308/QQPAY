@@ -736,7 +736,7 @@ export default {
     },
     newFundClicked(selectedRow) {
       this.$emit('openTab', 'funding')
-      this.$store.commit("set_selected_Settlement", selectedRow);
+      this.$store.commit("app/set_selected_Settlement", selectedRow);
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character

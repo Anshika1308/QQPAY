@@ -494,10 +494,10 @@ export default {
   methods: {
     openTab(sub_menu) {
       if (sub_menu === 'settlements') {
-        this.$store.commit("set_selected_deal", null);
+        this.$store.commit("app/set_selected_deal", null);
       }
       if (sub_menu === 'funding') {
-        this.$store.commit("set_selected_Settlement", null);
+        this.$store.commit("app/set_selected_Settlement", null);
       }
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;

@@ -605,7 +605,7 @@ export default {
     },
     newSettlementClicked(selectedRow) {
       this.$emit('openTab', 'settlements')
-      this.$store.commit("set_selected_deal", selectedRow);
+      this.$store.commit("app/set_selected_deal", selectedRow);
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character
