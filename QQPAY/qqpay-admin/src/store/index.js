@@ -7,9 +7,9 @@ import { getters } from './getters'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-    plugin: {},
-    modules: {
-        app,
-    },
-    getters,
+  plugin: {},
+  modules: {
+    app,
+  },
+  getters,
 })

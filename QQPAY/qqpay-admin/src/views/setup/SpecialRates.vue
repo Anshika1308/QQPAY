@@ -16,12 +16,12 @@
           <b-input-group size="md" class="mt-3">
             <b-form-input
               placeholder="Search for user"
-              v-model="defaultForm.search_user"
+              v-model="form.search_user"
               class="converted"
             ></b-form-input>
             <template #append>
               <b-dropdown
-                :text="defaultForm.filter_option"
+                :text="form.filter_option"
                 right
                 variant="light"
               >
@@ -61,10 +61,16 @@
         </div>
       </b-col>
     </b-row>
+      <b-row>
+      <b-col>
+        <b-alert v-model="isError" variant="danger" dismissible>
+          {{this.error}}
+        </b-alert>
+      </b-col>
+    </b-row>
     <b-table
       :items="items"
       :fields="fields"
-      :filter="filter"
       responsive
       class="align-middle mt-4"
     >
@@ -89,13 +95,13 @@
             <v-select
               :options="companyList"
               label="country_name"
-              v-model="specialRatesForm.company"
+              v-model="form.company"
               :reduce="(item) => item.country_name"
               placeholder="Available options here"
               required
               :clearable="false"
               :class="{
-                'is-invalid': $v.specialRatesForm.company.$error,
+                'is-invalid': $v.form.company.$error,
               }"
               aria-describedby="company-live-feedback"
             >
@@ -112,7 +118,7 @@
               <b-dropdown
                 block
                 id="input-relation"
-                :text="specialRatesForm.company"
+                :text="form.company"
                 variant="light"
                 label-size="sm"
               >
@@ -131,13 +137,13 @@
             <v-select
               :options="currencyTypeList"
               label="country_name"
-              v-model="specialRatesForm.currency_type"
+              v-model="form.currency_type"
               :reduce="(item) => item.country_name"
               placeholder="Available options here"
               required
               :clearable="false"
               :class="{
-                'is-invalid': $v.specialRatesForm.currency_type.$error,
+                'is-invalid': $v.form.currency_type.$error,
               }"
               aria-describedby="currency_type-live-feedback"
             >
@@ -154,7 +160,7 @@
               <b-dropdown
                 block
                 id="input-relation"
-                :text="specialRatesForm.currency_type"
+                :text="form.currency_type"
                 variant="light"
                 label-size="sm"
               >
@@ -176,12 +182,12 @@
               name="special_rate"
               class="mt-3"
               placeholder="Service Rate"
-              v-model="specialRatesForm.special_rate"
+              v-model="form.special_rate"
               size="md"
-              @keypress="onlyForDecimal($event, specialRatesForm.special_rate)"
+              @keypress="onlyForDecimal($event, form.special_rate)"
               required
               :class="{
-                'is-invalid': $v.specialRatesForm.special_rate.$error,
+                'is-invalid': $v.form.special_rate.$error,
               }"
               aria-describedby="special_rate-live-feedback"
             ></b-form-input>
@@ -192,7 +198,7 @@
               <b-form-input
                 class="mt-3"
                 placeholder="Special Rate"
-                v-model="specialRatesForm.special_rate"
+                v-model="form.special_rate"
                 size="sm"
               ></b-form-input>
             </b-form-group> -->
@@ -204,12 +210,12 @@
               name="publish_Rate"
               class="mt-3"
               placeholder="Publish Rate"
-              v-model="specialRatesForm.publish_Rate"
+              v-model="form.publish_Rate"
               size="md"
-              @keypress="onlyForDecimal($event, specialRatesForm.publish_Rate)"
+              @keypress="onlyForDecimal($event, form.publish_Rate)"
               required
               :class="{
-                'is-invalid': $v.specialRatesForm.publish_Rate.$error,
+                'is-invalid': $v.form.publish_Rate.$error,
               }"
               aria-describedby="publish_Rate-live-feedback"
             ></b-form-input>
@@ -220,7 +226,7 @@
               <b-form-input
                 class="mt-3"
                 placeholder="Publish Rate"
-                v-model="specialRatesForm.publish_Rate"
+                v-model="form.publish_Rate"
                 size="sm"
               ></b-form-input>
             </b-form-group> -->
@@ -232,12 +238,12 @@
               name="reuters_rate"
               class="mt-3"
               placeholder="Reuters Rate"
-              v-model="specialRatesForm.reuters_rate"
+              v-model="form.reuters_rate"
               size="md"
-              @keypress="onlyForDecimal($event, specialRatesForm.reuters_rate)"
+              @keypress="onlyForDecimal($event, form.reuters_rate)"
               required
               :class="{
-                'is-invalid': $v.specialRatesForm.reuters_rate.$error,
+                'is-invalid': $v.form.reuters_rate.$error,
               }"
               aria-describedby="reuters_rate-live-feedback"
             ></b-form-input>
@@ -248,7 +254,7 @@
               <b-form-input
                 class="mt-3"
                 placeholder="Reuters Rate"
-                v-model="specialRatesForm.reuters_rate"
+                v-model="form.reuters_rate"
                 size="sm"
               ></b-form-input>
             </b-form-group> -->
@@ -260,14 +266,14 @@
               name="paying_amount_min"
               class="mt-3"
               placeholder="Paying Amount(min)"
-              v-model="specialRatesForm.paying_amount_min"
+              v-model="form.paying_amount_min"
               size="md"
               @keypress="
-                onlyForDecimal($event, specialRatesForm.paying_amount_min)
+                onlyForDecimal($event, form.paying_amount_min)
               "
               required
               :class="{
-                'is-invalid': $v.specialRatesForm.paying_amount_min.$error,
+                'is-invalid': $v.form.paying_amount_min.$error,
               }"
               aria-describedby="paying_amount_min-live-feedback"
             ></b-form-input>
@@ -278,7 +284,7 @@
               <b-form-input
                 class="mt-3"
                 placeholder="Paying Amount(min)"
-                v-model="specialRatesForm.paying_amount_min"
+                v-model="form.paying_amount_min"
                 size="sm"
               ></b-form-input>
             </b-form-group> -->
@@ -290,14 +296,14 @@
               name="service_charge"
               class="mt-3"
               placeholder="Service Charge"
-              v-model="specialRatesForm.service_charge"
+              v-model="form.service_charge"
               size="md"
               @keypress="
-                onlyForDecimal($event, specialRatesForm.service_charge)
+                onlyForDecimal($event, form.service_charge)
               "
               required
               :class="{
-                'is-invalid': $v.specialRatesForm.service_charge.$error,
+                'is-invalid': $v.form.service_charge.$error,
               }"
               aria-describedby="service_charge-live-feedback"
             ></b-form-input>
@@ -308,7 +314,7 @@
               <b-form-input
                 class="mt-3"
                 placeholder="Paying Amount(max)"
-                v-model="specialRatesForm.paying_amount_max"
+                v-model="form.paying_amount_max"
                 size="sm"
                 rows="3"
                 max-rows="6"
@@ -320,7 +326,7 @@
               <b-form-datepicker
                 class="mt-3"
                 id="example-datepicker"
-                v-model="specialRatesForm.processing_date"
+                v-model="form.processing_date"
                 size="sm"
               ></b-form-datepicker>
             </b-form-group>
@@ -340,14 +346,7 @@
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll } from "@/api/country";
-import {
-  getServiceChargeType,
-  getPaymentMode,
-  getAll as list,
-  getById,
-  save,
-  update,
-} from "@/api/serviceCharge";
+import { getAll as list, getByCompany, save, update } from "@/api/specialRates";
 export default {
   mixins: [validationMixin],
   data() {
@@ -362,18 +361,19 @@ export default {
           active: true,
         },
       ],
+      isError: false,
+      error: null,
       special_rates: {
         country_name: null,
         search_user: null,
         filter_option: null,
       },
-      filter: null,
       countryList: [],
       serviceChargeTypeList: [],
       payoutPartnerList: [],
       paymentModeList: [],
       items: [],
-      specialRatesDefaultForm: {
+      form: {
         id: 0,
         company: null,
         currency_type: null,
@@ -384,7 +384,7 @@ export default {
         paying_amount_max: null,
         processing_date: null,
       },
-      specialRatesForm: null,
+      defaultForm: null,
       fields: [
         { key: "id", label: "SNO" },
         { key: "company_name", label: "Company Name" },
@@ -464,7 +464,7 @@ export default {
     };
   },
   validations: {
-    countryWiseForm: {
+    form: {
       company: {
         required,
       },
@@ -511,8 +511,11 @@ export default {
       }
     },
     resetForm() {
-      this.specialRatesForm = Object.assign({}, this.specialRatesDefaultForm);
-      this.onSearch();
+      this.form = Object.assign({}, this.defaultForm);
+      this.$v.$reset()
+      this.isError = false
+      this.error = null
+      this.onSearch()
     },
     onSearch() {
       list().then((res) => {
@@ -522,40 +525,43 @@ export default {
     },
     edit(item) {
       if (item.id > 0) {
-        getById(item.id)
+        getByCompany(item.id)
           .then((res) => {
-            this.countryWiseForm = Object.assign({}, res.data);
+            this.form = Object.assign({}, res.data);
             console.log(res);
           })
           .catch((error) => {
-            console.log(error);
+            this.isError = true
+              this.error = error.message
           });
       }
     },
     manage() {
-      console.log(this.countryWiseForm);
+      console.log(this.form);
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       }
-      if (this.countryWiseForm.id > 0) {
-        update(this.countryWiseForm)
+      if (this.form.id > 0) {
+        update(this.form)
           .then((res) => {
             console.log(res);
           })
           .catch((error) => {
-            console.log(error);
+            this.isError = true
+              this.error = error.message
           })
           .finally(() => {
             //done()
           });
       } else {
-        save(this.countryWiseForm)
+        save(this.form)
           .then((res) => {
             console.log(res);
           })
           .catch((error) => {
-            console.log(error);
+            this.isError = true
+              this.error = error.message
           })
           .finally(() => {
             //done()
@@ -564,20 +570,12 @@ export default {
     },
   },
   async created() {
-    this.resetForm();
+    this.resetForm()
+    this.onSearch()
     await Promise.all([
       getAll().then((res) => {
         this.countryList = res.data;
-      }),
-
-      getServiceChargeType().then((res) => {
-        this.serviceChargeTypeList = res.data;
-      }),
-
-      getPaymentMode().then((res) => {
-        this.paymentModeList = res.data;
-      }),
-      this.onSearch(),
+      })
     ]);
   },
 };
