@@ -1,0 +1,6 @@
+{
+    "SERVER_API": "http://3.111.140.40:8000/api/v1",
+    "REMITTER_API": "http://3.111.140.40:4000/api/v1",
+    "REMITTER_PAYMENT": "http://3.111.140.40:8003/api/v1",
+    "ACCESS_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQ3NDc4OTEsInN1YiI6Im5hcmVuNDYwbmFyZW5AZ21haWwuY29tIn0.BY44l-VYbaagsCEnNBE2kqybXtCvSF6c2nE_h4Ul0gU"
+}

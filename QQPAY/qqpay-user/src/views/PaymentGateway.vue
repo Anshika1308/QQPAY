@@ -31,13 +31,14 @@
 <script>
 import NavBar from "@/components/navigations/NavBar.vue";
 import TitleBar from "@/components/navigations/TitleBar.vue";
+import constants from "../../constants.json"
+import axios from "axios";
 // import NavBarLeft from "@/components/navigations/NavBarLeft.vue";
-import axios from 'axios';
 export default {
   data () {
     return {
-      baserul: 'https://94a5-183-83-163-96.in.ngrok.io',
-      token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTM1MDM4MzgsInN1YiI6Im5hcmVuZHJhQHNvZnRkZXZlbHMuY29tIn0.SZPefq1ChsfQEln6D3yeuVmgyBDNCVEDm8pwJAugXNA'
+      baserul: constants.REMITTER_PAYMENT,
+      token: `Bearer ${constants.ACCESS_TOKEN}`
     }
   },
 
@@ -75,7 +76,10 @@ export default {
         })
     },
     getSrc () {
-      axios.get(`${this.baserul}/api/v1/qqpay/payment/DD/thisispaymentreason/0.14/MYR/${this.pay_UUID()}/`, {
+      let transaction_details = this.$route.params.transaction_details
+      console.log("test", transaction_details)
+
+      axios.get(`${this.baserul}/qqpay/payment/${transaction_details.details.payment_type}/${transaction_details.details.remittenceReasonsText}/2.0/${transaction_details.details.source_country}/${this.pay_UUID()}/`, {
         headers: {
           'accept': '*/*',
           'Authorization': this.token

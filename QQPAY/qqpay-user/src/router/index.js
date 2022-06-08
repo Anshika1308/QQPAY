@@ -92,7 +92,14 @@ const routes = [{
         name: 'PaymentGateway',
         component: () =>
             import ('../views/PaymentGateway.vue')
-    }
+    },
+    {
+        path: '/select',
+        name: 'select',
+        component: () =>
+            import ('../views/test.vue')
+    },
+
 ]
 
 const router = new VueRouter({
