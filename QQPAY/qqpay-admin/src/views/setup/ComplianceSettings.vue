@@ -44,85 +44,118 @@
         </div>
       </b-col>
     </b-row>
-    <b-row v-if="this.showParameter" class="mt-3">
+    <b-row>
+      <b-col>
+        <b-alert v-model="isError" variant="danger" dismissible>
+          {{ this.error }}
+        </b-alert>
+      </b-col>
+    </b-row>
+    <b-row v-if="showParameter" class="mt-3">
       <b-col cols="3">
-        <b-form-group>
-          <b-form-input
-            placeholder="Name"
-            v-model="parameter_form.name"
-            size="sm"
-          ></b-form-input
-        ></b-form-group>
+        <b-form-input
+          id="parameter_name"
+          name="parameter_name"
+          size="sm"
+          placeholder="Parameter"
+          v-model="parameterForm.parameter_name"
+          required
+          :class="{
+            'is-invalid': $v.parameterForm.parameter_name.$error,
+          }"
+          aria-describedby="parameter_name-live-feedback"
+        ></b-form-input>
+        <b-form-invalid-feedback id="parameter_name-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
         <b-button
           class="float-left"
           variant="primary"
           size="sm"
-          @click="submitParameter()"
+          @click="manageParameter()"
           >Save</b-button
+        >
+        <b-button
+          class="float-left ml-2"
+          variant="primary"
+          size="sm"
+          @click="cancelParameter()"
+          >cancel</b-button
         >
       </b-col>
     </b-row>
-    <b-row v-if="this.showValue" class="mt-3">
+    <b-row v-if="showValue" class="mt-3">
       <b-col cols="3">
-        <b-form-group>
-          <b-form-input
-            placeholder="Name"
-            v-model="value_form.name"
-            size="sm"
-          ></b-form-input
-        ></b-form-group>
+        <b-form-input
+          id="value"
+          name="value"
+          size="sm"
+          placeholder="Value"
+          v-model="form.value"
+          required
+          :class="{
+            'is-invalid': $v.form.value.$error,
+          }"
+          aria-describedby="value-live-feedback"
+        ></b-form-input>
+        <b-form-invalid-feedback id="value-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
-        <b-form-group>
-          <b-dropdown
-            block
-            id="input-relation"
-            :text="value_form.parameter_name"
-            variant="light"
-            label-size="sm"
-            size="sm"
-          >
-            <b-dropdown-item
-              v-for="option in parameter_name_options"
-              :key="option.value"
-              :value="option.value"
-              size="sm"
-            >
-              {{ option.text }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
+        <v-select
+          :options="parameterList"
+          label="parameter_name"
+          v-model="form.parameter_code"
+          :reduce="(item) => item.id"
+          placeholder="Available options here"
+          required
+          :clearable="false"
+          :class="{
+            'is-invalid': $v.form.parameter_code.$error,
+          }"
+          aria-describedby="parameter_code-live-feedback"
+        >
+        </v-select>
+        <b-form-invalid-feedback id="parameter_code-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
-        <b-form-group>
-          <b-dropdown
-            block
-            id="input-relation"
-            :text="value_form.score"
-            variant="light"
-            label-size="sm"
-            size="sm"
-          >
-            <b-dropdown-item
-              v-for="option in score_options"
-              :key="option.value"
-              :value="option.value"
-              size="sm"
-            >
-              {{ option.text }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </b-form-group>
+        <v-select
+          :options="scoreList"
+          label="value"
+          v-model="form.score"
+          :reduce="(item) => item.id"
+          placeholder="Available options here"
+          required
+          :clearable="false"
+          :class="{
+            'is-invalid': $v.form.score.$error,
+          }"
+          aria-describedby="score-live-feedback"
+        >
+        </v-select>
+        <b-form-invalid-feedback id="score-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
         <b-button
           class="float-left"
           variant="primary"
           size="sm"
-          @click="submitValue(value_form)"
+          @click="manageValue()"
           >Save</b-button
+        >
+        <b-button
+          class="float-left ml-2"
+          variant="primary"
+          size="sm"
+          @click="cancelValue()"
+          >cancel</b-button
         >
       </b-col>
     </b-row>
@@ -130,7 +163,14 @@
       <b-row>
         <b-col sm="12" md="12" lg="12">
           <div>
-            <b-table striped hover :items="values" :fields="fields">
+            <b-table
+              striped
+              hover
+              :items="items"
+              :fields="fields"
+              responsive
+              class="align-middle mt-4"
+            >
               <template #cell(id)="row">
                 {{ row.index + 1 }}
               </template>
@@ -139,7 +179,7 @@
                   v-model="row.item.is_active"
                   switch
                   class="checkbox"
-                  @change="onChangeActive(row.item.is_active)"
+                  @change="onChangeActive(row.item)"
                 >
                 </b-form-checkbox> </template
               ><template #cell(actions)="row" size="sm">
@@ -147,7 +187,7 @@
                   <b-button
                     variant="light"
                     size="sm"
-                    @click="EditValue(row.item.id)"
+                    @click="edit(row.item)"
                     class="mr-2 expand-btn"
                   >
                     <b-icon icon="pencil-square"></b-icon>
@@ -155,7 +195,7 @@
                   <b-button
                     variant="light"
                     size="sm"
-                    @click="deleteValue(row.item.id)"
+                    @click="delete row.item"
                     class="mr-2 expand-btn"
                   >
                     <b-icon icon="trash"></b-icon>
@@ -171,21 +211,22 @@
 </template>
 
 <script>
+import { required, minLength } from "vuelidate/lib/validators";
+import { validationMixin } from "@/mixins";
+import { getAll } from "@/api/country";
+import {
+  getAll as list,
+  getParameterList,
+  getValueById,
+  saveParameter,
+  updateParameter,
+  saveValue,
+  updateValue,
+} from "@/api/compliance";
 export default {
-  components: {},
+  mixins: [validationMixin],
   data() {
     return {
-      showParameter: false,
-      showValue: false,
-      parameter_form: {
-        name: null,
-      },
-      value_form: {
-        name: null,
-        parameter_name: "Source of Income",
-        score: "1",
-        is_active: "True",
-      },
       menu_hierarchy: [
         {
           text: "Setup",
@@ -196,126 +237,225 @@ export default {
           active: true,
         },
       ],
+      isError: false,
+      error: null,
+      showParameter: false,
+      showValue: false,
+      defaultParameterForm: {
+        parameter_name: null,
+        is_active: null,
+      },
+      parameterForm: null,
+      defaultForm: {
+        value_code: null,
+        value: null,
+        parameter_code: null,
+        parameter_val_code: null,
+        score: null,
+        is_active: null,
+      },
+      form: null,
+      parameterList: [],
+      items: [],
       fields: [
         { key: "id", label: "SNO" },
-        { key: "parameter_name", label: "Parameter" },
-        { key: "name", label: "Value" },
+        { key: "parameter", label: "Parameter" },
+        { key: "value", label: "Value" },
         { key: "score", label: "Score", class: "text-center" },
         { key: "is_active", label: "Active" },
         { key: "actions", label: "Action", class: "text-right" },
       ],
-      values: [
+      scoreList: [
         {
           id: "1",
-          parameter_id: "1",
-          parameter_name: "Payment Mode",
-          name: "Bank Transfer",
-          score: "3",
-          is_active: "True",
+          value: "1",
         },
         {
           id: "2",
-          parameter_id: "1",
-          parameter_name: "Payment Mode",
-          name: "Cash Payment",
-          score: "2",
-          is_active: "True",
+          value: "2",
         },
         {
           id: "3",
-          parameter_id: "2",
-          parameter_name: "Source of Income",
-          name: "Salary",
-          score: "3",
-          is_active: "True",
+          value: "3",
         },
         {
           id: "4",
-          parameter_id: "2",
-          parameter_name: "Source of Income",
-          name: "Business Income",
-          score: "1",
-          is_active: "True",
+          value: "4",
         },
         {
           id: "5",
-          parameter_id: "3",
-          parameter_name: "Sender Occupation",
-          name: "Government",
-          score: "3",
-          is_active: "True",
-        },
-        {
-          id: "6",
-          parameter_id: "3",
-          parameter_name: "Sender Occupation",
-          name: "Self Service",
-          score: "1",
-          is_active: "True",
-        },
-      ],
-      parameter_name_options: [
-        {
-          text: "Payment Mode",
-          value: "1",
-        },
-        {
-          text: "Source of Income",
-          value: "2",
-        },
-        {
-          text: "Sender Occupation",
-          value: "3",
-        },
-      ],
-      score_options: [
-        {
-          text: "1",
-          value: "1",
-        },
-        {
-          text: "2",
-          value: "2",
-        },
-        {
-          text: "3",
-          value: "3",
-        },
-         {
-          text: "4",
-          value: "4",
-        },
-         {
-          text: "5",
           value: "5",
         },
       ],
     };
   },
+  validations: {
+    form: {
+      value: {
+        required,
+      },
+      parameter_code: {
+        required,
+      },
+      score: {
+        required,
+      },
+    },
+    parameterForm: {
+      parameter_name: {
+        required,
+        minLength: minLength(2),
+      },
+    },
+  },
   methods: {
-    onSearch() {},
     showParameterForm() {
       this.showParameter = true;
-    },
-    submitParameter() {
-      this.showParameter = false;
     },
     showValueForm() {
       this.showValue = true;
     },
-    EditValue(item) {
-      this.value_form = item;
-      this.showValue = true;
+    cancelParameter() {
+      this.showParameter = false;
+      this.parameterForm = Object.assign({}, this.defaultParameterForm);
     },
-    submitValue(item) {
-      debugger  // eslint-disable-line no-debugger
-      this.values.push(item);
+    cancelValue() {
       this.showValue = false;
+      this.form = Object.assign({}, this.defaultForm);
+    },
+    resetForm() {
+      this.parameterForm = Object.assign({}, this.defaultParameterForm);
+      this.form = Object.assign({}, this.defaultForm);
+      this.isError = false;
+      this.error = null;
+      this.$v.$reset();
+      this.onSearch();
+    },
+    onSearch() {
+      list().then((res) => {
+        this.items = res.data.data[0];
+      });
+    },
+    edit(item) {
+      debugger; // eslint-disable-line no-debugger
+      if (item.id > 0) {
+        getValueById(item.parameter_code, item.value_code)
+          .then((res) => {
+            debugger; // eslint-disable-line no-debugger
+            this.showValue = true;
+            this.form = Object.assign({}, res.data.data[0]);
+            this.form.parameter_val_code = this.form.value_code;
+            console.log(this.form);
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          });
+      }
+    },
+    manageParameter() {
+      debugger; // eslint-disable-line no-debugger
+      this.$v.parameterForm.$touch();
+      if (this.$v.parameterForm.$invalid) {
+        return;
+      }
+
+      debugger; // eslint-disable-line no-debugger
+      if (this.parameterForm.id > 0) {
+        updateParameter(this.parameterForm)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        debugger; // eslint-disable-line no-debugger
+        this.parameterForm.is_active = true;
+        saveParameter(this.parameterForm)
+          .then((res) => {
+            debugger; // eslint-disable-line no-debugger
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      }
     },
     onChangeActive(item) {
-      console.log(item);
+      updateValue(item, item.parameter_code, item.value_code)
+        .then((res) => {
+          console.log(res);
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.isError = true;
+          this.error = error.message;
+        })
+        .finally(() => {
+          //done()
+        });
     },
-    deleteValue() {},
+    manageValue() {
+      this.$v.form.$touch();
+      if (this.$v.form.$invalid) {
+        return;
+      }
+      if (this.form.id > 0) {
+        updateValue(
+          this.form,
+          this.form.parameter_code,
+          this.form.parameter_val_code
+        )
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        this.form.is_active = true;
+        saveValue(this.form)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      }
+    },
+  },
+  async created() {
+    this.resetForm();
+    this.onSearch();
+    await Promise.all([
+      getAll().then((res) => {
+        this.countryList = res.data;
+      }),
+      getParameterList().then((res) => {
+        this.parameterList = res.data.data[0];
+      }),
+    ]);
   },
 };
 </script>
