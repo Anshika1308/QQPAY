@@ -14,7 +14,7 @@ service.interceptors.request.use(
   (config) => {
     config.baseURL = store.getters.config.VUE_APP_BASE_API;
 
-    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQ2ODA0NjMsInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.RxJ7aBx8-AbMs-QpgiTO1xRk6zboaI2nxCp6FESPEzY'
+    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQ3NzI4NjgsInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.3HwmEqu9dl5KYTgMsaQ9odt49DVuW6QHPpVtarQlJok'
     config.headers['Authorization'] = 'Bearer ' + authToken
     
     return config;

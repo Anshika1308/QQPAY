@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const baseUrl = 'api/v1/special_rates'
+const baseUrl = 'api/v1/special_rates_router'
 
 export function getAll(){
     return request({

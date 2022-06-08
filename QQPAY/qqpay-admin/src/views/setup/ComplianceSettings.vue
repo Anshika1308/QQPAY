@@ -19,6 +19,16 @@
           <b-button
             class="float-right"
             variant="primary"
+            @click="showParameterForm()"
+            >Add Parameter</b-button
+          >
+        </div>
+      </b-col>
+      <b-col cols="2">
+        <div class="mt-3">
+          <b-button
+            class="float-right"
+            variant="primary"
             @click="showValueForm()"
             >Add Value</b-button
           >
@@ -34,15 +44,56 @@
         </div>
       </b-col>
     </b-row>
-    <b-row v-if="this.showValue" class="mt-3">
+    <b-row>
+      <b-col>
+        <b-alert v-model="isError" variant="danger" dismissible>
+          {{ this.error }}
+        </b-alert>
+      </b-col>
+    </b-row>
+    <b-row v-if="showParameter" class="mt-3">
       <b-col cols="3">
         <b-form-input
-          id="reuters_rate"
-          name="reuters_rate"
-          class="mt-3"
-          placeholder="Reuters Rate"
+          id="parameter_name"
+          name="parameter_name"
+          size="sm"
+          placeholder="Parameter"
+          v-model="parameterForm.parameter_name"
+          required
+          :class="{
+            'is-invalid': $v.parameterForm.parameter_name.$error,
+          }"
+          aria-describedby="parameter_name-live-feedback"
+        ></b-form-input>
+        <b-form-invalid-feedback id="parameter_name-live-feedback">
+          This is a required field.
+        </b-form-invalid-feedback>
+      </b-col>
+      <b-col cols="3">
+        <b-button
+          class="float-left"
+          variant="primary"
+          size="sm"
+          @click="manageParameter()"
+          >Save</b-button
+        >
+        <b-button
+          class="float-left ml-2"
+          variant="primary"
+          size="sm"
+          @click="cancelParameter()"
+          >cancel</b-button
+        >
+      </b-col>
+    </b-row>
+    <b-row v-if="showValue" class="mt-3">
+      <b-col cols="3">
+        <b-form-input
+          id="value"
+          name="value"
+          size="sm"
+          placeholder="Value"
           v-model="form.value"
-          size="md"
           required
           :class="{
             'is-invalid': $v.form.value.$error,
@@ -56,24 +107,24 @@
       <b-col cols="3">
         <v-select
           :options="parameterList"
-          label="value"
-          v-model="form.parameter_name"
+          label="parameter_name"
+          v-model="form.parameter_code"
           :reduce="(item) => item.id"
           placeholder="Available options here"
           required
           :clearable="false"
           :class="{
-            'is-invalid': $v.form.parameter_name.$error,
+            'is-invalid': $v.form.parameter_code.$error,
           }"
-          aria-describedby="parameter_name-live-feedback"
+          aria-describedby="parameter_code-live-feedback"
         >
         </v-select>
-        <b-form-invalid-feedback id="parameter_name-live-feedback">
+        <b-form-invalid-feedback id="parameter_code-live-feedback">
           This is a required field.
         </b-form-invalid-feedback>
       </b-col>
       <b-col cols="3">
-         <v-select
+        <v-select
           :options="scoreList"
           label="value"
           v-model="form.score"
@@ -96,8 +147,15 @@
           class="float-left"
           variant="primary"
           size="sm"
-          @click="manage()"
+          @click="manageValue()"
           >Save</b-button
+        >
+        <b-button
+          class="float-left ml-2"
+          variant="primary"
+          size="sm"
+          @click="cancelValue()"
+          >cancel</b-button
         >
       </b-col>
     </b-row>
@@ -105,7 +163,14 @@
       <b-row>
         <b-col sm="12" md="12" lg="12">
           <div>
-            <b-table striped hover :items="values" :fields="fields">
+            <b-table
+              striped
+              hover
+              :items="items"
+              :fields="fields"
+              responsive
+              class="align-middle mt-4"
+            >
               <template #cell(id)="row">
                 {{ row.index + 1 }}
               </template>
@@ -114,7 +179,7 @@
                   v-model="row.item.is_active"
                   switch
                   class="checkbox"
-                  @change="onChangeActive(row.item.is_active)"
+                  @change="onChangeActive(row.item)"
                 >
                 </b-form-checkbox> </template
               ><template #cell(actions)="row" size="sm">
@@ -122,7 +187,7 @@
                   <b-button
                     variant="light"
                     size="sm"
-                    @click="EditValue(row.item.id)"
+                    @click="edit(row.item)"
                     class="mr-2 expand-btn"
                   >
                     <b-icon icon="pencil-square"></b-icon>
@@ -130,7 +195,7 @@
                   <b-button
                     variant="light"
                     size="sm"
-                    @click="deleteValue(row.item.id)"
+                    @click="delete row.item"
                     class="mr-2 expand-btn"
                   >
                     <b-icon icon="trash"></b-icon>
@@ -146,10 +211,18 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll } from "@/api/country";
-import { getAll as list, getById, save, update } from "@/api/serviceCharge";
+import {
+  getAll as list,
+  getParameterList,
+  getValueById,
+  saveParameter,
+  updateParameter,
+  saveValue,
+  updateValue,
+} from "@/api/compliance";
 export default {
   mixins: [validationMixin],
   data() {
@@ -164,113 +237,207 @@ export default {
           active: true,
         },
       ],
+      isError: false,
+      error: null,
+      showParameter: false,
       showValue: false,
+      defaultParameterForm: {
+        parameter_name: null,
+        is_active: null,
+      },
+      parameterForm: null,
       defaultForm: {
-        name: null,
-        parameter_name: "Source of Income",
-        score: "1",
-        is_active: "True",
+        value_code: null,
+        value: null,
+        parameter_code: null,
+        parameter_val_code: null,
+        score: null,
+        is_active: null,
       },
       form: null,
       parameterList: [],
       items: [],
-      filter: null,
       fields: [
         { key: "id", label: "SNO" },
-        { key: "parameter_name", label: "Parameter" },
-        { key: "name", label: "Value" },
+        { key: "parameter", label: "Parameter" },
+        { key: "value", label: "Value" },
         { key: "score", label: "Score", class: "text-center" },
         { key: "is_active", label: "Active" },
         { key: "actions", label: "Action", class: "text-right" },
       ],
       scoreList: [
         {
-          text: "1",
+          id: "1",
           value: "1",
         },
         {
-          text: "2",
+          id: "2",
           value: "2",
         },
         {
-          text: "3",
+          id: "3",
           value: "3",
         },
         {
-          text: "4",
+          id: "4",
           value: "4",
         },
         {
-          text: "5",
+          id: "5",
           value: "5",
         },
       ],
     };
   },
   validations: {
-    countryWiseForm: {
+    form: {
       value: {
         required,
       },
-      parameter_name: {
+      parameter_code: {
         required,
-        minLength: []
       },
       score: {
         required,
       },
     },
+    parameterForm: {
+      parameter_name: {
+        required,
+        minLength: minLength(2),
+      },
+    },
   },
   methods: {
+    showParameterForm() {
+      this.showParameter = true;
+    },
     showValueForm() {
       this.showValue = true;
     },
+    cancelParameter() {
+      this.showParameter = false;
+      this.parameterForm = Object.assign({}, this.defaultParameterForm);
+    },
+    cancelValue() {
+      this.showValue = false;
+      this.form = Object.assign({}, this.defaultForm);
+    },
     resetForm() {
-      this.specialRatesForm = Object.assign({}, this.specialRatesDefaultForm);
+      this.parameterForm = Object.assign({}, this.defaultParameterForm);
+      this.form = Object.assign({}, this.defaultForm);
+      this.isError = false;
+      this.error = null;
+      this.$v.$reset();
       this.onSearch();
     },
     onSearch() {
       list().then((res) => {
-        this.items = res.data[0];
-        debugger; // eslint-disable-line no-debugger
+        this.items = res.data.data[0];
       });
     },
     edit(item) {
+      debugger; // eslint-disable-line no-debugger
       if (item.id > 0) {
-        getById(item.id)
+        getValueById(item.parameter_code, item.value_code)
           .then((res) => {
-            this.countryWiseForm = Object.assign({}, res.data);
-            console.log(res);
+            debugger; // eslint-disable-line no-debugger
+            this.showValue = true;
+            this.form = Object.assign({}, res.data.data[0]);
+            this.form.parameter_val_code = this.form.value_code;
+            console.log(this.form);
           })
           .catch((error) => {
-            console.log(error);
+            this.isError = true;
+            this.error = error.message;
           });
       }
     },
-    manage() {
-      console.log(this.countryWiseForm);
-      this.$v.$touch();
-      if (this.$v.$invalid) {
+    manageParameter() {
+      debugger; // eslint-disable-line no-debugger
+      this.$v.parameterForm.$touch();
+      if (this.$v.parameterForm.$invalid) {
         return;
       }
-      if (this.countryWiseForm.id > 0) {
-        update(this.countryWiseForm)
+
+      debugger; // eslint-disable-line no-debugger
+      if (this.parameterForm.id > 0) {
+        updateParameter(this.parameterForm)
           .then((res) => {
             console.log(res);
+            this.resetForm();
           })
           .catch((error) => {
-            console.log(error);
+            this.isError = true;
+            this.error = error.message;
           })
           .finally(() => {
             //done()
           });
       } else {
-        save(this.countryWiseForm)
+        debugger; // eslint-disable-line no-debugger
+        this.parameterForm.is_active = true;
+        saveParameter(this.parameterForm)
           .then((res) => {
+            debugger; // eslint-disable-line no-debugger
             console.log(res);
+            this.resetForm();
           })
           .catch((error) => {
-            console.log(error);
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      }
+    },
+    onChangeActive(item) {
+      updateValue(item, item.parameter_code, item.value_code)
+        .then((res) => {
+          console.log(res);
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.isError = true;
+          this.error = error.message;
+        })
+        .finally(() => {
+          //done()
+        });
+    },
+    manageValue() {
+      this.$v.form.$touch();
+      if (this.$v.form.$invalid) {
+        return;
+      }
+      if (this.form.id > 0) {
+        updateValue(
+          this.form,
+          this.form.parameter_code,
+          this.form.parameter_val_code
+        )
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        this.form.is_active = true;
+        saveValue(this.form)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
           })
           .finally(() => {
             //done()
@@ -284,6 +451,9 @@ export default {
     await Promise.all([
       getAll().then((res) => {
         this.countryList = res.data;
+      }),
+      getParameterList().then((res) => {
+        this.parameterList = res.data.data[0];
       }),
     ]);
   },
