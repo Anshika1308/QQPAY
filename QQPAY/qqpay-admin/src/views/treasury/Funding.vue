@@ -77,7 +77,7 @@
       <b-col class="col-p5">
         <div>
           <b-button-group size="sm">
-            <b-button v-if="selected_Settlement" @click="updateTrigger = false;" variant="outline-light" v-b-modal.add-funding>
+            <b-button v-if="selected_Settlement" @click="newFundingClick()" variant="outline-light" v-b-modal.add-funding>
               <b-icon icon="file-earmark-plus-fill"></b-icon> New Funding
             </b-button>
             <b-button variant="outline-light">
@@ -500,7 +500,7 @@ export default {
           bank_poc: "",
           coll_ccy_pay_ccy: "",
 
-          // deal_no: "",
+          deal_no: "",
           dollar_lcy_rate: "",
           parent_lcy_rate: "",
 
@@ -629,7 +629,7 @@ export default {
 
     submit() {
       const request = this.getRequest();
-      // request.deal_no = this.selected_Settlement.settle_srl_num;
+      request.deal_no = this.selected_Settlement.settle_srl_num;
       request.funding_number = Number(request.funding_number);
       // console.log('req', JSON.parse(JSON.stringify(request)))
       if (this.updateTrigger) {
@@ -680,6 +680,26 @@ export default {
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
       this.temp_funding = selectedRow;
+    },
+    newFundingClick() {
+      this.updateTrigger = false;
+      // Reset temp variable
+      this.temp_funding = {
+        payout_partner: "",
+        payout_partner_id: 1000,
+        fund_date: "",
+        lcy_amount: "",
+        pp_amount: "",
+        funding_number: "",
+        bank_poc: "",
+        coll_ccy_pay_ccy: "",
+
+        deal_no: "",
+        dollar_lcy_rate: "",
+        parent_lcy_rate: "",
+
+        bank_charges: "",
+      };
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character
