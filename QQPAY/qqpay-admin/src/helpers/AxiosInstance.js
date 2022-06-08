@@ -22,7 +22,7 @@ export const getApiData = async (url, param = null) => {
       url: `${url}`,
       params: param,
       headers: {
-        Authorization: `bearer ${accessToken()}`,
+        Authorization: `Bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         // Do whatever you want to transform the data
@@ -44,7 +44,7 @@ export const postApiData = async (url, formData) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `bearer ${accessToken()}`,
+        Authorization: `Bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -88,7 +88,7 @@ export const putApiData = async (url, formData) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `bearer ${accessToken()}`,
+        Authorization: `Bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -111,7 +111,7 @@ export const deleteApiData = async (url) => {
     url: url,
     // params: param,
     headers: {
-      Authorization: `bearer ${accessToken()}`,
+      Authorization: `Bearer ${accessToken()}`,
     },
   });
   return response;
@@ -127,14 +127,14 @@ export const bulkDeleteApiData = async (data) => {
     data: formData,
     // params: param,
     headers: {
-      Authorization: `bearer ${accessToken()}`,
+      Authorization: `Bearer ${accessToken()}`,
     },
   });
   return response;
 };
 
 //update data
-export const patchApiData = async (url, formData ) => {
+export const patchApiData = async (url, formData) => {
   let response;
   try {
     response = await instance({
@@ -142,7 +142,7 @@ export const patchApiData = async (url, formData ) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `bearer ${accessToken()}`,
+        Authorization: `Bearer ${accessToken()}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -164,7 +164,7 @@ export const downloadApiData = async (url, fileName) => {
       url: url,
       responseType: 'blob',
       headers: {
-        Authorization: `bearer ${accessToken()}`,
+        Authorization: `Bearer ${accessToken()}`,
       },
     }).then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
