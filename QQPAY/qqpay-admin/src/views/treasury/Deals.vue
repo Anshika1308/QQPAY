@@ -307,8 +307,11 @@
             </b-form-group>
           </b-col>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Target of Fund">
+            <!-- <b-form-group label="Target of Fund">
               <b-form-input v-model="temp_deal.tof" size="sm"></b-form-input>
+            </b-form-group> -->
+            <b-form-group label="Target of Fund">
+              <b-form-select v-model="temp_deal.tof" :options="targetOfFundOption"></b-form-select>
             </b-form-group>
           </b-col>          
 
@@ -353,6 +356,7 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
+import {responseHandler} from "@/helpers/globalFunctions";
 export default {
   name: "Deals",
   components: {
@@ -396,8 +400,10 @@ export default {
         { value: 'irh', text: 'IRH' },        
       ],
       fundSourceOption: [
-        { value: 'type1', text: 'Fund 1' },
-        { value: 'type2', text: 'Fund 2' },        
+        { value: 'Public Bank MYR', text: 'Public Bank MYR' }        
+      ],
+      targetOfFundOption: [
+        { value: 'Target Bank USD', text: 'Target Bank USD' }        
       ],
 /*       temp_deal: {
         approved_aate: null,
@@ -439,11 +445,11 @@ export default {
         fcy_amount: "",  // USD Amt
         fcy_deal_rate: "",
         lcy_amount: "",    //MYR Amt
-        source_of_funds: "",
+        source_of_funds: "Public Bank MYR",
 
         purchase_date: "",
         bank_charge: "",
-        tof: "",          // Target of fund
+        tof: "Target Bank USD",          // Target of fund
         bank_poc: "",
         tax: "",
         remarks: "",
@@ -533,10 +539,12 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.deal_id === this.temp_deal.deal_id);
             this.items[index] = response.data.data[0];
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
         });
 
@@ -547,11 +555,13 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             // response.data.data[0]['status'] = "open";
             // response.data.data[0]['no_of_settlements'] = 1;
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
         });
         
@@ -579,11 +589,13 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
           console.log("this.items", this.items);
         })
         .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
           console.log(e);
         });
     },
@@ -595,9 +607,30 @@ export default {
       }
     },
     newDealClicked() {
+      this.resetTempDeals();
       this.updateTrigger = false;
       this.temp_deal.status = "open";
       this.temp_deal.no_of_settlements = 1;
+    },
+    resetTempDeals() {
+      this.temp_deal = {
+        deal_type: "",
+        deal_date: "",
+        deal_no: "",
+        fcy_amount: "",  // USD Amt
+        fcy_deal_rate: "",
+        lcy_amount: "",    //MYR Amt
+        source_of_funds: "Public Bank MYR",
+
+        purchase_date: "",
+        bank_charge: "",
+        tof: "Target Bank USD",          // Target of fund
+        bank_poc: "",
+        tax: null,
+        remarks: "",
+        no_of_settlements: "",
+        status: ""
+      }
     },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;

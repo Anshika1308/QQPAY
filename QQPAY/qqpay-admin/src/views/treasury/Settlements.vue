@@ -398,6 +398,7 @@
 import axios from "axios";
 import CountryFlag from "vue-country-flag";
 import { mapGetters } from "vuex";
+import {responseHandler} from "@/helpers/globalFunctions";
 
 export default {
   name: "Settlements",
@@ -651,10 +652,12 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
         })
         .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
           console.log(e);
         });
     },
@@ -669,11 +672,12 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
         })
         .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
           console.log(e);
         });
     },
@@ -695,10 +699,12 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.settl_id === this.temp_settlement.settl_id);
             this.items[index] = response.data.data[0];
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
         });
 
@@ -711,9 +717,11 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
         });
         
