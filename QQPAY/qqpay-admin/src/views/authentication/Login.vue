@@ -138,26 +138,15 @@ export default {
         User_Email: this.userEmail,
         Password: this.userPassword,
       }
-      try {
-        this.loader = true;
-        const responseData = await this.$store.dispatch('AuthenticationService/login', userDetails);
-        console.log('responseData', responseData);
-        if (responseData && responseData.status === 200) {
-          const access_token = responseData.data.data[0];
-          localStorage.setItem('access_token', access_token)
-          this.loader = false
-          this.errorMessage = '';
-          this.$router.push({name: 'Home'})
-        }else {
-          this.loader = false;
-          this.errorMessage = responseData.response.data.message;
-          this.dismissCountDown = this.dismissSecs;
-        }
-      } catch (error) {
+      this.loader = true;
+      const responseData = await this.$store.dispatch('AuthenticationService/login', userDetails);
+      if (responseData && responseData.data[0].is_admin) {
+        this.loader = false
+        this.$router.push({name: 'Home'})
+      } else {
         this.loader = false;
-        this.errorMessage = 'Server is down please connect after some time'
+        this.errorMessage = 'User is not permitted to access admin portal';
         this.dismissCountDown = this.dismissSecs;
-
       }
     },
     countDownChanged(dismissCountDown) {

@@ -104,20 +104,18 @@ const getters = {
 
 const actions = {
   async login({ commit }, _userDetails) {
+    const option = {
+      method: 'POST',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+      },
+      body:  JSON.stringify(_userDetails),
+    };
     try {
-      fetch(`${state.base_url}:${state.user_port}/api/v1/user/login`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application.json',
-          'Content-Type': 'application/json'
-        },
-        body:  JSON.stringify(_userDetails),
-      }).then(resp => resp.json()).then((data) => {
-        if (data) {
-          commit("loginAccount", { type: "LOGIN_ACCOUNT", data: data });
-          return data;
-        }
-      })
+      const loginRes = await (await fetch(`${state.base_url}:${state.user_port}/api/v1/user/login`, option)).json()
+      commit("loginAccount", { type: "LOGIN_ACCOUNT", data: loginRes });
+      return loginRes;
     } catch (error) {
       console.log('err', error);
       return error;
