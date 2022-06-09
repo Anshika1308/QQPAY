@@ -11,8 +11,6 @@
             v-model="transaction_details.details.method"
             :options="method_options"
             class="mb-3"
-            value-field="value_code"
-            text-field="value"
             disabled-field="notEnabled"
             ><b-form-select-option :value="null"
               >select payment method</b-form-select-option
@@ -146,7 +144,16 @@ export default {
   data () {
     return {
       paymentTypeOptions: [{ value: 'Credit Card', value_code: 'CC' }, { value: 'Direct Debit', value_code: 'DD' }],
-      method_options: null,
+      method_options: [
+        {
+          text: "FPX",
+          value: "FPX",
+        },
+        {
+          text: "Bank Deposit",
+          value: "Bank Deposit",
+        },
+      ],
       remittenceReasons: null,
       sourceOfFunds: null,
       p_m_error: true,
@@ -162,8 +169,8 @@ export default {
     "transaction_details.details.method" (val) {
       console.log(val)
       if (val !== "") {
-        this.transaction_details.details.methodText = this.method_options.filter(x => x.value_code === val)[0].value
-        console.log(this.transaction_details.details.methodText)
+        this.transaction_details.details.methodText = val
+        // console.log(this.transaction_details.details.methodText)
         this.p_m_error = false
       } else {
         this.p_m_error = true
@@ -219,54 +226,26 @@ export default {
       console.log(this.transaction_details.details);
       if (this.transaction_details.details.method !== null || this.transaction_details.details.method !== "null" && this.transaction_details.details.reason_of_remittance_cd !== null || this.transaction_details.details.reason_of_remittance_cd !== "" && this.transaction_details.details.source_of_fund_cd !== null || this.transaction_details.details.source_of_fund_cd !== "") {
         console.log(this.transaction_details)
-        let beneficiary = JSON.parse(localStorage.getItem('selectedBeneficiary'))
-        let transactionData = {
-          "total_coll_amount": this.transaction_details.details.target_amount,
-          "coll_crncy_cd": this.transaction_details.details.source_country,
-          "coll_ex_rate": this.transaction_details.details.exchangerate,
-          "pay_amount": this.transaction_details.details.target_amount,
-          "pay_crncy_cd": this.transaction_details.details.target_country,
-          "payment_mode_cd": this.transaction_details.details.payment_type,
-          "trans_comments": this.transaction_details.details.remarks,
-          "source_of_fund_cd": this.transaction_details.details.sourceOfFundsText,
-          "reason_of_remittance_cd": this.transaction_details.details.remittenceReasonsText,
-          "Remittee_id": beneficiary[0].Remitter_id,
-          "is_self": JSON.parse(localStorage.getItem('on_behalf_details')).on_behalf,
-          "on_behalf_id": JSON.parse(localStorage.getItem('on_behalf_id'))
-        }
-        axios
-          .post(`${constants.SERVER_API}/transaction/save`, transactionData, {
-            headers: {
-              accept: 'application/json',
-              Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
-            },
-          })
-          .then((response) => {
-            console.log('payment methods', response)
-            this.$emit('my-event')
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        this.$emit('my-event')
 
       }
     },
-    getPaymentMethods () {
-      axios
-        .get(`${constants.SERVER_API}/sub_category/payment-mode`, {
-          headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
-          },
-        })
-        .then((response) => {
-          console.log('payment methods', response)
-          this.method_options = response.data.data[0]
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    // getPaymentMethods () {
+    //   axios
+    //     .get(`${constants.SERVER_API}/sub_category/payment-mode`, {
+    //       headers: {
+    //         accept: 'application/json',
+    //         Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+    //       },
+    //     })
+    //     .then((response) => {
+    //       console.log('payment methods', response)
+    //       this.method_options = response.data.data[0]
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // },
     getRemittenceReasons () {
       axios
         .get(`${constants.SERVER_API}/sub_category/remittence-reason`, {
@@ -301,22 +280,20 @@ export default {
     },
   },
   created () {
-
+    this.transaction_details.details.method = ['FPX']
 
     if (this.transaction_details.details.method !== null || this.transaction_details.details.method !== "" && this.transaction_details.details.reason_of_remittance_cd !== null || this.transaction_details.details.reason_of_remittance_cd !== "" && this.transaction_details.details.source_of_fund_cd !== null || this.transaction_details.details.source_of_fund_cd !== "") {
       let stored_transaction_details = JSON.parse(localStorage.getItem('transactionDetails'))
       this.transaction_details.details.method = stored_transaction_details.details.method
       this.transaction_details.details.reason_of_remittance_cd = stored_transaction_details.details.reason_of_remittance_cd
       this.transaction_details.details.source_of_fund_cd = stored_transaction_details.details.source_of_fund_cd
-      this.p_m_error = false
-      this.t_r_error = false
-      this.s_f_error = false
+
     } else {
       this.transaction_details.details.method = ""
       this.transaction_details.details.reason_of_remittance_cd = ""
       this.transaction_details.details.source_of_fund_cd = ""
     }
-    this.getPaymentMethods()
+    // this.getPaymentMethods()
     this.getRemittenceReasons()
     this.getSourceFunds()
   }

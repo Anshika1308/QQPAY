@@ -436,6 +436,8 @@ export default {
     },
   },
   async created () {
+    this.getOccupationsList()
+    this.nationalityList()
     let stored_on_behalf_details = JSON.parse(localStorage.getItem('on_behalf_details'))
     console.log("stored_on_behalf_details", stored_on_behalf_details)
 
@@ -443,8 +445,7 @@ export default {
       this.on_behalf_details = stored_on_behalf_details
     }
 
-    this.getOccupationsList()
-    this.nationalityList()
+
     console.log("constants.ACCESS_TOKEN", constants.ACCESS_TOKEN)
   }
 }

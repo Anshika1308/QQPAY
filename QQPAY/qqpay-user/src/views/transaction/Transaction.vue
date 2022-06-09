@@ -303,7 +303,37 @@ export default {
       this.on_behalf = false;
     },
     ConfirmAndPay () {
-      this.$router.push({ name: 'PaymentGateway', params: { transaction_details: this.transaction_details } })
+      let beneficiary = JSON.parse(localStorage.getItem('selectedBeneficiary'))
+      let transactionData = {
+        "total_coll_amount": this.transaction_details.details.target_amount,
+        "coll_crncy_cd": this.transaction_details.details.source_country,
+        "coll_ex_rate": this.transaction_details.details.exchangerate,
+        "pay_amount": this.transaction_details.details.target_amount,
+        "pay_crncy_cd": this.transaction_details.details.target_country,
+        "payment_mode_cd": this.transaction_details.details.payment_type,
+        "trans_comments": this.transaction_details.details.remarks,
+        "source_of_fund_cd": this.transaction_details.details.sourceOfFundsText,
+        "reason_of_remittance_cd": this.transaction_details.details.remittenceReasonsText,
+        "Remittee_id": beneficiary[0].Remitter_id,
+        "is_self": JSON.parse(localStorage.getItem('on_behalf_details')).on_behalf,
+        "on_behalf_id": JSON.parse(localStorage.getItem('on_behalf_id'))
+      }
+      axios
+        .post(`${constants.SERVER_API}/transaction/save`, transactionData, {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+          },
+        })
+        .then((response) => {
+          console.log('payment methods', response)
+
+          this.$router.push({ name: 'PaymentGateway', params: { transaction_details: this.transaction_details } })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       // let data = {
       //   "total_coll_amount": 0,
       //   "coll_crncy_cd": "string",

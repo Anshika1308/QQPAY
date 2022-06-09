@@ -431,7 +431,7 @@ export default {
 
       if (this.transaction_details.details.source_amount > this.transaction_details.details.service_charge) {
         let convertable_amount = (parseInt(this.transaction_details.details.source_amount) - parseInt(this.transaction_details.details.service_charge))
-        this.getConvertedAmount(convertable_amount)
+        this.getConvertedAmount()
         return convertable_amount;
       } else {
         return 0
@@ -488,12 +488,12 @@ export default {
     async "transaction_details.details.source_country" () {
       await this.getServiceCharge()
       await this.getExchangeRate()
-      await this.getConvertedAmount(this.convertableAmount)
+      await this.getConvertedAmount()
     },
     async "transaction_details.details.target_country" () {
       await this.getServiceCharge()
       await this.getExchangeRate()
-      await this.getConvertedAmount(this.convertableAmount)
+      await this.getConvertedAmount()
     }
   },
   methods: {
@@ -548,8 +548,9 @@ export default {
           console.log(error);
         });
     },
-    getConvertedAmount (convertableAmount) {
+    getConvertedAmount () {
       // exchangerates/convert/MYR/INR?convert_quantity=100'
+      let convertableAmount = (parseInt(this.transaction_details.details.source_amount) - parseInt(this.transaction_details.details.service_charge))
       console.log("convertableAmount", convertableAmount)
       console.log("ourFee", this.transaction_details.details.service_charge)
       if (convertableAmount > parseInt(this.transaction_details.details.service_charge)) {
@@ -569,7 +570,7 @@ export default {
             console.log(error);
           });
       } else {
-        this.convertableAmount = 0
+        // this.convertableAmount = 0
       }
     },
     getServiceCharge () { //http://3.111.140.40:8000/api/v1/service_charge/get-service-charge/country/INR
@@ -610,14 +611,22 @@ export default {
   },
 
   async created () {
+    this.transaction_details.details.source_amount = 0
+    this.transaction_details.details.target_amount = 0
+    await this.getServiceCharge()
     await this.get_all_country_data()
     await this.getExchangeRate()
-    await this.getServiceCharge()
+    await this.getConvertedAmount()
+
+    console.log('check local storage', localStorage)
     if (this.transaction_details.details.source_amount !== null || this.transaction_details.details.source_amount !== "" && this.transaction_details.details.target_amount !== null || this.transaction_details.details.target_amount !== "") {
-      let stored_transaction_details = JSON.parse(localStorage.getItem('transactionDetails'))
-      this.transaction_details.details.source_amount = stored_transaction_details.details.source_amount
-      this.transaction_details.details.source_country = stored_transaction_details.details.source_country
-      this.transaction_details.details.target_country = stored_transaction_details.details.target_country
+      this.getConvertedAmount()
+      if (localStorage["transactionDetails"]) {
+        let stored_transaction_details = JSON.parse(localStorage.getItem('transactionDetails'))
+        this.transaction_details.details.source_amount = stored_transaction_details.details.source_amount
+        this.transaction_details.details.source_country = stored_transaction_details.details.source_country
+        this.transaction_details.details.target_country = stored_transaction_details.details.target_country
+      }
     } else {
       this.transaction_details.details.source_amount = 0
       this.transaction_details.details.target_amount = 0
@@ -750,3 +759,7 @@ li {
   height: 100%;
 }
 </style>
+
+  function set(transaction_details) {
+    throw new Error('Function not implemented.');
+  }

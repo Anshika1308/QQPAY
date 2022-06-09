@@ -180,8 +180,8 @@
                       <b-col cols="12" class="text-left">
                         <b-row>
                           <b-col cols="4">
-                            <medium class="converted" style="margin-left: -15px"
-                              >74.6497</medium
+                            <span class="converted" style="margin-left: -15px"
+                              >74.6497</span
                             >&nbsp;&nbsp;<b
                               ><b-icon
                                 icon="graph-up"
@@ -339,6 +339,10 @@ export default {
   },
   mounted () {
     console.log(getAllISOCodes())
+    localStorage.setItem("on_behalf_details", "")
+    localStorage.setItem("on_behalf_id", "")
+    localStorage.setItem("selectedBeneficiary", "")
+    localStorage.setItem("transactionDetails", "")
   }
 };
 </script>
