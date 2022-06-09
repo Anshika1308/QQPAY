@@ -165,7 +165,7 @@
                           class="d-flex justify-content-between align-items-center"
                         >
                           <label>Purchase Date</label>
-                          <label>{{ format(row.item.deal_date) }}</label>
+                          <label>{{ format(row.item.purchase_date) }}</label>
                         </b-list-group-item>
                         <b-list-group-item
                           class="d-flex justify-content-between align-items-center"
@@ -535,13 +535,13 @@ export default {
         lcy_amount: null,
 
         ccy_cd: "",
-        deal_date: "",
+        purchase_date: "",
         swift_charge: "",
         coll_ccy_pay_ccy_wrong: "",  // Need to capture
         created_by: "",
         updated_by: "",
         pp_bank_poc: "",  // Not captured
-        tax: "",             // Not captured
+        tax: null,             // Not captured
         deal_id: "",         // Need to add settlement in a particular deal
 
 /*         PP_CCY: "",
@@ -709,7 +709,7 @@ export default {
         });
 
       } else {
-        request.deal_date = this.selected_deal.deal_date
+        request.purchase_date = this.selected_deal.deal_date
         request.deal_id = this.selected_deal.deal_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
         axios.post(this.base_url + "deal-settlement/new-deal-settlement", request, {
             headers: {
@@ -765,13 +765,13 @@ export default {
         lcy_amount: null,
 
         ccy_cd: "",
-        deal_date: "",
+        purchase_date: "",
         swift_charge: "",
         coll_ccy_pay_ccy_wrong: "",  // Need to capture
         created_by: "",
         updated_by: "",
         pp_bank_poc: "",  // Not captured
-        tax: "",             // Not captured
+        tax: null,             // Not captured
         deal_id: "",         // Need to add settlement in a particular deal
 
       };
