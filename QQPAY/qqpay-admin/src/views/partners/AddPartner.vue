@@ -85,9 +85,10 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Agent Code" />
               <b-form-group id="input-group-partner-type" label="Partner Type" label-for="input-partner-type">
                 <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.partnerType"
-                  :options="companyDetail.partnerTypeOptions" />
+                  :options="companyDetail.partnerTypeOptions" required />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
