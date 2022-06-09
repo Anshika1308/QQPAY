@@ -254,7 +254,7 @@ export default {
           key: 'User_Type',
           label: 'User Type',
         },
-        "risk_status",
+        // "risk_status",
         {
           key: 'Is_Active',
           label: 'User Status',
