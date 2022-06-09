@@ -14,9 +14,13 @@ service.interceptors.request.use(
   (config) => {
     config.baseURL = store.getters.config.VUE_APP_BASE_API;
 
-    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQ3NzI4NjgsInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.3HwmEqu9dl5KYTgMsaQ9odt49DVuW6QHPpVtarQlJok'
+    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTQ4MjYxMTksInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.ZpeDeUupr0plrWe9CDhEkz2knnmY2rW5HgsdVzqP1os'
     config.headers['Authorization'] = 'Bearer ' + authToken
     
+    const port  = config.url.slice(0, 4);
+    config.url = config.url.substring(4);
+    config.baseURL = config.baseURL + port
+
     return config;
   },
   (error) => {

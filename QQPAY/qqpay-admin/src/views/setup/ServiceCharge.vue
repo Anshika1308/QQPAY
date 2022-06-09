@@ -73,7 +73,6 @@
     <b-table
       :items="items"
       :fields="fields"
-      :filter="filter"
       responsive
       class="align-middle mt-4"
     >
@@ -320,14 +319,28 @@
                         This is a required field.
                       </b-form-invalid-feedback>
                     </b-col>
-                    <b-col
-                      cols="6"
-                      label-cols-sm="12"
-                      label-cols-lg="12"
-                      content-cols-sm="12"
-                      content-cols-lg="12"
-                    >
-                      <b-dropdown
+                    <b-col cols="6"  class="mt-3">
+                      <v-select
+                        :options="payoutPartnerList"
+                        label="contact_name1"
+                        v-model="countryWiseForm.payment_partner"
+                        :reduce="(item) => item.agent_id"
+                        placeholder="Available options here"
+                        required
+                        :clearable="false"
+                        :class="{
+                          'is-invalid':
+                            $v.countryWiseForm.payment_partner.$error,
+                        }"
+                        aria-describedby="payment_partner-live-feedback"
+                      >
+                      </v-select>
+                      <b-form-invalid-feedback
+                        id="payment_partner-live-feedback"
+                      >
+                        This is a required field.
+                      </b-form-invalid-feedback>
+                      <!-- <b-dropdown
                         block
                         id="input-relation"
                         :text="countryWiseDefaultForm.payout_partner"
@@ -342,7 +355,7 @@
                         >
                           {{ option.text }}
                         </b-dropdown-item>
-                      </b-dropdown>
+                      </b-dropdown> -->
                     </b-col>
                     <b-col cols="6">
                       <b-form-input
@@ -352,7 +365,7 @@
                         size="sm"
                       ></b-form-input>
                     </b-col>
-                    <b-col cols="6">
+                    <b-col cols="6"  class="mt-3">
                       <v-select
                         :options="serviceChargeTypeList"
                         label="value"
@@ -522,6 +535,7 @@
 import { required, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll } from "@/api/country";
+import { getList } from "@/api/partnerDetails";
 import {
   getServiceChargeType,
   getPaymentMode,
@@ -562,6 +576,7 @@ export default {
       countryWiseDefaultForm: {
         id: 0,
         payment_mode: null,
+        payment_partner: null,
         country: null,
         service_charge_type: null,
         service_charge: null,
@@ -618,6 +633,9 @@ export default {
       payment_mode: {
         required,
       },
+      payment_partner: {
+        required,
+      },
       country: {
         required,
       },
@@ -663,10 +681,10 @@ export default {
     },
     resetForm() {
       this.countryWiseForm = Object.assign({}, this.countryWiseDefaultForm);
-      this.$v.$reset()
-      this.isError = false
-      this.error = null
-      this.onSearch()
+      this.$v.$reset();
+      this.isError = false;
+      this.error = null;
+      this.onSearch();
     },
     onSearch() {
       list().then((res) => {
@@ -721,6 +739,7 @@ export default {
   },
   async created() {
     this.resetForm();
+    this.onSearch();
     await Promise.all([
       getAll().then((res) => {
         this.countryList = res.data;
@@ -733,7 +752,10 @@ export default {
       getPaymentMode().then((res) => {
         this.paymentModeList = res.data;
       }),
-      this.onSearch(),
+
+      getList().then((res) => {
+        this.payoutPartnerList = res.data.data;
+      }),
     ]);
   },
 };

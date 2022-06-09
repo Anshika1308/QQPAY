@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const baseUrl = 'api/v1/complaince'
+const baseUrl = '8000/api/v1/complaince'
 
 export function getAll(){
     return request({
