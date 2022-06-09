@@ -49,7 +49,7 @@
               <div class="risk-status-header">
                 <span>{{ header.field.label }}</span>
                 <!-- <span><a href="javascript:void(0)"><b-icon icon="arrow-down" aria-hidden="true"></b-icon></a></span> -->
-                <span>
+                <!-- <span>
                   <b-dropdown
                     variant="transparent"
                     text="Split Link"
@@ -94,17 +94,22 @@
                       <b-button class="apply-btn" @click="riskFilterApply()">Apply</b-button>
                     </b-dropdown-form>
                   </b-dropdown>
-                </span>
+                </span> -->
 
               </div>
             </template>
             <template v-slot:cell(name_&_occupation)="row">
               <div class="name-occupation">
-                <img :src="row.item.avatarImg" alt="Image" />
+                <b-avatar  
+                  square
+                  :src="row.item.avatarImg"
+                  size="3rem"
+                ></b-avatar>                
+                <!-- <img :src="row.item.avatarImg" alt="Image" /> -->
                 <div>
-                  {{ row.item.name }}
+                  {{ row.item.Full_Name }}
                   <br />
-                  <small>{{ row.item.occupation }}</small>
+                  <small>{{ row.item.Occupation_Code }}</small>
                 </div>
               </div>
             </template>
@@ -114,12 +119,20 @@
                 :options="riskStatusOptions"
                 @change="onChangeRiskStatus($event)"
               ></b-form-select>
-              <b-button size="sm" @click="row.toggleDetails" class="mr-2 apply-btn">
+              <!-- <b-button size="sm" @click="row.toggleDetails" class="mr-2 apply-btn">
                 {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
-              </b-button>
+              </b-button> -->
             </template>
-            <template v-slot:cell(fraudulent)="row">
-              <template v-if="row.item.fraudulent">
+            <template v-slot:cell(Is_Active)="row">
+              <template v-if="row.item.Is_Active">
+                Active
+              </template>
+              <template v-if="!row.item.Is_Active">
+                Inactive
+              </template>
+            </template>
+            <template v-slot:cell(Is_Negativelisted)="row">
+              <template v-if="row.item.Is_Negativelisted === 1">
                 <b-icon icon="flag-fill" variant="danger"></b-icon>
               </template>
             </template>
@@ -157,7 +170,7 @@
 
     </div>
     <div v-if="showUserDetails">
-      <UserDetails />  
+      <UserDetails :selectedData="selectedData" @backBtnClick="backBtnClick"/>  
     </div>
 
     <b-modal ref="risk-status-modal" hide-footer modal-class="risk-status-modal">
@@ -196,13 +209,23 @@
 
 <script>
 import UserDetails from './UserDetails';
+import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   name: "ComplianceUser",
   components: {
     UserDetails
   },
+  computed: {
+    ...mapGetters([
+      "token",
+      // "base_url",
+    ]),
+
+  },
   data() {
     return {
+      base_url: 'http://3.111.140.40:5000/api/v1/',
       showUserDetails: false,
       riskChangeComment: '',
       selectMode: "single",
@@ -212,19 +235,43 @@ export default {
         { value: "b", text: "Selected Option" },
       ],
       filterSelected: null,
-      selected: [],
+      selectedData: [],
       fields: [
         "name_&_occupation",
-        "number",
-        "email",
-        "country",
-        "user_type",
+        {
+          key: 'Phone_Number',
+          label: 'Number',
+        },
+        {
+          key: 'Email_ID',
+          label: 'Email',
+        },
+        {
+          key: 'Country_Code',
+          label: 'Country',
+        },
+        {
+          key: 'User_Type',
+          label: 'User Type',
+        },
         "risk_status",
-        "user_status",
-        "fraudulent",
+        {
+          key: 'Is_Active',
+          label: 'User Status',
+        },
+        {
+          key: 'Is_Negativelisted',
+          label: 'Fraudulent',
+        },
+        // "user_status",
+        // "fraudulent",
+       /*  {
+          key: 'deal_type',
+          label: 'Deal Type',
+        }, */
       ],
       items: [
-        {
+/*         {
           name: "Yammi Peter",
           occupation: "Software Engineer",
           avatarImg:
@@ -275,7 +322,7 @@ export default {
           risk_status: "High risk",
           user_status: "Active",
           fraudulent: false,
-        },
+        }, */
       ],
       tableData: [],
       riskStatusOptions: [
@@ -294,14 +341,34 @@ export default {
   },
   created() {
     this.tableData = this.items // Dummy chnage will change logic after Api integration
+    this.getComplianceDtls();
   },
   methods: {
-    onRowSelected(items) {
-      this.selected = items;
+    async getComplianceDtls() {
+      console.log("token", this.token);
+
+      axios
+        .get(this.base_url + "user/get-all-remitters", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.items = JSON.parse(JSON.stringify(response.data.data));
+          console.log("this.items", this.items);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    onRowSelected(data) {
+      console.log(data);
+      this.selectedData = data;
       this.showUserDetails = true;
       // this.$router.push("userDetails");
     },
-    riskFilterApply() {
+/*     riskFilterApply() {
       // this.items = this.tableData
       console.log(this.riskStatus);
       this.items = this.tableData.filter(ele => {
@@ -326,15 +393,21 @@ export default {
       this.riskStatus.low = this.riskStatus.all
       this.riskStatus.high = this.riskStatus.all
       this.riskStatus.critical = this.riskStatus.all
-    },
+    }, */
     onChangeRiskStatus(eve) {
       console.log(eve);
       // eve.preventDefault();
       this.$refs["risk-status-modal"].show();
 
     },
+    AddRiskComment() {
+      this.$refs["risk-status-modal"].hide();
+    },
     hideCancelModel() {
       this.$refs["risk-status-modal"].hide();
+    },
+    backBtnClick() {
+      this.showUserDetails = false;
     },
   },
 };
@@ -376,10 +449,11 @@ export default {
 .name-occupation {
   display: flex;
   justify-content: space-between;
-  img {
+  align-items: center;
+ /*  img {
     border-radius: 50%;
     width: 50px;
-  }
+  } */
 }
 
 .compliance-table {
