@@ -16,469 +16,107 @@
         <b-row align-h="center my-5">
           <b-col col sm="12" md="12" lg="8">
             <div v-if="currentStep == 1">
-              <h4>{{$t('fundTransfers.howMuchTransfer')}}</h4>
-              <b-input-group size="lg" class="mt-3">
-                <b-form-input
-                  placeholder="You Send"
-                  v-model="transaction_details.details.source_amount"
-                  class="converted"
-                ></b-form-input>
-                <template #append>
-                  <b-dropdown
-                    :text="transaction_details.details.source_country"
-                    right
-                    variant="primary"
-                  >
-                    <b-dropdown-item
-                      v-for="option in country_options"
-                      :key="option.value"
-                      :value="option.value"
-                      @click="
-                        transaction_details.details.source_country =
-                          option.value
-                      "
-                    >
-                      {{ option.text }}
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </template>
-              </b-input-group>
-              <b-list-group flush>
-                <b-list-group-item href="#">
-                  <b-row align-v="end">
-                    <div class="operations minus">-</div>
-                    <b-col cols="12">
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        :label="$t('fundTransfers.deliveryMethod')"
-                        label-for="input-relation"
-                        label-size="sm"
-                      >
-                        <b-dropdown
-                          id="input-relation"
-                          :text="transaction_details.details.delivery"
-                          variant="light"
-                          label-size="sm"
-                        >
-                          <b-dropdown-item
-                            v-for="option in delivery_options"
-                            :key="option.value"
-                            :value="option.value"
-                            @click="
-                              transaction_details.details.delivery = option.value
-                            "
-                            size="sm"
-                          >
-                            {{ option.text }}
-                          </b-dropdown-item>
-                        </b-dropdown>
-                      </b-form-group>
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        label="1,822.75 INR"
-                        label-size="sm"
-                      >
-                        <small>{{$t('fundTransfers.ourFee')}}</small>
-                      </b-form-group>
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        label="1,822.75 INR"
-                        label-size="sm"
-                      >
-                        <small>{{$t('fundTransfers.totalFee')}}</small>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-                <b-list-group-item href="#">
-                  <b-row align-v="end">
-                    <div class="operations operation-padding">=</div>
-                    <b-col cols="12">
-                      <b-form-group
-                        label-cols-sm="12"
-                        label-cols-lg="3"
-                        content-cols-sm="12"
-                        content-cols-lg="4"
-                        label="98,177.25 INR"
-                        label-size="sm"
-                      >
-                        <small>{{$t('fundTransfers.amountConvert')}}</small>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-                <b-list-group-item href="#">
-                  <b-row align-v="end">
-                    <div class="operations operation-padding">&#xf7;</div>
-                    <b-col cols="12">
-                      <b-row>
-                        <b-col cols="3">
-                          <small class="converted">74.6497</small>&nbsp;&nbsp;<b
-                            ><b-icon
-                              icon="graph-up"
-                              animation="fade"
-                              style="color: green"
-                            ></b-icon
-                          ></b>
-                        </b-col>
-                        <b-col cols="4">
-                          <small style="margin-left: -5px"
-                            >{{$t('fundTransfers.guarantteRate')}}</small
-                          >
-                        </b-col>
-                      </b-row>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-              </b-list-group>
-              <b-input-group size="lg">
-                <b-form-input
-                  placeholder="They Receive"
-                  v-model="transaction_details.details.target_amount"
-                  class="converted"
-                ></b-form-input>
-                <template #append>
-                  <b-dropdown
-                    :text="transaction_details.details.target_country"
-                    right
-                    variant="primary"
-                  >
-                    <b-dropdown-item
-                      v-for="option in country_options"
-                      :key="option.value"
-                      :value="option.value"
-                      @click="
-                        transaction_details.details.target_country =
-                          option.value
-                      "
-                    >
-                      {{ option.text }}
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </template>
-              </b-input-group>
-              <b-button
-                class="float-right mt-5 px-5"
-                variant="primary"
-                @click="onClickNext"
-                >{{$t('next')}}</b-button
-              >
+              <StepOne
+                :txnDetails="transaction_details"
+                :country_options="country_options"
+                :delivery_options="delivery_options"
+                @my-event="onClickNext"
+                v-model="transaction_details"
+              />
             </div>
             <div v-if="currentStep == 2">
-              <h4>{{$t('fundTransfers.isThisPersonalTransaction')}}</h4>
-              <b-button-group size="lg">
-                <b-button
-                  pressed.sync="false"
-                  variant="light"
-                  size="lg"
-                  class="px-5 py-3"
-                  @click="notOnBehalf"
-                >
-                  <b-icon
-                    icon="person"
-                    style="width: 80px; height: 80px; color: #b4b4b4;"
-                  ></b-icon>
-                  <br />
-                  {{$t('fundTransfers.myAccount')}}
-                  <br />
-                  <small>{{$t('fundTransfers.payingFromOwnAccount')}}.</small>
-                </b-button>
-                <b-button
-                  pressed.sync="false"
-                  variant="light"
-                  size="lg"
-                  class="px-5 py-3"
-                  @click="onBehalf"
-                >
-                  <b-icon
-                    icon="person-bounding-box"
-                    style="width: 80px; height: 80px; color: #b4b4b4"
-                  ></b-icon>
-                  <br />
-                  {{$t('fundTransfers.onBehalf')}}
-                  <br />
-                  <small>{{$t('fundTransfers.payingOnBehalfSomeone')}}</small>
-                </b-button>
-              </b-button-group>
-              <b-collapse v-model="on_behalf">
-              <b-card
-                header="Personal Details"
-                header-tag="header"
-                class="mt-3"
-              >
-                <b-row>
-                  <b-col>
-                    <b-form-group
-                      label="Full legal first and middle names"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Date of birth"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col>
-                    <b-form-group
-                      label="Full legal last name(s)"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Phone"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-card>
-              <b-card header="Address" header-tag="header" class="mt-3">
-                <b-row>
-                  <b-col>
-                    <b-form-group
-                      label="Country"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Address"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Occupation"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                  <b-col>
-                    <b-form-group
-                      label="City"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Postal code"
-                      label-for="input-type"
-                      class="mt-2"
-                    >
-                      <b-form-input id="input-name"></b-form-input>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-              </b-card>
-              <b-button
-                class="float-left mt-5 px-5"
-                variant="outline-secondary"
-                @click="onClickBack"
-                >Back</b-button
-              >
-              </b-collapse>
-              <b-button
-                class="float-right mt-5 px-5"
-                variant="primary"
-                @click="onClickNext"
-                >Next</b-button
-              >
+              <StepTwo
+                :txnDetails="transaction_details"
+                @my-event="onClickNext"
+                @my-event-click-back="onClickBack"
+                v-model="transaction_details"
+              />
             </div>
             <div v-if="currentStep == 3">
-              <h4>{{$t('fundTransfers.whoAreYouSendingMoney')}}?</h4>
-              <b-form-group
-                label-for="filter-input"
-                label-cols-sm="0"
-                label-cols-lg="0"
-                label-align-lg="right"
-                content-cols-sm="12"
-                content-cols-lg="4"
-                label-align-sm="right"
-                label-size="sm"
-                class="mb-2"
-              >
-                <b-input-group size="sm">
-                  <b-form-input
-                    id="filter-input"
-                    v-model="filter"
-                    type="search"
-                    placeholder="Search Beneficiary"
-                  ></b-form-input>
-
-                  <b-input-group-append>
-                    <b-button :disabled="!filter" @click="filter = ''"
-                      >{{$t('fundTransfers.clear')}}</b-button
-                    >
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-              <b-table
-                :items="items"
-                :fields="fields"
-                :filter="filter"
-                responsive
-                selectable
-                @row-selected="onRowSelected"
-                select-mode="single"
-                class="align-middle mt-2"
-              >
-                <template #cell(name)="row">
-                  <b-avatar
-                    variant="dark"
-                    :text="row.item.name.charAt(0) + row.item.name.charAt(1)"
-                    class="mr-2"
-                  ></b-avatar>
-                  <b>{{ row.item.name }}</b>
-                </template>
-                <template #cell(actions)="{ rowSelected }">
-                  <template v-if="rowSelected">
-                    <span aria-hidden="true">&check;</span>
-                    <span class="sr-only">Selected</span>
-                  </template>
-                  <template v-else>
-                    <span aria-hidden="true">&nbsp;</span>
-                    <span class="sr-only">Not selected</span>
-                  </template>
-                </template>
-              </b-table>
-              <b-button
-                class="float-left mt-5 px-5"
-                variant="outline-secondary"
-                @click="onClickBack"
-                >Back</b-button
-              >
-              <b-button
-                class="float-right mt-5 px-5"
-                variant="primary"
-                @click="onClickNext"
-                >Next</b-button
-              >
+              <StepThree
+                :txnDetails="transaction_details"
+                @my-event="onClickNext"
+                @my-event-click-back="onClickBack"
+                v-model="transaction_details"
+              />
             </div>
             <div v-if="currentStep == 4">
-              <h4>{{$t('fundTransfers.letusKnowWhySend')}}</h4>
-              <b-row class="mt-5">
-                <b-col
-                  ><b-form-group
-                        :label="$t('fundTransfers.paymentMethod')"
-                        label-for="input-name"
-                      >
-                        <b-dropdown
-                          id="input-relation"
-                          :text="transaction_details.details.method"
-                          variant="light"
-                          class="wd-100p"
-                        >
-                          <b-dropdown-item
-                            v-for="option in method_options"
-                            :key="option.value"
-                            :value="option.value"
-                            @click="
-                              transaction_details.details.method = option.value
-                            "
-                            size="sm"
-                          >
-                            {{ option.text }}
-                          </b-dropdown-item>
-                        </b-dropdown>
-                      </b-form-group></b-col
-                >
-                <b-col
-                  ><b-form-group
-                    :label="$t('fundTransfers.transactionReason')"
-                    label-for="input-type"
-                  >
-                    <b-form-input
-                      id="input-name"
-                      v-model="transaction_details.details.reason"
-                    ></b-form-input> </b-form-group
-                ></b-col>
-              </b-row>
-
-              <b-form-group
-                :label="$t('fundTransfers.sourceFund')"
-                label-for="input-type"
-                class="mt-2"
-              >
-                <b-form-input
-                  id="input-name"
-                  v-model="transaction_details.details.fund_source"
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group :label="$t('fundTransfers.remarks')" label-for="input-type" class="mt-2">
-                <b-form-input
-                  id="input-name"
-                  v-model="transaction_details.details.remarks"
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group
-                label-cols-sm="12"
-                label-cols-lg="6"
-                label-align-lg="right"
-                content-cols-sm="12"
-                content-cols-lg="6"
-                v-if="transaction_details.details.method === 'Bank Deposit'"
-                :label="$t('fundTransfers.uploadBankReceipt')"
-                label-for="input-type"
-                class="mt-2"
-              >
-                <b-button-group class="mx-1">
-                  <b-button variant="success" v-if="false" class="mr-1"
-                    ><b-icon icon="cloud-check-fill"></b-icon
-                  ></b-button>
-                  <b-button variant="warning" v-else class="mr-1"
-                    ><b-icon icon="cloud-upload-fill"></b-icon
-                  ></b-button>
-                  <b-button variant="light"
-                    ><b-icon icon="eye-fill"></b-icon
-                  ></b-button>
-                </b-button-group>
-              </b-form-group>
-              <b-button
-                class="float-left mt-5 px-5"
-                variant="outline-secondary"
-                @click="onClickBack"
-                >{{$t('backLabel')}}</b-button
-              >
-              <b-button
-                class="float-right mt-5 px-5"
-                variant="primary"
-                @click="onClickNext"
-                >{{$t('next')}}</b-button
-              >
+              <StepFour
+                :txnDetails="transaction_details"
+                @my-event="onClickNext"
+                @my-event-click-back="onClickBack"
+              />
             </div>
             <div v-if="currentStep == 5" class="text-center">
-              <h4>{{$t('letsReviewTransaction')}}</h4>
-              <img
-                center
-                alt="QQ Pay"
-                class="logo_img"
-                src="../../assets/transaction.gif"
-              />
+              <div style="justify-content: center; display: grid">
+                <img
+                  center
+                  alt="QQ Pay"
+                  class="logo_img"
+                  src="../../assets/transaction.gif"
+                />
+              </div>
               <div class="text-left">
-                <ul>
+                <div>
+                  <b-card>
+                    <div
+                      class="bg-dark"
+                      style="border-radius: 5px; padding: 30px"
+                    >
+                      <b-card>
+                        <div class="row box-right">
+                          <div class="col-md-8 ps-0">
+                            <p class="ps-3 textmuted fw-bold h4 mb-0">
+                              {{
+                                transaction_details.details.source_country_name
+                              }}
+                            </p>
+                            <p class="fw-bold d-flex">
+                              <span class="h1">{{
+                                transaction_details.details.source_amount
+                              }}</span>
+                              <span class="h6" style="display: contents">{{
+                                transaction_details.details.source_country
+                              }}</span>
+                            </p>
+                            <!-- <p class="ms-3 px-2 bg-green">
+                              +10% since last month
+                            </p> -->
+                            <p class="ps-3 textmuted fw-bold h4 mb-0">
+                              {{
+                                transaction_details.details.target_country_name
+                              }}
+                            </p>
+                            <p class="p-org">
+                              <strong>Convertable Amount</strong>
+                            </p>
+                            <p class="fw-bold">
+                              {{
+                                transaction_details.details.target_amount
+                              }}&nbsp;<span class="textmuted">{{
+                                transaction_details.details.target_country
+                              }}</span>
+                            </p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="p-blue">
+                              <strong>Service Charge</strong>
+                            </p>
+                            <p class="fw-bold mb-3">
+                              <span class="fas fa-dollar-sign pe-1"></span
+                              >{{ transaction_details.details.service_charge }}
+                              <span class="textmuted">{{
+                                transaction_details.details.service_charge_CC
+                              }}</span>
+                            </p>
+                          </div>
+                        </div>
+                      </b-card>
+                    </div>
+                  </b-card>
+                </div>
+
+                <!-- <ul>
                   <li
                     v-for="(value, key) in transaction_details.beneficiary"
                     :key="key"
@@ -491,7 +129,7 @@
                   >
                     {{ key.toUpperCase() }} : <b>{{ value }}</b>
                   </li>
-                </ul>
+                </ul> -->
               </div>
               <b-button
                 class="float-left mt-5 px-5"
@@ -502,6 +140,7 @@
               <b-button
                 class="float-right mt-5 px-5"
                 variant="primary"
+                @click="ConfirmAndPay"
                 >Confirm and PAY</b-button
               >
             </div>
@@ -517,7 +156,13 @@ import NavBar from "@/components/navigations/NavBar.vue";
 import TitleBar from "@/components/navigations/TitleBar.vue";
 import NavBarLeft from "@/components/navigations/NavBarLeft.vue";
 import StepProgress from "@/components/tools/StepProgress.vue";
-
+import StepOne from "@/components/transactions/stepOne.vue";
+import StepTwo from "@/components/transactions/stepTwo.vue";
+import StepThree from "@/components/transactions/stepThree.vue";
+import StepFour from "@/components/transactions/stepFour.vue";
+// import StepFive from "@/components/transactions/stepFive.vue";
+import constants from "../../../constants.json"
+import axios from "axios";
 export default {
   name: "Transaction",
   components: {
@@ -525,9 +170,15 @@ export default {
     TitleBar,
     NavBarLeft,
     "step-progress": StepProgress,
+    StepOne,
+    StepTwo,
+    StepThree,
+    StepFour,
+    // StepFive
   },
-  data() {
+  data () {
     return {
+      remittenceReasons: [],
       filter: null,
       on_behalf: false,
       tabIndex: 1,
@@ -543,15 +194,23 @@ export default {
       transaction_details: {
         beneficiary: {},
         details: {
-          source_amount: 100000,
-          target_amount: 1315.17,
-          source_country: "MALAYSIA",
-          target_country: "INDIA",
-          method: "Bank Deposit",
-          delivery: "Bank Account",
-          reason: "",
-          fund_source: "",
+          source_amount: 0,
+          exchangerate: 0,
+          ourFee: 0,
+          target_amount: 0,
+          source_country: "MYR",
+          source_country_name: "MALAYSIA",
+          target_country: "INR",
+          target_country_name: "INDIA",
+          delivery_method: "",
+          payment_type: "",
+          method: "",
+          reason_of_remittance_cd: "",
+          source_of_fund_cd: "",
           remarks: "",
+          methodText: "",
+          sourceOfFundsText: "",
+          remittenceReasonsText: "",
         },
       },
       method_options: [
@@ -564,6 +223,7 @@ export default {
           value: "Bank Deposit",
         },
       ],
+
       country_options: [
         {
           text: "INDIA",
@@ -596,55 +256,170 @@ export default {
           value: "Pick up",
         },
       ],
-      fields: [
-        // this.$t('fundTransfers.name'),
-        // this.$t('fundTransfers.country'),
-        // this.$t('fundTransfers.type'),
-        // this.$t('fundTransfers.relationship'),
-        'name',
-        'country',
-        'type',
-        'relationship',
-        { key: "actions", label: "" },
-      ],
-      items: [
-        {
-          name: "Dev Shah",
-          country: "DenMark",
-          type: "Individual",
-          relationship: "Family",
-        },
-        {
-          name: "Mactronics Limited",
-          country: "Sweden",
-          type: "Business",
-          relationship: "Vendor",
-        },
-      ],
+      sourceOfFunds: [],
+
     };
   },
+  mounted () {
+    // this.transaction_details = JSON.parse(localStorage.getItem('transactionDetails'))
+    // console.log('transactionDetails from local', JSON.parse(localStorage.getItem('transactionDetails')))
+  },
   methods: {
-    select_beneficiary(data) {
+    splitKeyValue (obj) {
+      const keys = Object.keys(obj);
+      const res = [];
+      console.log("keys", obj)
+      console.log("keys", keys)
+      for (let i = 0; i < keys.length; i++) {
+        res.push({
+          'text': keys[i],
+          'value': obj[keys[i]]
+        });
+      }
+      console.log("res", res)
+      return res;
+    },
+    select_beneficiary (data) {
       this.transaction_details.beneficiary = data;
       this.tabIndex++;
       console.log(this.transaction_details.beneficiary);
     },
     onClickNext: function () {
+      // alert('hi')
+      localStorage.setItem('transactionDetails', JSON.stringify(this.transaction_details))
+      console.log('transactionDetails from local', JSON.parse(localStorage.getItem('transactionDetails')))
       this.currentStep++;
     },
     onClickBack: function () {
       this.currentStep--;
     },
-    onRowSelected(items) {
+    onRowSelected (items) {
       this.selected = items;
     },
-    onBehalf(){
+    onBehalf () {
       this.on_behalf = true;
     },
-    notOnBehalf(){
+    notOnBehalf () {
       this.on_behalf = false;
-    }
+    },
+    ConfirmAndPay () {
+      let beneficiary = JSON.parse(localStorage.getItem('selectedBeneficiary'))
+      let transactionData = {
+        "total_coll_amount": this.transaction_details.details.target_amount,
+        "coll_crncy_cd": this.transaction_details.details.source_country,
+        "coll_ex_rate": this.transaction_details.details.exchangerate,
+        "pay_amount": this.transaction_details.details.target_amount,
+        "pay_crncy_cd": this.transaction_details.details.target_country,
+        "payment_mode_cd": this.transaction_details.details.payment_type,
+        "trans_comments": this.transaction_details.details.remarks,
+        "source_of_fund_cd": this.transaction_details.details.sourceOfFundsText,
+        "reason_of_remittance_cd": this.transaction_details.details.remittenceReasonsText,
+        "Remittee_id": beneficiary[0].Remitter_id,
+        "is_self": JSON.parse(localStorage.getItem('on_behalf_details')).on_behalf,
+        "on_behalf_id": JSON.parse(localStorage.getItem('on_behalf_id'))
+      }
+      axios
+        .post(`${constants.SERVER_API}/transaction/save`, transactionData, {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+          },
+        })
+        .then((response) => {
+          console.log('payment methods', response)
+
+          this.$router.push({ name: 'PaymentGateway', params: { transaction_details: this.transaction_details } })
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // let data = {
+      //   "total_coll_amount": 0,
+      //   "coll_crncy_cd": "string",
+      //   "coll_ex_rate": "string",
+      //   "pay_amount": this.transaction_details.details.target_amount,
+      //   "pay_crncy_cd": this.transaction_details.details.target_country,
+      //   "payment_mode_cd": "string",
+      //   "trans_comments": "string",
+      //   "source_of_fund_cd": this.transaction_details.details.target_country,
+      //   "reason_of_remittance_cd": "string",
+      //   "Remittee_id": 0,
+      //   "is_self": true,
+      //   "on_behalf_id": 0
+      // }
+      // axios
+      //   .get(`${constants.SERVER_API}/transaction/save`, {
+      //     headers: {
+      //       accept: 'application/json',
+      //       Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+      //     },
+      //   })
+      //   .then((response) => {
+      //     console.log('save transaction response', response)
+      //     this.$router.push({ name: 'PaymentGateway', params: { transaction_details: this.transaction_details } })
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+
+    },
+    getPaymentMethods () {
+      axios
+        .get(`${constants.SERVER_API}/sub_category/payment-mode`, {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+          },
+        })
+        .then((response) => {
+          console.log('payment methods', response)
+          this.method_options = response.data.data[0]
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getRemittenceReasons () {
+      axios
+        .get(`${constants.SERVER_API}/sub_category/remittence-reason`, {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+          },
+        })
+        .then((response) => {
+          console.log('remittenceReasons methods', response)
+          this.remittenceReasons = response.data.data[0]
+          //315
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getSourceFunds () {
+      axios
+        .get(`${constants.SERVER_API}/sub_category/source-of-funds`, {
+          headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${constants.ACCESS_TOKEN}`,
+          },
+        })
+        .then((response) => {
+          console.log('source-of-funds ', response)
+          this.sourceOfFunds = response.data.data[0]
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+
   },
+  created () {
+
+  }
 };
 </script>
 <style lang="scss" scoped>
