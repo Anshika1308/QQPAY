@@ -106,11 +106,9 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="License Expiry Date" />
               <b-form-group id="input-group-license-expiry-date" label="License Expiry Date"
                 label-for="input-license-expiry-date">
-                <b-form-input id="input-license-expiry-date" v-model="companyDetail.licenseExpiryDate" type="date"
-                  required />
+                <b-form-input id="input-license-expiry-date" v-model="companyDetail.licenseExpiryDate" type="date" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
@@ -133,9 +131,8 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Phone 2" />
               <b-form-group id="input-group-phone-2" label="Phone 2" label-for="input-phone-2">
-                <b-form-input id="input-phone-2" v-model="companyDetail.phone2" type="tel" required />
+                <b-form-input id="input-phone-2" v-model="companyDetail.phone2" type="tel" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
@@ -650,6 +647,7 @@ export default {
     },
     async getPartner() {
       const res = await getApiData(`${APIS.GET_PARTNER}/${this.partner_id}`);
+      console.log(res.data.data)
       if (res.data.status_code === 200) {
         this.contactInformation = {
           ...this.contactInformation,
@@ -666,15 +664,15 @@ export default {
           ...this.companyDetail,
           nameOfEmployer: res.data.data[0].company_name,
           agentShortcode: res.data.data[0].agent_short_code,
-          agentCode: res.data.data[0].agentCode,
-          partnerType: res.data.data[0].test,
-          businessLicense: res.data.data[0].license,
+          agentCode: res.data.data[0].agent_code,
+          partnerType: res.data.data[0].agent_type,
+          businessLicense: res.data.data[0].agent_lic_no,
           address: res.data.data[0].address,
-          licenseExpiryDate: res.data.data[0].lic_exp_date,
+          licenseExpiryDate: moment(res.data.data[0].lic_exp_date).format(),
           city: res.data.data[0].city,
           country: res.data.data[0].country,
-          phone1: res.data.data[0].company_phon1,
-          phone2: res.data.data[0].comapny_phone2,
+          phone1: res.data.data[0].phone1,
+          phone2: res.data.data[0].phone2,
           email: res.data.data[0].email,
           website: res.data.data[0].website,
           zipCode: res.data.data[0].zip_code,
