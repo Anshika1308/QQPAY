@@ -1,6 +1,6 @@
 const APIS = {
   // AUTH
-  LOGIN: `/token/create/`,
+  LOGIN: `/user/token`,
   VERIFY: `/auth/jwt/verify/`,
   REFRESH: `/auth/jwt/refresh/`,
   CURRENT_USER_PROFILE: '/auth/users/me/',
