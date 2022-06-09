@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const baseUrl = 'api/v1/service_charge'
+const baseUrl = '8000/api/v1/service_charge'
 
 export function getById(Id){
     return request({
