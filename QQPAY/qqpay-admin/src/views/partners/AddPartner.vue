@@ -85,10 +85,9 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Partner Type" />
               <b-form-group id="input-group-partner-type" label="Partner Type" label-for="input-partner-type">
                 <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.partnerType"
-                  :options="companyDetail.partnerTypeOptions" required />
+                  :options="companyDetail.partnerTypeOptions" />
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
@@ -463,7 +462,7 @@ export default {
           { value: 'd', text: 'Currency Type 3' },
           { value: 'e', text: 'Currency Type 4', disabled: true }
         ],
-        mileageDefined: "",
+        mileageDefined: 0,
         maxPayoutAmtPerTXNCashPay: "",
         maxPayoutAmtPerTXNACDeposit: "",
         partnerSettlementIn: null,
@@ -539,7 +538,7 @@ export default {
         mobileCountryCode: "",
         smsNotificationToBeneficiary: false,
         isThisAPreFundingPartner: false,
-        alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent: "",
+        alertNotificationIfBalanceBelowIfPartnerIsPrepaidAgent: 0,
         branchLimitToMakeAPayment: ""
       }
     }
