@@ -12,8 +12,10 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   plugin: {},
   modules: {
+    app,
     partnerService: partnerStore,
     partnerCommission: partnerCommissionStore,
     AuthenticationService: Authentication
-  }
+  },
+  getters,
 })

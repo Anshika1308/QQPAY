@@ -15,8 +15,6 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
 //vuelidate plugin
-import Vuelidate from 'vuelidate'
-Vue.use(Vuelidate)
 
 //vue2-select plugin
 import vSelect from 'vue-select'
