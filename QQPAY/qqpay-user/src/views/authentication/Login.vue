@@ -5,24 +5,25 @@
         <b-row align-v="center" align-h="center" class="my-auto">
           <b-col col sm="12" md="1" lg="6" class="mt-5">
             <b-jumbotron bg-variant="light" text-variant="secondary">
-              <template #header><img
-                alt="QQ Pay"
-                class="logo_img_lg"
-                src="../../assets/master_logo.png"
+              <template #header
+                ><img
+                  alt="QQ Pay"
+                  class="logo_img_lg"
+                  src="../../assets/master_logo.png"
               /></template>
 
               <template #lead>
-                {{$t('loginScreen.paymentAccrossGlb')}}
+                {{ $t("loginScreen.paymentAccrossGlb") }}
               </template>
 
-              <hr class="my-4">
+              <hr class="my-4" />
 
               <p>
-              {{$t('loginScreen.paymentSubheader')}}
+                {{ $t("loginScreen.paymentSubheader") }}
               </p>
             </b-jumbotron>
           </b-col>
-          
+
           <b-col col sm="12" md="12" lg="5">
             <b-alert
               :show="dismissCountDown"
@@ -31,9 +32,13 @@
               variant="danger"
               @dismiss-count-down="countDownChanged"
             >
-              {{submitError}}
+              {{ submitError }}
             </b-alert>
-            <b-card :header="$t('loginScreen.signin')" header-tag="header" class="mt-2">
+            <b-card
+              :header="$t('loginScreen.signin')"
+              header-tag="header"
+              class="mt-2"
+            >
               <b-form-input
                 v-model="user_details.email"
                 type="email"
@@ -41,7 +46,7 @@
                 class="mt-3"
               ></b-form-input>
               <div v-if="validateEmail" class="floating-placeholder">
-                <span >{{errorMessage}}</span>
+                <span>{{ errorMessage }}</span>
               </div>
               <b-form-input
                 v-model="user_details.password"
@@ -50,12 +55,14 @@
                 class="my-3"
               ></b-form-input>
               <div v-if="validateCurrentPassword" class="floating-placeholder">
-                <span>{{errorMessage}}</span>
+                <span>{{ errorMessage }}</span>
               </div>
               <div v-if="submitErrorMessage" class="floating-placeholder">
-                <span>{{submitErrorMessage}}</span>
+                <span>{{ submitErrorMessage }}</span>
               </div>
-              <b-link @click="$router.push('/forgotpassword')">{{$t('loginScreen.forgotPassword')}}?</b-link>
+              <b-link @click="$router.push('/forgotpassword')"
+                >{{ $t("loginScreen.forgotPassword") }}?</b-link
+              >
               <b-button
                 variant="primary"
                 @click="onClickLogin"
@@ -63,26 +70,30 @@
                 ><div class="button-loader" v-if="loader">
                   <span class="spinner-border spinner-border-sm"></span>
                 </div>
-                <div v-else>{{$t('loginScreen.signin')}}</div>
+                <div v-else>{{ $t("loginScreen.signin") }}</div>
               </b-button>
             </b-card>
-            
+
             <b-card class="mt-3" size="lg">
               <div class="language-selection">
                 <div class="div-signup" @click="$router.push('/signup')">
-                  <b-icon icon="person-lines-fill" scale="1.2" aria-hidden="true"></b-icon
-                  >&nbsp;&nbsp;{{$t('loginScreen.singnupOption')}}
+                  <b-icon
+                    icon="person-lines-fill"
+                    scale="1.2"
+                    aria-hidden="true"
+                  ></b-icon
+                  >&nbsp;&nbsp;{{ $t("loginScreen.singnupOption") }}
                 </div>
                 <div class="select-newlangauge">
                   <select v-model="$i18n.locale">
                     <option
-                      v-for="(lang) in language_options"
+                      v-for="lang in language_options"
                       :key="lang.imdex"
-                      :value="lang.value">
-                        {{ lang.text }}
+                      :value="lang.value"
+                    >
+                      {{ lang.text }}
                     </option>
                   </select>
-
                 </div>
               </div>
             </b-card>
@@ -90,7 +101,7 @@
         </b-row>
       </b-container>
     </div>
-    <Footer/>
+    <Footer />
   </div>
 </template>
 
@@ -102,7 +113,7 @@ export default {
   components: {
     Footer,
   },
-  data() {
+  data () {
     return {
       user_details: {
         email: "",
@@ -132,16 +143,16 @@ export default {
     };
   },
   computed: {
-    validateEmail(){
+    validateEmail () {
       const email = this.user_details.email;
       if (email) {
         //eslint-disable-next-line
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
           //eslint-disable-next-line
-          this.errorMessage =  " " ;
+          this.errorMessage = " ";
           //eslint-disable-next-line
           this.emailError = false;
-           //eslint-disable-next-line
+          //eslint-disable-next-line
           this.errorOnSubmit = false;
           //eslint-disable-next-line
           this.submitErrorMessage = '';
@@ -151,7 +162,7 @@ export default {
           this.errorMessage = "Please Enter the valid email address";
           //eslint-disable-next-line
           this.emailError = true;
-           //eslint-disable-next-line
+          //eslint-disable-next-line
           this.errorOnSubmit = true;
           //eslint-disable-next-line
           this.submitErrorMessage = '';
@@ -167,7 +178,7 @@ export default {
         return false;
       }
     },
-    validateCurrentPassword(){
+    validateCurrentPassword () {
       const currentPassowrd = this.user_details.password;
       const recievedPassword = this.passwordValidation(currentPassowrd);
       console.log('reciev', recievedPassword);
@@ -192,7 +203,7 @@ export default {
     },
   },
   methods: {
-    passwordValidation(currentPassowrd) {
+    passwordValidation (currentPassowrd) {
       if (currentPassowrd.length > 0) {
         if (currentPassowrd.length < 8) {
           //eslint-disable-next-line
@@ -215,11 +226,11 @@ export default {
           this.errorMessage = "Password must have at least one Uppercase Character.";
           return true;
         }
-      
+
         const isContainsLowercase = /^(?=.*[a-z]).*$/;
         if (!isContainsLowercase.test(currentPassowrd)) {
           //eslint-disable-next-line
-          this.errorMessage =  "Password must have at least one Lowercase Character.";
+          this.errorMessage = "Password must have at least one Lowercase Character.";
           return true;
         }
 
@@ -235,7 +246,7 @@ export default {
       this.errorMessage = '';
       return false;
     },
-    async onClickLogin() {
+    async onClickLogin () {
       if (!this.user_details.email || !this.user_details.password) {
         this.submitErrorMessage = 'Please Enter the email and password';
       }
@@ -254,8 +265,8 @@ export default {
             this.errorOnSubmit = false;
             this.submitErrorMessage = '';
             this.submitError = '';
-            this.$router.push({name: 'Beneficiary'})
-          }else if (responseData && responseData.status === 401) {
+            this.$router.push({ name: 'Beneficiary' })
+          } else if (responseData && responseData.status === 401) {
             this.loader = false
             this.errorOnSubmit = false;
             this.dismissCountDown = this.dismissSecs
@@ -270,7 +281,7 @@ export default {
         }
       }
     },
-    countDownChanged(dismissCountDown) {
+    countDownChanged (dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
   }

@@ -77,7 +77,7 @@
       <b-col class="col-p5">
         <div>
           <b-button-group size="sm">
-            <b-button v-if="selected_Settlement" @click="updateTrigger = false;" variant="outline-light" v-b-modal.add-funding>
+            <b-button v-if="selected_Settlement" @click="newFundingClick()" variant="outline-light" v-b-modal.add-funding>
               <b-icon icon="file-earmark-plus-fill"></b-icon> New Funding
             </b-button>
             <b-button variant="outline-light">
@@ -408,6 +408,7 @@
 import CountryFlag from "vue-country-flag";
 import { mapGetters } from "vuex";
 import axios from "axios";
+import {responseHandler} from "@/helpers/globalFunctions";
 
 export default {
   name: "Funding",
@@ -499,7 +500,7 @@ export default {
           bank_poc: "",
           coll_ccy_pay_ccy: "",
 
-          // deal_no: "",
+          deal_no: "",
           dollar_lcy_rate: "",
           parent_lcy_rate: "",
 
@@ -593,9 +594,11 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
         })
         .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
           console.log(e);
         });
     },
@@ -608,9 +611,11 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
         })
         .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
           console.log(e);
         });
     },
@@ -624,7 +629,7 @@ export default {
 
     submit() {
       const request = this.getRequest();
-      // request.deal_no = this.selected_Settlement.settle_srl_num;
+      request.deal_no = this.selected_Settlement.settle_srl_num;
       request.funding_number = Number(request.funding_number);
       // console.log('req', JSON.parse(JSON.stringify(request)))
       if (this.updateTrigger) {
@@ -634,10 +639,12 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.fund_id === this.temp_funding.fund_id);
             this.items[index] = response.data.data[0];
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
         });
 
@@ -649,9 +656,11 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
         });
         
@@ -671,6 +680,26 @@ export default {
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
       this.temp_funding = selectedRow;
+    },
+    newFundingClick() {
+      this.updateTrigger = false;
+      // Reset temp variable
+      this.temp_funding = {
+        payout_partner: "",
+        payout_partner_id: 1000,
+        fund_date: "",
+        lcy_amount: "",
+        pp_amount: "",
+        funding_number: "",
+        bank_poc: "",
+        coll_ccy_pay_ccy: "",
+
+        deal_no: "",
+        dollar_lcy_rate: "",
+        parent_lcy_rate: "",
+
+        bank_charges: "",
+      };
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character

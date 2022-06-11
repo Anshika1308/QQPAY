@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
  * @return {null}
  */
 const post = (url = "", body = {}, header = {}) =>
-  axios
+    axios
     .post(url, body, header)
     .then(handlePostResponse)
     .catch(error);
@@ -25,7 +25,7 @@ const post = (url = "", body = {}, header = {}) =>
  * @return {null}
  */
 const put = (url = "", body = {}, header = {}) =>
-  axios
+    axios
     .put(url, body, header)
     .then(handlePostResponse)
     .catch(error);
@@ -39,10 +39,10 @@ const put = (url = "", body = {}, header = {}) =>
  * @return {null}
  */
 const trash = (url = "", body = {}, header = {}) =>
-axios
-  .delete(url, body, header)
-  .then(handlePostResponse)
-  .catch(error);
+    axios
+    .delete(url, body, header)
+    .then(handlePostResponse)
+    .catch(error);
 
 //Public method
 /**
@@ -53,14 +53,14 @@ axios
  * @return {response}
  */
 const get = (url = "", body = "", header = {}) =>
-  axios
+    axios
     .get(url, body, header)
     .then(handleGetResponse)
     .catch(apierror => {
-      return {
-        status: -1,
-        statusText: apierror.message
-      };
+        return {
+            status: -1,
+            statusText: apierror.message
+        };
     });
 
 //Private Methods
@@ -71,18 +71,18 @@ const get = (url = "", body = "", header = {}) =>
  */
 const handlePostResponse = _response => {
 
-  if(_response.data.status===401){
-    var now = new Date();
-    Cookies.remove("userId", { path: "/", expires: now.toGMTString() });
-    Cookies.remove("authToken", { path: "/", expires: now.toGMTString() });
-    Cookies.remove("companyName", { path: "/", expires: now.toGMTString() });
-    Cookies.remove("contactPerson", {
-      path: "/",
-      expires: now.toGMTString(),
-    });
-    window.location="/employerzone"
-  }
-  return _response;
+    if (_response.data.status === 401) {
+        var now = new Date();
+        Cookies.remove("userId", { path: "/", expires: now.toGMTString() });
+        Cookies.remove("authToken", { path: "/", expires: now.toGMTString() });
+        Cookies.remove("companyName", { path: "/", expires: now.toGMTString() });
+        Cookies.remove("contactPerson", {
+            path: "/",
+            expires: now.toGMTString(),
+        });
+        window.location = "/employerzone"
+    }
+    return _response;
 };
 //Private Methods
 /**
@@ -91,18 +91,18 @@ const handlePostResponse = _response => {
  * @return {object}
  */
 const handleGetResponse = (_response) => {
-  if(_response.data.status===401){
-    var now = new Date();
-    Cookies.remove("userId", { path: "/", expires: now.toGMTString() });
-    Cookies.remove("authToken", { path: "/", expires: now.toGMTString() });
-    Cookies.remove("companyName", { path: "/", expires: now.toGMTString() });
-    Cookies.remove("contactPerson", {
-      path: "/",
-      expires: now.toGMTString(),
-    });
-    window.location="/employerzone"
-  }
-  return _response;
+    if (_response.data.status === 401) {
+        var now = new Date();
+        Cookies.remove("userId", { path: "/", expires: now.toGMTString() });
+        Cookies.remove("authToken", { path: "/", expires: now.toGMTString() });
+        Cookies.remove("companyName", { path: "/", expires: now.toGMTString() });
+        Cookies.remove("contactPerson", {
+            path: "/",
+            expires: now.toGMTString(),
+        });
+        window.location = "/employerzone"
+    }
+    return _response;
 };
 
 /**
@@ -111,7 +111,7 @@ const handleGetResponse = (_response) => {
  * @return {object}
  */
 const error = _error => {
-  return _error;
+    return _error;
 };
 
 //export APIService

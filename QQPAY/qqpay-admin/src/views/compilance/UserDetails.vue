@@ -1,38 +1,43 @@
 <template>
   <div>
+    <div class="back-btn">
+      <b-button @click="$emit('backBtnClick')" variant="outline-warning" class="mt-5 block"
+        >Back</b-button
+      >
+    </div>
     <div class="d-flex ">
       <b-avatar  
         square
         
-        src="https://www.mecgale.com/wp-content/uploads/2017/08/dummy-profile.png"
+        src=""
         size="10rem"
       ></b-avatar>
-
       <b-container class="bv-example-row ml-5">
         <b-row>
-          <b-col cols="4" style="color: black">Hrishikesh Kale</b-col>
+          <b-col cols="4" style="font-size: 25px;color: black">{{ userDtl.Remitter_name }}</b-col>
           <b-col></b-col>
         </b-row>
 
         <b-row>
-          <b-col cols="4">23rd Feb 1992</b-col>
-          <b-col>+91 77095 97813</b-col>
+          <!-- <b-col cols="4">23rd Feb 1992</b-col> -->
+          <b-col cols="4">{{ userDtl.Remitter_DOB || '23rd Feb 1992' }}</b-col>
+          <b-col>{{ userDtl.Phone_Number || 9912110114 }}</b-col>
         </b-row>
 
         <b-row>
-          <b-col cols="4">Male</b-col>
-          <b-col>h.kale0000@gmail.com</b-col>
+          <b-col cols="4">{{ userDtl.Gender || 'Male' }}</b-col>
+          <b-col>{{ userDtl.Email_ID || 'no-mail@gmail.com' }}</b-col>
         </b-row>
 
         <b-row>
-          <b-col cols="4">India</b-col>
-          <b-col>Ankita Residency, Gadital,Hadapsar</b-col>
+          <b-col cols="4">{{ userDtl.Country_Code || 'India' }}</b-col>
+          <b-col>{{ userDtl.Address || 'New Town'}}</b-col>
         </b-row>
 
         <b-row>
-          <b-col cols="4">Software Engineer</b-col>
+          <b-col cols="4">{{ userDtl.Occupation_Text || 'Software Engineer' }}</b-col>
 
-          <b-col>Pune,India- 411028</b-col>
+          <b-col>{{ userDtl.Remitter_State || 'Karnataka' }}, {{ userDtl.Remitter_City || 'Bangalore' }} - {{ userDtl.Remitter_Zipcode || '560059' }}</b-col>
         </b-row>
 
         <b-row>
@@ -59,9 +64,9 @@
     <b-container class="bv-example-row mt-5 justify-content-between">
       <b-row>
         <b-col cols="3" class="data">KYC Status</b-col>
-        <b-col cols="4" class="data">Clear</b-col>
+        <b-col cols="4" class="data">{{ userDtl.Is_Ekyc_User ? 'Clear' : 'Pending' }}</b-col>
         <b-col cols="3" class="data">Account Status</b-col>
-        <b-col cols="2" class="data">Active</b-col>
+        <b-col cols="2" class="data">{{ userDtl.Is_Active ? 'Active' : 'Inactive' }}</b-col>
       </b-row>
 
       <b-row>
@@ -112,8 +117,8 @@
         gn="left"
       >
         <b-card-text>
-          <h8 class="label">India</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">India</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -122,8 +127,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">USA</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">USA</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -132,8 +137,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">Malaysia</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Malaysia</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -142,8 +147,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">Australia</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Australia</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -152,8 +157,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">United Kingdom</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">United Kingdom</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -161,8 +166,8 @@
             :max="max"
             class="mb-3"
           ></b-progress>
-          <h8 class="label">Germany</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Germany</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -192,8 +197,8 @@
         align="left"
       >
         <b-card-text>
-          <h8 class="label">Bank transfer</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Bank transfer</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -202,8 +207,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">Home delivery</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Home delivery</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -212,8 +217,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">Pickup</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Pickup</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -222,8 +227,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">Wallet</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Wallet</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -232,8 +237,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">3rd Party</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">3rd Party</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -251,8 +256,8 @@
         align="left"
       >
         <b-card-text>
-          <h8 class="label">INR</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">INR</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -261,8 +266,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">USD</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">USD</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -271,8 +276,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">MYR</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">MYR</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -281,8 +286,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">AUD</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">AUD</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -291,8 +296,8 @@
             class="mb-3"
           ></b-progress>
 
-          <h8 class="label">Sterling Pound</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Sterling Pound</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -300,8 +305,8 @@
             :max="max"
             class="mb-3"
           ></b-progress>
-          <h8 class="label">Euro</h8>
-          <h8 class="lab2">50k</h8>
+          <span class="label">Euro</span>
+          <span class="lab2">50k</span>
           <b-progress
             variant="warning"
             height="2px"
@@ -329,217 +334,133 @@
         </b-row>
       </b-container>
 
-      <b-container class="bv-example-row mt-2 contain">
+      <b-container class="bv-example-row mt-2 contain" v-for="transaction in transactionDtl" :key="transaction.id">
+        
         <b-row>
 
           <b-form-checkbox class="mt-3 ml-2"/>
           <b-col class="mt-2">
-            <b-avatar variant="primary" text="IT"></b-avatar>
+            <b-avatar variant="primary" :text="getAvatar(transaction)"></b-avatar>
           </b-col>
 
 
 
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 ml-2 data">l2B</b-col>
+          <b-col class="mt-3 data" cols="2">{{ transaction.Remitter_first_name + ' ' + transaction.Remitter_last_name }}</b-col>
+          <b-col class="mt-3 data">{{ format(transaction.created_on) }}</b-col>
+          <b-col class="mt-3 ml-4 ml-4 data">{{ transaction.paying_cntry_cd }} </b-col>
+          <b-col class="mt-3 data">{{ transaction.Remittee_id }}</b-col>
+          <b-col class="mt-3 ml-2 ml-2 data">{{ transaction.remit_type }}</b-col>
           <b-col class="mt-3 data" >In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
+          <b-col class="mt-3 data">{{ transaction.pay_amount }} MYR</b-col>
         </b-row>
+
       </b-container>
 
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-
-          
-           
-             <b-form-checkbox class="mt-3 ml-2"/>
-
-          <b-col class="mt-2">
-            <b-avatar variant="success" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="warning" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="success" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="warning" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="primary" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="primary" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="primary" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="success" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
-
-      <b-container class="bv-example-row mt-2 contain">
-        <b-row>
-
-            <b-form-checkbox class="mt-3 ml-2"/>
-          <b-col class="mt-2">
-            <b-avatar variant="warning" text="IT"></b-avatar>
-          </b-col>
-
-          <b-col class="mt-3 data" cols="2">Tata Consultancy</b-col>
-          <b-col class="mt-3 data">1/11/2021</b-col>
-          <b-col class="mt-3 ml-4 data">India</b-col>
-          <b-col class="mt-3 data">QQ_pay_00010252</b-col>
-          <b-col class="mt-3 ml-2 data">l2B</b-col>
-          <b-col class="mt-3 data">In-process</b-col>
-          <b-col class="mt-3 data">10,000MYR</b-col>
-        </b-row>
-      </b-container>
     </div>
 
-      <div class="overflow-auto mt-5 float-right">
+      <!-- <div class="overflow-auto mt-5 float-right">
          <div>
       
       <b-pagination v-model="currentPage" :total-rows="rows" size="sm"></b-pagination>
     </div>
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
-
-
-
+import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
   name: "UserDetails",
   components:{
     
   },
+  computed: {
+    ...mapGetters([
+      "token",
+      // "base_url",
+    ]),
+
+  },
+  props: ["selectedData"],
+  created() {
+    // this.userDtl = this.selectedData[0][0];
+    console.log('selded row data', this.selectedData);
+    this.getUserDtl();
+    this.getTransactions();
+  },
 
   data() {
     return {
+      base_url: 'http://3.111.140.40:5000/api/v1/',
+      transaction_base_url: 'http://3.111.140.40:8000/api/v1/',
       value: 75,
       rows: 100,
       currentPage: 1,
       row: 3,
+      max: 10,
+      userDtl: null,
+      transactionDtl: null
     };
   },
+  methods: {
+    async getUserDtl() {
+      console.log("token", this.token, this.base_url);
+
+      axios
+        // .get(this.base_url + "user/profile", {
+        //   headers: {
+        //     Authorization: `Bearer ${this.token}`,
+        //   },
+        // })
+        .get(this.base_url + "user/get-remitter-by/" + this.selectedData[0].Remitter_code, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.userDtl = JSON.parse(JSON.stringify(response.data.data[0]));
+          console.log("this.userDtl", this.userDtl);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    async getTransactions() {
+      console.log("token", this.token, this.transaction_base_url);
+
+      axios
+        .get(this.transaction_base_url + "transaction/transaction/" + this.selectedData[0].Remitter_code, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.transactionDtl = JSON.parse(JSON.stringify(response.data.data));
+          console.log("this.transactionDtl", this.transactionDtl);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getAvatar(transaction) {
+      let first = transaction.Remitter_first_name && transaction.Remitter_first_name.charAt(0);
+      let last = transaction.Remitter_last_name && transaction.Remitter_last_name.charAt(0)
+      console.log(first,last);
+      return  first+last; 
+      
+    },
+    format(date) {
+      if (date) {
+        date = new Date(date);
+        let month = date.toLocaleString("en-US", { month: 'short' })
+        return date.getDate() + ' ' + month + ' ' + date.getFullYear();
+      }
+    },
+  }
 };
 </script>
 

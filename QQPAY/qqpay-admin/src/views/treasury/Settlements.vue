@@ -77,7 +77,7 @@
       <b-col class="col-p5">
         <div>
           <b-button-group size="sm">
-            <b-button v-if="selected_deal"  variant="outline-light" v-b-modal.add-settlement @click="updateTrigger = false;">
+            <b-button v-if="selected_deal"  variant="outline-light" v-b-modal.add-settlement @click="newSettlementlick()">
               <b-icon icon="file-earmark-plus-fill"></b-icon> New Settlement
             </b-button>
             <b-button variant="outline-light">
@@ -165,7 +165,7 @@
                           class="d-flex justify-content-between align-items-center"
                         >
                           <label>Purchase Date</label>
-                          <label>{{ format(row.item.deal_date) }}</label>
+                          <label>{{ format(row.item.purchase_date) }}</label>
                         </b-list-group-item>
                         <b-list-group-item
                           class="d-flex justify-content-between align-items-center"
@@ -398,6 +398,7 @@
 import axios from "axios";
 import CountryFlag from "vue-country-flag";
 import { mapGetters } from "vuex";
+import {responseHandler} from "@/helpers/globalFunctions";
 
 export default {
   name: "Settlements",
@@ -534,13 +535,13 @@ export default {
         lcy_amount: null,
 
         ccy_cd: "",
-        deal_date: "",
+        purchase_date: "",
         swift_charge: "",
         coll_ccy_pay_ccy_wrong: "",  // Need to capture
         created_by: "",
         updated_by: "",
         pp_bank_poc: "",  // Not captured
-        tax: "",             // Not captured
+        tax: null,             // Not captured
         deal_id: "",         // Need to add settlement in a particular deal
 
 /*         PP_CCY: "",
@@ -651,10 +652,12 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
         })
         .catch((e) => {
+          responseHandler(e.status_code, this, e.message)
           console.log(e);
         });
     },
@@ -669,11 +672,12 @@ export default {
           },
         })
         .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
         })
         .catch((e) => {
+          responseHandler(e.status_code, this, e.message)
           console.log(e);
         });
     },
@@ -695,15 +699,17 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.settl_id === this.temp_settlement.settl_id);
             this.items[index] = response.data.data[0];
           })
           .catch((err) => {
+            responseHandler(err.status_code, this, err.message)
             console.log('Deal not posted', err);
         });
 
       } else {
-        request.deal_date = this.selected_deal.deal_date
+        request.purchase_date = this.selected_deal.deal_date
         request.deal_id = this.selected_deal.deal_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
         axios.post(this.base_url + "deal-settlement/new-deal-settlement", request, {
             headers: {
@@ -711,9 +717,11 @@ export default {
             },
           })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
+            responseHandler(err.status_code, this, err.message)
             console.log('Deal not posted', err);
         });
         
@@ -736,7 +744,7 @@ export default {
     },
     newFundClicked(selectedRow) {
       this.$emit('openTab', 'funding')
-      this.$store.commit("set_selected_Settlement", selectedRow);
+      this.$store.commit("app/set_selected_Settlement", selectedRow);
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character
@@ -744,6 +752,29 @@ export default {
       if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
       // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
       else e.preventDefault(); // If not match, don't add to input text
+    },
+    newSettlementlick() {
+      this.updateTrigger = false;
+      this.temp_settlement = {
+        payout_partner: "",
+        settl_date: "",
+        settle_srl_num: "",
+        credit_amount: "",
+        authorized_date: "",
+        coll_ccy_pay_ccy: null,
+        lcy_amount: null,
+
+        ccy_cd: "",
+        purchase_date: "",
+        swift_charge: "",
+        coll_ccy_pay_ccy_wrong: "",  // Need to capture
+        created_by: "",
+        updated_by: "",
+        pp_bank_poc: "",  // Not captured
+        tax: null,             // Not captured
+        deal_id: "",         // Need to add settlement in a particular deal
+
+      };
     }
     
   },

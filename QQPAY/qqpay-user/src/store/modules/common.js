@@ -1,7 +1,9 @@
 export default {
     namespaced: true,
     state: {
-        user_details: {}
+        user_details: {
+            name: 'naren'
+        }
     },
     getters: {
         user_details: (state) => {
@@ -10,7 +12,7 @@ export default {
     },
     mutations: {
         set_user_details: (state, payload) => {
-            state.user_details = payload;  
+            state.user_details = payload;
         }
     },
     actions: {

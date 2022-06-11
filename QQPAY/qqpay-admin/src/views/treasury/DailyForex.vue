@@ -5,9 +5,26 @@
       <b-col>
         <div>
           <span class="mr-2">Daily Forex of</span>
-          <b-dropdown
+          <v-select
+            :options="countryList"
+            label="country_name"
+            v-model="type.country"
+            :reduce="(item) => item.country_name"
+            placeholder="Available options here"
+            required
+            :clearable="false"
+            :class="{
+              'is-invalid': $v.type.country.$error,
+            }"
+            aria-describedby="country-live-feedback"
+          >
+          </v-select>
+          <b-form-invalid-feedback id="country-live-feedback">
+            This is a required field.
+          </b-form-invalid-feedback>
+          <!-- <b-dropdown
             id="input-type"
-            :text="daily_forex.country_name"
+            :text="defaultForm.country_name"
             variant="light"
           >
             <b-dropdown-item
@@ -17,7 +34,7 @@
             >
               {{ option.text }}
             </b-dropdown-item>
-          </b-dropdown>
+          </b-dropdown> -->
         </div>
       </b-col>
       <b-col>
@@ -45,7 +62,23 @@
     <b-row>
       <b-col cols="10">
         <div>
-          <b-input-group size="md" class="mt-3">
+          <b-form-input
+            id="search_user"
+            name="search_user"
+            class="mt-3"
+            placeholder="Service Charge"
+            v-model="form.search_user"
+            size="md"
+            required
+            :class="{
+              'is-invalid': $v.form.search_user.$error,
+            }"
+            aria-describedby="search_user-live-feedback"
+          ></b-form-input>
+          <b-form-invalid-feedback id="search_user-live-feedback">
+            This is a required field.
+          </b-form-invalid-feedback>
+          <!-- <b-input-group size="md" class="mt-3">
             <b-form-input
               placeholder="Search for user"
               v-model="daily_forex.search_user"
@@ -66,40 +99,8 @@
                 </b-dropdown-item>
               </b-dropdown>
             </template>
-          </b-input-group>
+          </b-input-group> -->
         </div>
-        <!-- <b-form-group
-          label-for="filter-input"
-          label-cols-sm="0"
-          label-cols-lg="0"
-          label-align-lg="center"
-          content-cols-sm="6"
-          content-cols-lg="6"
-          label-align-sm="center"
-          label-size="sm"
-          class="mb-2"
-        >
-          <b-input-group size="sm">
-            <b-form-input
-              id="filter-input"
-              v-model="filter"
-              type="search"
-              placeholder="Type to Search"
-            ></b-form-input>
-          
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''"
-                >Clear</b-button
-              >
-            </b-input-group-append>
-          </b-input-group>
-            <b-button
-              class="float-right mt-5 px-5"
-              variant="primary"
-              @click="onSearch"
-              >Next</b-button
-            >
-        </b-form-group> -->
       </b-col>
       <b-col cols="1">
         <div class="mt-3">
@@ -119,16 +120,9 @@
           <b-table
             :items="items"
             :fields="fields"
-            :filter="filter"
             responsive
             class="align-middle"
           >
-            <!-- <template #cell(q_q_offer_rate)="row" size="sm">
-        <b-form-input
-          id="input-name"
-          v-model="row.item.q_q_offer_rate"
-        ></b-form-input>
-      </template> -->
             <template #cell(margin)="row" size="sm">
               <b-form-input
                 id="input-name"
@@ -170,7 +164,8 @@
                 <b-button
                   variant="light"
                   size="sm"
-                  @click="row.toggleDetails"
+                  title="Tooltip directive content"
+                  @click="edit(row.item)"
                   class="mr-2 expand-btn"
                 >
                   <b-icon icon="three-dots-vertical"></b-icon>
@@ -183,16 +178,9 @@
           <b-table
             :items="otherCountriesItems"
             :fields="fields"
-            :filter="filter"
             responsive
             class="align-middle"
           >
-            <!-- <template #cell(q_q_offer_rate)="row" size="sm">
-        <b-form-input
-          id="input-name"
-          v-model="row.item.q_q_offer_rate"
-        ></b-form-input>
-      </template> -->
             <template #cell(margin)="row" size="sm">
               <b-form-input
                 id="input-name"
@@ -249,20 +237,45 @@
 </template>
 
 <script>
-//import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
+import { required } from "vuelidate/lib/validators";
+import { validationMixin } from "@/mixins";
+import { getAll } from "@/api/country";
+import {
+  getAll as list,
+  getById,
+  getPayoutDetailList,
+  save,
+  update,
+} from "@/api/dailyForex";
 export default {
-  name: "Daily Forex",
-  components: {
-    //TreasuryFlow,
-  },
+  mixins: [validationMixin],
   data() {
     return {
-      daily_forex: {
-        country_name: "Malaysia",
-        search_user: "",
-        filter_option: "Filter",
+      menu_hierarchy: [
+        {
+          text: "Treasury",
+          active: true,
+        },
+        {
+          text: "Daily Forex",
+          active: true,
+        },
+      ],
+      isError: false,
+      error: null,
+      defaultType: {
+        country: null,
       },
-      filter: null,
+      type: null,
+      defaultForm: {
+        country: null,
+        search_user: null,
+        filter_option: null,
+      },
+      form: null,
+      countryList: [],
+      items: [],
+      otherCountriesItems: [],
       temp_deal: {
         i_o_IRH: "O",
         deal_date: "",
@@ -278,128 +291,112 @@ export default {
         edited_by: "",
         comment: "",
       },
-      menu_hierarchy: [
-        {
-          text: "Treasury",
-          active: true,
-        },
-        {
-          text: "Daily Forex",
-          active: true,
-        },
-      ],
       fields: [
-        { key: "payout_countries", label: "Payout Countries" },
-        { key: "ccv", label: "CCV" },
-        { key: "q_q_cost_rate", label: "QQ Cost Rate (Avg)" },
-        { key: "payout_ccv", label: "Payout CVV (Lowest)" },
+        { key: "id", label: "S/N" },
+        { key: "payout_country", label: "Payout Countries" },
+        { key: "ccy", label: "CCV" },
+        { key: "qqcost_avg_rate", label: "QQ Cost Rate (Avg)" },
+        { key: "lowest_payout_ccy_rate", label: "Payout CVV (Lowest)" },
         {
-          key: "pr_payout_partner_cost_rate",
+          key: "payout_partner_cost_rate",
           label: "Payout Partner Cost Rate",
         },
-        { key: "q_q_offer_rate", label: "Reuters Rate" },
-        { key: "margin", label: "Margin" },
+        { key: "qq_offer_rate", label: "Reuters Rate" },
+        { key: "consumer_margin", label: "Margin" },
         { key: "consumers_rate", label: "Consumers Rate" },
-        { key: "gain_loss", label: "Gain/Loss" },
-        { key: "br_margin", label: "Margin" },
-        { key: "br_business_rate", label: "Business Rate" },
-        { key: "br_gain_loss", label: "Gain/Loss" },
+        { key: "consumer_gain_or_loss", label: "Gain/Loss" },
+        { key: "business_margin", label: "Margin" },
+        { key: "business_rate", label: "Business Rate" },
+        { key: "business_gain_or_loss", label: "Gain/Loss" },
         { key: "actions", label: "" },
-      ],
-      items: [
-        {
-          payout_countries: "India",
-          ccv: "INR",
-          q_q_cost_rate: "4.1200",
-          payout_ccv: "74.2210",
-          pr_payout_partner_cost_rate: "18.0148",
-          q_q_offer_rate: "17.8440",
-          margin: "0.0110",
-          consumers_rate: "17.8550",
-          gain_loss: "-1.0122",
-          br_margin: "0.0110",
-          br_business_rate: "17.8550",
-          br_gain_loss: "-1.0122",
-        },
-        {
-          payout_countries: "India",
-          ccv: "INR",
-          q_q_cost_rate: "4.1200",
-          payout_ccv: "74.2210",
-          pr_payout_partner_cost_rate: "18.0148",
-          q_q_offer_rate: "17.8440",
-          margin: "0.0110",
-          consumers_rate: "17.8550",
-          gain_loss: "-1.0122",
-          br_margin: "0.0110",
-          br_business_rate: "17.8550",
-          br_gain_loss: "-1.0122",
-        },
-        {
-          payout_countries: "India",
-          ccv: "INR",
-          q_q_cost_rate: "4.1200",
-          payout_ccv: "74.2210",
-          pr_payout_partner_cost_rate: "18.0148",
-          q_q_offer_rate: "17.8440",
-          margin: "0.0110",
-          consumers_rate: "17.8550",
-          gain_loss: "-1.0122",
-          br_margin: "0.0110",
-          br_business_rate: "17.8550",
-          br_gain_loss: "-1.0122",
-        },
-      ],
-      otherCountriesItems: [
-        {
-          payout_countries: "USA",
-          ccv: "USD",
-          q_q_cost_rate: "4.1200",
-          payout_ccv: "1",
-          pr_payout_partner_cost_rate: "0.24",
-          q_q_offer_rate: "0.2353",
-          margin: "0.0110",
-          consumers_rate: "17.8550",
-          gain_loss: "-1.0122",
-          br_margin: "0.0110",
-          br_business_rate: "17.8550",
-          br_gain_loss: "-1.0122",
-        },
-        {
-          payout_countries: "UK",
-          ccv: "GBP",
-          q_q_cost_rate: "4.1200",
-          payout_ccv: "0.75",
-          pr_payout_partner_cost_rate: "0.24",
-          q_q_offer_rate: "0.2353",
-          margin: "0.0110",
-          consumers_rate: "17.8550",
-          gain_loss: "-1.0122",
-          br_margin: "0.0110",
-          br_business_rate: "17.8550",
-          br_gain_loss: "-1.0122",
-        },
-      ],
-      country_options: [
-        {
-          text: "Malaysia",
-          value: "Malaysia",
-        },
-        {
-          text: "India",
-          value: "India ",
-        },
-      ],
-      filter_options: [
-        {
-          text: "Filter",
-          value: "Filter",
-        },
       ],
     };
   },
+  validations: {
+    type: {
+      country: {
+        required,
+      },
+    },
+    form: {
+      search_user: {
+        required,
+      },
+    },
+  },
   methods: {
-    onSearch: function () {},
+    resetForm() {
+      debugger; // eslint-disable-line no-debugger
+      this.type = Object.assign({}, this.defaultType);
+      this.form = Object.assign({}, this.defaultForm);
+      this.$v.$reset();
+      this.isError = false;
+      this.error = null;
+      this.onSearch();
+    },
+    onSearch() {
+      list().then((res) => {
+        this.items = res.data.data[0];
+        this.otherCountriesItems = res.data.data[0];
+      });
+    },
+    edit(item) {
+      if (item.id > 0) {
+        getById(item.id)
+          .then((res) => {
+            this.form = Object.assign({}, res.data);
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          });
+      }
+    },
+    manage() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      }
+      if (this.form.id > 0) {
+        update(this.form)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      } else {
+        save(this.form)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      }
+    },
+  },
+  async created() {
+    this.resetForm();
+    this.onSearch();
+    await Promise.all([
+      getAll().then((res) => {
+        this.countryList = res.data;
+      }),
+      getPayoutDetailList().then((res) => {
+        this.serviceChargeTypeList = res.data;
+      }),
+    ]);
   },
 };
 </script>
