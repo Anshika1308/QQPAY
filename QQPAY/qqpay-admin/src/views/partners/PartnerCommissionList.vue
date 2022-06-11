@@ -126,13 +126,14 @@ export default {
     },
     async getPartnerCommissions() {
       const response = await getApiData(APIS.GET_PARTNER_COMMISSION_LIST);
+      console.log(response, "data");
       await responseHandler(response.data.status_code, this, response.data.message)
       if (response.data.status_code === 200) {
         this.items = response.data.data.map(item => ({
-          country: item.country,
-          partner: item.partner_id,
+          country: item.country_name,
+          partner: item.name_of_employer,
           payment_method: item.payment_method.replaceAll("_", " ").toUpperCase(),
-          comm_charge_ccy: item.service_charge_by,
+          comm_charge_ccy: item.currency,
           upper_limit: item.upper_limit,
           active: item.is_active,
           action: item.id,
