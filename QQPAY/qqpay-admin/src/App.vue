@@ -39,4 +39,5 @@ export default {
   background-color: #ff6b00 !important;
 
 }
+ @import './assets/styles/custom.scss';
 </style>
