@@ -61,7 +61,7 @@
               <span v-if="isSubmitted && !$v.userPassword.required" class="invalid-feedback">
                 Password field is required
               </span>
-              <b-link @click="$router.push('/forgotpassword')">{{$t('loginScreen.forgotPassword')}}?</b-link>
+              <!-- <b-link @click="$router.push('/forgotpassword')">{{$t('loginScreen.forgotPassword')}}?</b-link> -->
               <b-button
                 variant="primary"
                 @click="onClickLogin"
@@ -117,23 +117,6 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
-      // const userData = {
-      //   User_Email: "string",
-      //   Password: "string",
-      //   User_Type: "string",
-      //   FirstName: "string",
-      //   LastName: "string",
-      //   Is_Back_Office_User: false,
-      //   middle_name: "string",
-      //   date_of_joining: "2022-06-09",
-      //   pincode: "string",
-      //   nationality: "string",
-      //   personal_email: "string",
-      //   alternative_phone_number: "string",
-      //   designation: "string",
-      //   department: "string",
-      //   sub_division: "string"
-      // }
       const userDetails = {
         User_Email: this.userEmail,
         Password: this.userPassword,
@@ -141,6 +124,8 @@ export default {
       this.loader = true;
       const responseData = await this.$store.dispatch('AuthenticationService/login', userDetails);
       if (responseData && responseData.data[0].is_admin) {
+        const isPermitted = true;
+        localStorage.setItem('isPermitted', isPermitted);
         this.loader = false
         this.$router.push({name: 'Home'})
       } else {
@@ -186,8 +171,5 @@ export default {
 }
 .button#input-type__BV_toggle_ {
   font-size: 10px;
-}
-.btn-primary {
-  background-image: linear-gradient(to right, #b99bf5 0%, #ff6b00 51%, #ff6b00 100%) !important;
 }
 </style>
