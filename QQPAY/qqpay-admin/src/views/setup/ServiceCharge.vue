@@ -178,7 +178,7 @@
                       </b-form-group>
                     </b-col>
                     <b-col cols="12">
-                      <b-form-group label="County">
+                      <b-form-group label="Country">
                         <v-select
                           :options="countryList"
                           label="country_name"
@@ -190,7 +190,6 @@
                             'is-invalid': $v.countryWiseForm.country.$error,
                           }"
                           aria-describedby="country-live-feedback"
-                          @change="onChangeCounty()"
                         >
                         </v-select>
                         <b-form-invalid-feedback id="country-live-feedback">
@@ -346,7 +345,7 @@
                 <b-form>
                   <div class="row">
                     <b-col cols="12">
-                      <b-form-group label="PAyment Mode">
+                      <b-form-group label="Payment Mode">
                         <v-select
                           :options="paymentModeList"
                           label="value"
@@ -368,7 +367,7 @@
                         </b-form-invalid-feedback>
                       </b-form-group>
                     </b-col>
-                    <b-col cols="6" class="mt-3">
+                    <b-col cols="6">
                       <b-form-group label="Payment Partner">
                         <v-select
                           :options="payoutPartnerList"
@@ -394,7 +393,6 @@
                     <b-col cols="6">
                       <b-form-group label="Receive Country">
                         <b-form-input
-                          class="mt-3"
                           v-model="countryWiseDefaultForm.receive_country"
                           size="sm"
                         ></b-form-input>
@@ -528,7 +526,6 @@
                       <b-form-group label="Remarks">
                         <b-form-textarea
                           id="remarks"
-                          class="mt-3"
                           v-model="countryWiseForm.remarks"
                           size="sm"
                           rows="3"
