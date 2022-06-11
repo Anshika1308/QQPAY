@@ -1,7 +1,8 @@
 import Axios from 'axios';
-import { accessToken } from "./sessionKey";
+import {accessToken} from "./sessionKey";
 
 const API_ROOT = process.env.VUE_APP_SERVER_ENDPOINT
+const TRANSACTION_SERVICE = process.env.VUE_APP_TRANSACTION_SERVICE
 
 
 //create axios instance
@@ -12,6 +13,13 @@ export const instance = Axios.create({
   },
 });
 
+//create axios instance
+export const transactionInstance = Axios.create({
+  baseURL: `${TRANSACTION_SERVICE}`,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 //get data from api
 export const getApiData = async (url, param = null) => {
@@ -34,6 +42,30 @@ export const getApiData = async (url, param = null) => {
   }
   return response;
 }
+
+
+//get data from api
+export const transactionGetApiData = async (url, param = null) => {
+  let response;
+  try {
+    response = await transactionInstance({
+      method: "GET",
+      url: `${url}`,
+      params: param,
+      headers: {
+        Authorization: `Bearer ${accessToken()}`,
+      },
+      transformResponse: [function (responseData) {
+        // Do whatever you want to transform the data
+        return JSON.parse(responseData);
+      }],
+    });
+  } catch (e) {
+    return e.response;
+  }
+  return response;
+}
+
 
 //post data to api
 export const postApiData = async (url, formData) => {
@@ -119,7 +151,7 @@ export const deleteApiData = async (url) => {
 
 //delete bulk data
 export const bulkDeleteApiData = async (data) => {
-  const { url, formData } = data;
+  const {url, formData} = data;
   let response;
   response = await instance({
     method: "DELETE",

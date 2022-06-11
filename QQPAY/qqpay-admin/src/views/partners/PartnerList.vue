@@ -8,7 +8,7 @@
       <div class="search-area">
         <b-row>
           <b-col class="input-field" cols='8' v-click-outside="onClickOutside">
-            <span class="partner-filter" @click="togglePartnerFilter=!togglePartnerFilter">Filter</span>
+            <span class="partner-filter" @click="togglePartnerFilter = !togglePartnerFilter">Filter</span>
             <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
             <div v-show="togglePartnerFilter" class="partner-filter-content">
               <b-row cols="2 m-1">
@@ -32,8 +32,8 @@
           <template v-slot:cell(action)="row">
             <template v-if="row.item.action">
               <b-icon class="btn" icon="pencil-square" variant="success"
-                      @click="handleOpenUpdatePartner(row.item.action)"/>
-              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)"/>
+                @click="handleOpenUpdatePartner(row.item.action)" />
+              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)" />
             </template>
           </template>
         </b-table>
@@ -44,7 +44,7 @@
             <div class="mb-3">Processing...</div>
           </div>
           <div v-else ref="dialog" tabindex="-1" role="dialog" aria-modal="false" aria-labelledby="form-confirm-label"
-               class="text-center p-3">
+            class="text-center p-3">
             <p><strong id="form-confirm-label">Are you sure you want to delete?</strong></p>
             <div class="d-flex">
               <b-button class="mr-3 search-btn" @click="onCancel">
@@ -57,10 +57,10 @@
       </b-overlay>
     </b-container>
     <b-modal id="add-partner-modal" hide-footer size="xl" title="Add Partner">
-      <AddPartner @getPartners="getPartners"/>
+      <AddPartner @getPartners="getPartners" />
     </b-modal>
     <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner Commission">
-      <UpdatePartner :partner_id="updateSelectedPartner" @getPartners="getPartners"/>
+      <UpdatePartner :partner_id="updateSelectedPartner" @getPartners="getPartners" />
     </b-modal>
   </div>
 </template>
@@ -69,9 +69,9 @@
 <script>
 import Vue from "vue";
 import UpdatePartner from "@/views/partners/UpdatePartner";
-import {deleteApiData, getApiData} from "@/helpers/AxiosInstance";
+import { deleteApiData, getApiData } from "@/helpers/AxiosInstance";
 import APIS from "@/constants/EndPoint";
-import {responseHandler} from "@/helpers/globalFunctions";
+import { responseHandler } from "@/helpers/globalFunctions";
 import AddPartner from "@/views/partners/AddPartner";
 
 Vue.directive("click-outside", {
@@ -103,9 +103,9 @@ export default {
       deleteSelectedId: null,
       selectMode: "single",
       filterOptions: [
-        {value: "null", text: "Filter"},
-        {value: "a", text: "This is First option"},
-        {value: "b", text: "Selected Option"},
+        { value: "null", text: "Filter" },
+        { value: "a", text: "This is First option" },
+        { value: "b", text: "Selected Option" },
       ],
       filterSelected: null,
       selected: [],
@@ -121,9 +121,9 @@ export default {
       ],
       items: [],
       riskStatusOptions: [
-        {value: "Low risk", text: "Low risk"},
-        {value: "High risk", text: "High risk"},
-        {value: "Critical risk", text: "Critical risk"},
+        { value: "Low risk", text: "Low risk" },
+        { value: "High risk", text: "High risk" },
+        { value: "Critical risk", text: "Critical risk" },
       ],
       searchValue: ''
     };
@@ -159,13 +159,13 @@ export default {
       await responseHandler(response.data.status_code, this, response.data.message)
       if (response.data.status_code === 200) {
         this.items = response.data.data.map(item => ({
-          partner_name: item.contact_name1,
+          partner_name: item.name_of_employer,
           id: item.agent_id,
-          contact_person: item.contact_name2,
-          number: item.phone1,
-          email: item.email1,
-          country: item.country,
-          partner_type: item.agent_type,
+          contact_person: item.contact_person_1,
+          number: item.company_phone_1,
+          email: item.company_email,
+          country: item.country_name,
+          partner_type: item.partner_type.toUpperCase().replaceAll("_", " "),
           action: item.agent_id,
         }))
       }
@@ -250,7 +250,7 @@ export default {
     border-color: $primary;
     width: 100%;
     background: transparent !important;
-    color: $primary !important;
+    color: $primary  !important;
   }
 }
 
@@ -268,5 +268,4 @@ export default {
 .compliance-table {
   text-align: center;
 }
-
 </style>

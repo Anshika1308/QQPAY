@@ -18,7 +18,10 @@ const APIS = {
   GET_PARTNER_COMMISSION: '/partner_commission/get_partner_commission_by_id',
   DELETE_PARTNER_COMMISSION: '/partner_commission/delete_partner_commission_by_id',
   CREATE_PARTNER_COMMISSION: '/partner_commission/create-partner-commission',
-  UPDATE_PARTNER_COMMISSION: `/partner_commission/update_partner_commission_by_id`
+  UPDATE_PARTNER_COMMISSION: `/partner_commission/update_partner_commission_by_id`,
+
+//  TRANSACTION SERVICE
+  GET_COUNTRY_NAME:'/exchangerates/get-all_country_data'
 }
 
 export default APIS
