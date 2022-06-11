@@ -144,9 +144,9 @@ export default {
       await responseHandler(response.data.status_code, this, response.data.message)
       if (response.data.status_code === 200) {
         this.items = response.data.data.map(item => ({
-          country: item.country,
+          country: item.country.toUpperCase(),
           partner: item.partner_id,
-          payment_method: item.payment_method,
+          payment_method: item.payment_method.replaceAll("_", " ").toUpperCase(),
           comm_charge_by: item.service_charge_by,
           comm_charge_ccy: item.service_charge_by,
           upper_limit: item.upper_limit,

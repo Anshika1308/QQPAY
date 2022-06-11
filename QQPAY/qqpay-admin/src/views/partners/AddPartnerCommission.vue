@@ -149,7 +149,7 @@ export default {
       const res = await getApiData(APIS.GET_PARTNER_LIST);
       this.partnerType.push(...res.data.data.map(item => ({
         value: item.agent_id,
-        text: item.contact_name1
+        text: item.name_of_employer
       })))
     },
     toggleUpperLimit() {

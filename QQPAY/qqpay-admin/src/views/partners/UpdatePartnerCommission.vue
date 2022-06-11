@@ -175,7 +175,7 @@ export default {
       if (response.data.status_code === 200) {
         this.partnerType = response?.data?.data?.map(item => ({
           value: item.agent_id,
-          text: item.contact_name1
+          text: item.name_of_employer
         }))
       }
     },
