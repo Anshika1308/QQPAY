@@ -47,7 +47,7 @@ export function save(data){
 
 export function update(data){
     return request({
-        url: `${baseUrl}/update-service-charge/`,
+        url: `${baseUrl}/update-service-charge/`+ data.id,
         method: 'put',
         data,
     })
@@ -60,3 +60,10 @@ export function exportToExcel(){
         responseType: 'blob',
     })
 }
+
+// export function onDelete(parameter_code, parameter_val_code){
+//     return request({
+//         url: `${baseUrl}/delete_value_score/` + parameter_code + `/` + parameter_val_code,
+//         method: 'delete',
+//     })
+// }

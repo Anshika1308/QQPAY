@@ -16,17 +16,21 @@ $lightslategrey: #778899;
 $slategrey: #708090;
 $dimgrey: #696969;
 $darkgray: #333333;
+$green: #1eb795;
 
 //Widths
 .wd-100p {
 	width: 100%;
 }
+
 .wd-50p {
 	width: 50%;
 }
+
 .wd-15p {
 	width: 15%;
 }
+
 .wd-200 {
 	width: 200px;
 }
@@ -35,12 +39,15 @@ $darkgray: #333333;
 .mt-10 {
 	margin-top: 10rem;
 }
+
 .mt-05 {
 	margin-top: 5rem;
 }
+
 .mt-02 {
 	margin-top: 2rem;
 }
+
 .mt-01 {
 	margin-top: 1rem;
 }
@@ -49,9 +56,11 @@ $darkgray: #333333;
 .a-end {
 	text-align: end;
 }
+
 .a-center {
 	text-align: center;
 }
+
 .a-right {
 	text-align: right;
 }
@@ -60,12 +69,15 @@ $darkgray: #333333;
 .b-radius-30 {
 	border-radius: 30px;
 }
+
 .b-radius-20 {
 	border-radius: 20px;
 }
+
 .b-radius-10 {
 	border-radius: 10px;
 }
+
 .b-radius-5 {
 	border-radius: 5px;
 }
@@ -85,12 +97,14 @@ $darkgray: #333333;
 	border-radius: 3px;
 	display: block;
 	border: none;
+
 	&:hover {
 		background-position: right center;
 		color: #fff;
 		text-decoration: none;
 	}
 }
+
 .btn-grad-invites-secondary {
 	background-image: linear-gradient(to right, #c0c0c0 0%, #696969 51%, #696969 100%);
 	text-align: center;
@@ -100,6 +114,7 @@ $darkgray: #333333;
 	border-radius: 3px;
 	display: block;
 	border: 1px #696969 solid;
+
 	&:hover {
 		background-position: right center;
 		color: #fff;
@@ -122,6 +137,7 @@ $darkgray: #333333;
 	box-shadow: inset 0 0 2000px rgba(255, 255, 255, 1);
 	padding-bottom: 100px;
 }
+
 .btn-light {
 	border: 1px solid #d3d3d3 !important;
 }
@@ -130,16 +146,35 @@ $darkgray: #333333;
 .fade-enter-active {
 	transition: opacity 0.5s;
 }
+
 .fade-leave-active {
 	transition: opacity 0.5s;
 }
+
 .fade-enter {
 	opacity: 0;
 }
+
 .fade-leave-to {
 	opacity: 0;
 }
 
 .form-control {
 	padding: 3px 5px !important;
+}
+
+.color-checkbox {
+	color: $green  !important;
+
+	.custom-control-label {
+		color: #1eb795;
+		border-color: #1eb795 !important;
+		background-color: #1eb795 !important;
+	}
+}
+
+.custom-control-input:checked~.custom-control-label::before {
+	color: #fff;
+	border-color: #1eb795 !important;
+	background-color: #1eb795 !important;
 }

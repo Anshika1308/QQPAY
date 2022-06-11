@@ -70,16 +70,20 @@
         </b-alert>
       </b-col>
     </b-row>
-    <b-table
-      :items="items"
-      :fields="fields"
-      responsive
-      class="align-middle mt-4"
-    >
-      <template #cell(id)="row">
-        {{ row.index + 1 }}
-      </template>
-      <template #cell(remarks)="row" size="sm">
+    <div>
+      <b-row>
+        <b-col sm="12" md="12" lg="12">
+          <div>
+            <b-table
+              :items="items"
+              :fields="fields"
+              responsive
+              class="align-middle mt-4"
+            >
+              <template #cell(id)="row">
+                {{ row.index + 1 }}
+              </template>
+              <!-- <template #cell(remarks)="row" size="sm">
         <div class="action-div">
           <b-icon
             v-if="row.item.remarks != null && row.item.remarks != ''"
@@ -91,15 +95,50 @@
             icon="square"
           ></b-icon>
         </div>
-      </template>
-    </b-table>
+      </template> -->
+              <template #cell(is_active)="row">
+                <b-form-checkbox
+                  v-model="row.item.is_active"
+                  switch
+                  class="checkbox"
+                  variant="success"
+                  @change="onChangeActive(row.item)"
+                >
+                </b-form-checkbox>
+              </template>
+              <template #cell(actions)="row">
+                <div class="action-div">
+                  <b-button
+                    variant="light"
+                    size="sm"
+                    @click="edit(row.item)"
+                    class="mr-2 expand-btn"
+                  >
+                    <b-icon icon="pencil-square"></b-icon>
+                  </b-button>
+                  <!-- <b-button
+                    variant="light"
+                    size="sm"
+                    @click="onDelete(row.item)"
+                    class="mr-2 expand-btn"
+                  >
+                    <b-icon icon="trash"></b-icon>
+                  </b-button> -->
+                </div>
+              </template>
+            </b-table>
+          </div>
+        </b-col>
+      </b-row>
+    </div>
     <b-modal
       id="scs-country-wise"
-      ref="modal"
+      ref="serviceCharge-modal"
       title="Service Charge Setup"
       size="md"
       variant="primary"
       hide-footer
+      @hide="resetForm()"
     >
       <b-card no-body class="my-custom-class">
         <b-tabs pills card variant="primary">
@@ -107,185 +146,179 @@
             ><b-card-text>
               <b-card>
                 <b-form>
-                  <div class="row">
-                    <div class="col">
-                      <v-select
-                        :options="paymentModeList"
-                        label="value"
-                        v-model="countryWiseForm.payment_mode"
-                        :reduce="(item) => item.id"
-                        placeholder="Available options here"
-                        required
-                        :clearable="false"
-                        :class="{
-                          'is-invalid': $v.countryWiseForm.payment_mode.$error,
-                        }"
-                        aria-describedby="payment_mode-live-feedback"
-                      >
-                      </v-select>
-                      <b-form-invalid-feedback id="payment_mode-live-feedback">
-                        This is a required field.
-                      </b-form-invalid-feedback>
-                    </div>
-                    <b-col cols="12" class="mt-3">
-                      <v-select
-                        :options="countryList"
-                        label="country_name"
-                        v-model="countryWiseForm.country"
-                        :reduce="(item) => item.country_name"
-                        placeholder="Available options here"
-                        required
-                        :clearable="false"
-                        :class="{
-                          'is-invalid': $v.countryWiseForm.country.$error,
-                        }"
-                        aria-describedby="country-live-feedback"
-                      >
-                      </v-select>
-                      <b-form-invalid-feedback id="country-live-feedback">
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                  <b-row>
+                    <b-col cols="12">
+                      <b-form-group label="Payment Mode">
+                        <v-select
+                          :options="paymentModeList"
+                          label="value"
+                          v-model="countryWiseForm.payment_mode"
+                          :reduce="(item) => item.id"
+                          required
+                          :clearable="false"
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.payment_mode.$error,
+                          }"
+                          aria-describedby="payment_mode-live-feedback"
+                        >
+                        </v-select>
+                        <b-form-invalid-feedback
+                          id="payment_mode-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
-                    <b-col cols="6" class="mt-3">
-                      <v-select
-                        :options="serviceChargeTypeList"
-                        label="value"
-                        v-model="countryWiseForm.service_charge_type"
-                        :reduce="(item) => item.id"
-                        placeholder="Available options here"
-                        required
-                        :clearable="false"
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.service_charge_type.$error,
-                        }"
-                        aria-describedby="service_charge_type-live-feedback"
+                    <b-col cols="12">
+                      <b-form-group label="County">
+                        <v-select
+                          :options="countryList"
+                          label="country_name"
+                          v-model="countryWiseForm.country"
+                          :reduce="(item) => item.country_name"
+                          required
+                          :clearable="false"
+                          :class="{
+                            'is-invalid': $v.countryWiseForm.country.$error,
+                          }"
+                          aria-describedby="country-live-feedback"
+                          @change="onChangeCounty()"
+                        >
+                        </v-select>
+                        <b-form-invalid-feedback id="country-live-feedback">
+                          This is a required field.
+                        </b-form-invalid-feedback></b-form-group
                       >
-                      </v-select>
-                      <b-form-invalid-feedback
-                        id="service_charge_type-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        type="number"
-                        id="service_charge"
-                        name="service_charge"
-                        class="mt-3"
-                        placeholder="Service Charge"
-                        v-model="countryWiseForm.service_charge"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal($event, countryWiseForm.service_charge)
-                        "
-                        required
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.service_charge.$error,
-                        }"
-                        aria-describedby="service_charge-live-feedback"
-                      ></b-form-input>
-                      <b-form-invalid-feedback
-                        id="service_charge-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Service Charge Type">
+                        <v-select
+                          :options="serviceChargeTypeList"
+                          label="value"
+                          v-model="countryWiseForm.service_charge_type"
+                          :reduce="(item) => item.id"
+                          required
+                          :clearable="false"
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.service_charge_type.$error,
+                          }"
+                          aria-describedby="service_charge_type-live-feedback"
+                        >
+                        </v-select>
+                        <b-form-invalid-feedback
+                          id="service_charge_type-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="6">
+                      <b-form-group label="Service Charge">
+                        <b-form-input
+                          type="number"
+                          id="service_charge"
+                          name="service_charge"
+                          v-model="countryWiseForm.service_charge"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.service_charge.$error,
+                          }"
+                          aria-describedby="service_charge-live-feedback"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="service_charge-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <small class="ml-3 mt-3"
                       >if <strong>percentage</strong> selected then Upper Limit
                       will be disabled.</small
                     >
                     <b-col cols="12">
-                      <b-form-input
-                        type="number"
-                        id="upper_limit"
-                        name="upper_limit"
-                        class="mt-3"
-                        placeholder="Upper Limit"
-                        v-model="countryWiseForm.upper_limit"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal($event, countryWiseForm.upper_limit)
-                        "
-                        required
-                        :class="{
-                          'is-invalid': $v.countryWiseForm.upper_limit.$error,
-                        }"
-                        aria-describedby="upper_limit-live-feedback"
-                      ></b-form-input>
-                      <b-form-invalid-feedback id="upper_limit-live-feedback">
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Upper Limit">
+                        <b-form-input
+                          type="number"
+                          id="upper_limit"
+                          name="upper_limit"
+                          v-model="countryWiseForm.upper_limit"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid': $v.countryWiseForm.upper_limit.$error,
+                          }"
+                          aria-describedby="upper_limit-live-feedback"
+                        ></b-form-input>
+                        <b-form-invalid-feedback id="upper_limit-live-feedback">
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        type="number"
-                        id="qqpay_commission"
-                        name="qqpay_commission"
-                        class="mt-3"
-                        placeholder="Total Commission"
-                        v-model="countryWiseForm.qqpay_commission"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal(
-                            $event,
-                            countryWiseForm.qqpay_commission
-                          )
-                        "
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.qqpay_commission.$error,
-                        }"
-                        aria-describedby="qqpay_commission-live-feedback"
-                      ></b-form-input>
-                      <b-form-invalid-feedback
-                        id="qqpay_commission-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Total Commission">
+                        <b-form-input
+                          type="number"
+                          id="qqpay_commission"
+                          name="qqpay_commission"
+                          v-model="countryWiseForm.qqpay_commission"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.qqpay_commission.$error,
+                          }"
+                          aria-describedby="qqpay_commission-live-feedback"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="qqpay_commission-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        type="number"
-                        id="payout_partner_commission"
-                        name="payout_partner_commission"
-                        class="mt-3"
-                        placeholder="Pay Commission"
-                        v-model="countryWiseForm.payout_partner_commission"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal(
-                            $event,
-                            countryWiseForm.payout_partner_commission
-                          )
-                        "
-                        required
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.payout_partner_commission.$error,
-                        }"
-                        aria-describedby="payout_partner_commission-live-feedback"
-                      ></b-form-input>
-                      <b-form-invalid-feedback
-                        id="payout_partner_commission-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Pay Commission">
+                        <b-form-input
+                          type="number"
+                          id="payout_partner_commission"
+                          name="payout_partner_commission"
+                          v-model="countryWiseForm.payout_partner_commission"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.payout_partner_commission
+                                .$error,
+                          }"
+                          aria-describedby="payout_partner_commission-live-feedback"
+                        ></b-form-input>
+                        <b-form-invalid-feedback
+                          id="payout_partner_commission-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="12">
-                      <b-form-textarea
-                        id="remarks"
-                        class="mt-3"
-                        placeholder="Remarks"
-                        v-model="countryWiseForm.remarks"
-                        size="sm"
-                        rows="3"
-                        max-rows="6"
-                      ></b-form-textarea>
+                      <b-form-group label="Remarks">
+                        <b-form-textarea
+                          id="remarks"
+                          v-model="countryWiseForm.remarks"
+                          size="sm"
+                          rows="3"
+                          max-rows="6"
+                        ></b-form-textarea>
+                      </b-form-group>
                     </b-col>
-                  </div>
+                  </b-row>
                   <b-row class="float-right">
                     <b-button size="lg" variant="primary" @click="manage()">
                       Add Service Charge Setup
@@ -301,213 +334,192 @@
                 <b-form>
                   <div class="row">
                     <b-col cols="12">
-                      <v-select
-                        :options="paymentModeList"
-                        label="value"
-                        v-model="countryWiseForm.payment_mode"
-                        :reduce="(item) => item.id"
-                        placeholder="Available options here"
-                        required
-                        :clearable="false"
-                        :class="{
-                          'is-invalid': $v.countryWiseForm.payment_mode.$error,
-                        }"
-                        aria-describedby="payment_mode-live-feedback"
-                      >
-                      </v-select>
-                      <b-form-invalid-feedback id="payment_mode-live-feedback">
-                        This is a required field.
-                      </b-form-invalid-feedback>
-                    </b-col>
-                    <b-col cols="6"  class="mt-3">
-                      <v-select
-                        :options="payoutPartnerList"
-                        label="contact_name1"
-                        v-model="countryWiseForm.payment_partner"
-                        :reduce="(item) => item.agent_id"
-                        placeholder="Available options here"
-                        required
-                        :clearable="false"
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.payment_partner.$error,
-                        }"
-                        aria-describedby="payment_partner-live-feedback"
-                      >
-                      </v-select>
-                      <b-form-invalid-feedback
-                        id="payment_partner-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
-                      <!-- <b-dropdown
-                        block
-                        id="input-relation"
-                        :text="countryWiseDefaultForm.payout_partner"
-                        variant="light"
-                        label-size="sm"
-                      >
-                        <b-dropdown-item
-                          v-for="option in payoutPartnerList"
-                          :key="option.value"
-                          :value="option.value"
-                          size="sm"
+                      <b-form-group label="PAyment Mode">
+                        <v-select
+                          :options="paymentModeList"
+                          label="value"
+                          v-model="countryWiseForm.payment_mode"
+                          :reduce="(item) => item.id"
+                          required
+                          :clearable="false"
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.payment_mode.$error,
+                          }"
+                          aria-describedby="payment_mode-live-feedback"
                         >
-                          {{ option.text }}
-                        </b-dropdown-item>
-                      </b-dropdown> -->
+                        </v-select>
+                        <b-form-invalid-feedback
+                          id="payment_mode-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="6" class="mt-3">
+                      <b-form-group label="Payment Partner">
+                        <v-select
+                          :options="payoutPartnerList"
+                          label="company_name"
+                          v-model="countryWiseForm.payment_partner"
+                          :reduce="(item) => item.agent_id"
+                          required
+                          :clearable="false"
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.payment_partner.$error,
+                          }"
+                          aria-describedby="payment_partner-live-feedback"
+                        >
+                        </v-select>
+                        <b-form-invalid-feedback
+                          id="payment_partner-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        class="mt-3"
-                        placeholder="Receive Country"
-                        v-model="countryWiseDefaultForm.receive_country"
-                        size="sm"
-                      ></b-form-input>
-                    </b-col>
-                    <b-col cols="6"  class="mt-3">
-                      <v-select
-                        :options="serviceChargeTypeList"
-                        label="value"
-                        v-model="countryWiseForm.service_charge_type"
-                        :reduce="(item) => item.id"
-                        placeholder="Available options here"
-                        required
-                        :clearable="false"
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.service_charge_type.$error,
-                        }"
-                        aria-describedby="service_charge_type-live-feedback"
-                      >
-                      </v-select>
-                      <b-form-invalid-feedback
-                        id="service_charge_type-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Receive Country">
+                        <b-form-input
+                          class="mt-3"
+                          v-model="countryWiseDefaultForm.receive_country"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        type="number"
-                        id="service_charge"
-                        name="service_charge"
-                        class="mt-3"
-                        placeholder="Service Charge"
-                        v-model="countryWiseForm.service_charge"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal($event, countryWiseForm.service_charge)
-                        "
-                        required
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.service_charge.$error,
-                        }"
-                        aria-describedby="service_charge-live-feedback"
-                      >
-                      </b-form-input>
-                      <b-form-invalid-feedback
-                        id="service_charge-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Service Charge Type">
+                        <v-select
+                          :options="serviceChargeTypeList"
+                          label="value"
+                          v-model="countryWiseForm.service_charge_type"
+                          :reduce="(item) => item.id"
+                          required
+                          :clearable="false"
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.service_charge_type.$error,
+                          }"
+                          aria-describedby="service_charge_type-live-feedback"
+                        >
+                        </v-select>
+                        <b-form-invalid-feedback
+                          id="service_charge_type-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
+                    </b-col>
+                    <b-col cols="6">
+                      <b-form-group label="Service Charge">
+                        <b-form-input
+                          type="number"
+                          id="service_charge"
+                          name="service_charge"
+                          v-model="countryWiseForm.service_charge"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.service_charge.$error,
+                          }"
+                          aria-describedby="service_charge-live-feedback"
+                        >
+                        </b-form-input>
+                        <b-form-invalid-feedback
+                          id="service_charge-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <small class="ml-3 mt-3"
                       >if <strong>percentage</strong> selected then Upper Limit
                       will be disabled.</small
                     >
                     <b-col cols="12">
-                      <b-form-input
-                        type="number"
-                        id="upper_limit"
-                        name="upper_limit"
-                        class="mt-3"
-                        placeholder="Upper Limit"
-                        v-model="countryWiseForm.upper_limit"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal($event, countryWiseForm.upper_limit)
-                        "
-                        required
-                        :class="{
-                          'is-invalid': $v.countryWiseForm.upper_limit.$error,
-                        }"
-                        aria-describedby="upper_limit-live-feedback"
-                      >
-                      </b-form-input>
-                      <b-form-invalid-feedback id="upper_limit-live-feedback">
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Upper Limit">
+                        <b-form-input
+                          type="number"
+                          id="upper_limit"
+                          name="upper_limit"
+                          v-model="countryWiseForm.upper_limit"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid': $v.countryWiseForm.upper_limit.$error,
+                          }"
+                          aria-describedby="upper_limit-live-feedback"
+                        >
+                        </b-form-input>
+                        <b-form-invalid-feedback id="upper_limit-live-feedback">
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        type="number"
-                        id="qqpay_commission"
-                        name="qqpay_commission"
-                        class="mt-3"
-                        placeholder="Total Commission"
-                        v-model="countryWiseForm.qqpay_commission"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal(
-                            $event,
-                            countryWiseForm.qqpay_commission
-                          )
-                        "
-                        required
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.qqpay_commission.$error,
-                        }"
-                        aria-describedby="qqpay_commission-live-feedback"
-                      >
-                      </b-form-input>
-                      <b-form-invalid-feedback
-                        id="qqpay_commission-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="RemTotal Commissionarks">
+                        <b-form-input
+                          type="number"
+                          id="qqpay_commission"
+                          name="qqpay_commission"
+                          v-model="countryWiseForm.qqpay_commission"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.qqpay_commission.$error,
+                          }"
+                          aria-describedby="qqpay_commission-live-feedback"
+                        >
+                        </b-form-input>
+                        <b-form-invalid-feedback
+                          id="qqpay_commission-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-input
-                        type="number"
-                        id="payout_partner_commission"
-                        name="payout_partner_commission"
-                        class="mt-3"
-                        placeholder="Pay Commission"
-                        v-model="countryWiseForm.payout_partner_commission"
-                        size="md"
-                        @keypress="
-                          onlyForDecimal(
-                            $event,
-                            countryWiseForm.payout_partner_commission
-                          )
-                        "
-                        required
-                        :class="{
-                          'is-invalid':
-                            $v.countryWiseForm.payout_partner_commission.$error,
-                        }"
-                        aria-describedby="payout_partner_commission-live-feedback"
-                      >
-                      </b-form-input>
-                      <b-form-invalid-feedback
-                        id="payout_partner_commission-live-feedback"
-                      >
-                        This is a required field.
-                      </b-form-invalid-feedback>
+                      <b-form-group label="Pay Commission">
+                        <b-form-input
+                          type="number"
+                          id="payout_partner_commission"
+                          name="payout_partner_commission"
+                          v-model="countryWiseForm.payout_partner_commission"
+                          size="md"
+                          @keypress="onForInteger($event)"
+                          required
+                          :class="{
+                            'is-invalid':
+                              $v.countryWiseForm.payout_partner_commission
+                                .$error,
+                          }"
+                          aria-describedby="payout_partner_commission-live-feedback"
+                        >
+                        </b-form-input>
+                        <b-form-invalid-feedback
+                          id="payout_partner_commission-live-feedback"
+                        >
+                          This is a required field.
+                        </b-form-invalid-feedback>
+                      </b-form-group>
                     </b-col>
                     <b-col cols="12">
-                      <b-form-textarea
-                        id="remarks"
-                        class="mt-3"
-                        placeholder="Remarks"
-                        v-model="countryWiseForm.remarks"
-                        size="sm"
-                        rows="3"
-                        max-rows="6"
-                      ></b-form-textarea>
+                      <b-form-group label="Remarks">
+                        <b-form-textarea
+                          id="remarks"
+                          class="mt-3"
+                          v-model="countryWiseForm.remarks"
+                          size="sm"
+                          rows="3"
+                          max-rows="6"
+                        ></b-form-textarea>
+                      </b-form-group>
                     </b-col>
                   </div>
                   <b-row class="float-right">
@@ -608,7 +620,8 @@ export default {
         { key: "service_charge", label: "Service Charge MYR" },
         { key: "payout_partner_commission", label: "Pay Commission" },
         { key: "qqpay_commission", label: "Receive Commission" },
-        { key: "remarks", label: "Remarks" },
+        { key: "is_active", label: "Active" },
+        { key: "actions", label: "Action" },
       ],
       filter_options: [
         {
@@ -679,11 +692,25 @@ export default {
         $event.preventDefault();
       }
     },
+    onForInteger($event, val) {
+      debugger; // eslint-disable-line no-debugger
+      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if (
+        val != null &&
+        keyCode > 31 &&
+        (keyCode < 48 || keyCode > 57) &&
+        keyCode !== 46
+      ) {
+        $event.preventDefault();
+      }
+    },
     resetForm() {
+      debugger; // eslint-disable-line no-debugger
       this.countryWiseForm = Object.assign({}, this.countryWiseDefaultForm);
       this.$v.$reset();
       this.isError = false;
       this.error = null;
+      this.publishRate = null;
       this.onSearch();
     },
     onSearch() {
@@ -695,7 +722,8 @@ export default {
       if (item.id > 0) {
         getById(item.id)
           .then((res) => {
-            this.countryWiseForm = Object.assign({}, res.data);
+            this.countryWiseForm = Object.assign({}, res.data.data[0]);
+            this.$refs["serviceCharge-modal"].show();
           })
           .catch((error) => {
             this.isError = true;
@@ -703,6 +731,30 @@ export default {
           });
       }
     },
+    onChangeActive(item) {
+      update(item)
+        .then((res) => {
+          console.log(res);
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.isError = true;
+          this.error = error.message;
+        })
+        .finally(() => {
+          //done()
+        });
+    },
+    // onDelete(item) {
+    //   onDelete(item.parameter_code, item.value_code)
+    //     .then(() => {
+    //       this.resetForm();
+    //     })
+    //     .catch((error) => {
+    //       this.isError = true;
+    //       this.error = error.message;
+    //     });
+    // },
     manage() {
       this.$v.$touch();
       if (this.$v.$invalid) {
