@@ -389,7 +389,7 @@
 
 <script>
 import moment from "moment";
-import {postApiData} from "@/helpers/AxiosInstance";
+import {postApiData, transactionGetApiData} from "@/helpers/AxiosInstance";
 import APIS from "@/constants/EndPoint";
 import {responseHandler} from "@/helpers/globalFunctions";
 import UpdateLabel from "@/components/reusable/UpdateLabel";
@@ -440,13 +440,7 @@ export default {
         licenseExpiryDate: "",
         city: "",
         country: "",
-        countryOptions: [
-          {value: 'a', text: 'Country Type 1'},
-          {value: 'b', text: 'Country Type 1'},
-          {value: 'c', text: 'Country Type 2'},
-          {value: 'd', text: 'Country Type 3'},
-          {value: 'e', text: 'Country Type 4', disabled: true}
-        ],
+        countryOptions: [],
         phone1: "",
         phone2: "",
         email: "",
@@ -461,13 +455,7 @@ export default {
         creditLimitToSDNTRN: null,
         creditLimitToSBNTRN: null,
         localCurrency: null,
-        localCurrencyOptions: [
-          {value: 'a', text: 'Currency Type 1'},
-          {value: 'b', text: 'Currency Type 1'},
-          {value: 'c', text: 'Currency Type 2'},
-          {value: 'd', text: 'Currency Type 3'},
-          {value: 'e', text: 'Currency Type 4', disabled: true}
-        ],
+        localCurrencyOptions: [],
         mileageDefined: 0,
         maxPayoutAmtPerTXNCashPay: null,
         maxPayoutAmtPerTXNACDeposit: null,
@@ -617,8 +605,29 @@ export default {
         })
         console.log(this.errors);
       }
+    },
+    async getCountryList() {
+      const res = await transactionGetApiData(`${APIS.GET_COUNTRY_NAME}`);
+      this.companyDetail = {
+        ...this.companyDetail,
+        countryOptions: res?.data?.map(item => ({
+          value: item.id,
+          text: item.nationality
+        })),
+      };
+      this.bankAndBranchAccountDetail = {
+        ...this.bankAndBranchAccountDetail,
+        localCurrencyOptions: res?.data?.map(item => ({
+          value: item.currency_code,
+          text: `${item.currency_code}(${item.currency_name})`
+        })),
+
+      }
     }
   },
+  async created() {
+    await this.getCountryList()
+  }
 }
 </script>
 <style lang="scss" scoped>
