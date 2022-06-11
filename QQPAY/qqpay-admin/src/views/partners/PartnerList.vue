@@ -8,7 +8,7 @@
       <div class="search-area">
         <b-row>
           <b-col class="input-field" cols='8' v-click-outside="onClickOutside">
-            <span class="partner-filter" @click="togglePartnerFilter=!togglePartnerFilter">Filter</span>
+            <span class="partner-filter" @click="togglePartnerFilter = !togglePartnerFilter">Filter</span>
             <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
             <div v-show="togglePartnerFilter" class="partner-filter-content">
               <b-row cols="2 m-1">
@@ -159,13 +159,13 @@ export default {
       await responseHandler(response.data.status_code, this, response.data.message)
       if (response.data.status_code === 200) {
         this.items = response.data.data.map(item => ({
-          partner_name: item.contact_name1,
+          partner_name: item.name_of_employer,
           id: item.agent_id,
-          contact_person: item.contact_name2,
-          number: item.phone1,
-          email: item.email1,
-          country: item.country,
-          partner_type: item.agent_type,
+          contact_person: item.contact_person_1,
+          number: item.company_phone_1,
+          email: item.company_email,
+          country: item.company_country,
+          partner_type: item.partner_type.toUpperCase().replaceAll("_", " "),
           action: item.agent_id,
         }))
       }
@@ -268,5 +268,4 @@ export default {
 .compliance-table {
   text-align: center;
 }
-
 </style>
