@@ -416,7 +416,7 @@ export default {
       this.showUserDetails = false;
     },
     getRiskLabel(riskVal) {
-      if (riskVal >0 && riskVal <= 50) {
+      if (riskVal >=0 && riskVal <= 50) {
         return 'Low risk'
       } else if (riskVal >50 && riskVal <= 80) {
         return 'Medium risk'
