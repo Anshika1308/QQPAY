@@ -1,6 +1,7 @@
+const token = localStorage.getItem('token');
 const state = {
     config: null,
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUwOTg2NjcsInN1YiI6InNhaWxlc2hrdXNoOTVAZ21haWwuY29tIn0.FKCgUwCkPfR1V60Th34PA80ToyX-dURw8ZZUScF0fYs', // Need to change after login
+    token: token, // Need to change after login
     base_url: 'http://3.111.140.40:8001/api/v1/',
     selected_deal: null, // to be used in settlement page
     selected_Settlement: null, // to be used in prefund page

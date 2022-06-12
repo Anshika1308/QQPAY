@@ -8,13 +8,13 @@ const service = axios.create({
     "content-type": "application/json",
   },
 });
-
+const token = localStorage.getItem('token');
 //request interceptor
 service.interceptors.request.use(
   (config) => {
     config.baseURL = store.getters.config.VUE_APP_BASE_API;
 
-    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUwOTg2NjcsInN1YiI6InNhaWxlc2hrdXNoOTVAZ21haWwuY29tIn0.FKCgUwCkPfR1V60Th34PA80ToyX-dURw8ZZUScF0fYs'
+    const authToken = token
     config.headers['Authorization'] = 'Bearer ' + authToken
     
     const port  = config.url.slice(0, 4);
