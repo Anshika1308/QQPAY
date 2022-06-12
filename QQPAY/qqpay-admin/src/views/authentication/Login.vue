@@ -127,6 +127,7 @@ export default {
         const isPermitted = true;
         localStorage.setItem('isPermitted', isPermitted);
         this.loader = false
+        this.$store.commit("app/set_token", responseData.data[0].token);
         this.$router.push({name: 'Home'})
       } else {
         this.loader = false;

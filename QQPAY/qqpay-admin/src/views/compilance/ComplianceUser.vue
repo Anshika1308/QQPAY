@@ -100,25 +100,27 @@
             </template>
             <template v-slot:cell(name_&_occupation)="row">
               <div class="name-occupation">
-                <b-avatar  
+                <!-- <b-avatar  
                   square
                   :src="row.item.avatarImg"
                   size="3rem"
-                ></b-avatar>                
+                ></b-avatar>   -->
+                <b-avatar :variant="getVariant()" :text="getAvatar(row.item.Full_Name)"></b-avatar>
                 <!-- <img :src="row.item.avatarImg" alt="Image" /> -->
-                <div>
+                <div class="name-label">
                   {{ row.item.Full_Name }}
                   <br />
                   <small>{{ row.item.Occupation_Code }}</small>
                 </div>
               </div>
             </template>
-            <template v-slot:cell(risk_status)="row">
-              <b-form-select
-                v-model="row.item.risk_status"
+            <template v-slot:cell(Risk)="row">
+              <!-- <b-form-select
+                :v-model="row.item.Risk"
                 :options="riskStatusOptions"
                 @change="onChangeRiskStatus($event)"
-              ></b-form-select>
+              ></b-form-select> -->
+              {{ getRiskLabel(row.item.Risk) }}
               <!-- <b-button size="sm" @click="row.toggleDetails" class="mr-2 apply-btn">
                 {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
               </b-button> -->
@@ -253,6 +255,10 @@ export default {
         {
           key: 'User_Type',
           label: 'User Type',
+        },
+        {
+          key: 'Risk',
+          label: 'Risk Status',
         },
         // "risk_status",
         {
@@ -409,6 +415,27 @@ export default {
     backBtnClick() {
       this.showUserDetails = false;
     },
+    getRiskLabel(riskVal) {
+      if (riskVal >0 && riskVal <= 50) {
+        return 'Low risk'
+      } else if (riskVal >50 && riskVal <= 80) {
+        return 'Medium risk'
+      } else {
+        return 'High risk'
+      }
+    },
+    getAvatar(name) {
+      const nameArr = name.split(' ');
+      if (nameArr && nameArr.length > 0) {
+        return nameArr[0].charAt(0) + nameArr[nameArr.length -1]?.charAt(0)
+      }
+      
+    },
+    getVariant() {
+      const variantArr = ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'light', 'dark'];
+      const randomVal = variantArr[Math.floor(Math.random() * variantArr.length)];
+      return randomVal;
+    }
   },
 };
 </script>
@@ -448,8 +475,11 @@ export default {
 }
 .name-occupation {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
   align-items: center;
+  .name-label {
+    margin-left: 10px;
+  }
  /*  img {
     border-radius: 50%;
     width: 50px;
@@ -459,6 +489,7 @@ export default {
 .compliance-table {
   overflow-x: auto;
   text-align: center;
+  font-size: 14px;
 }
 .risk-status-header {
   display: flex;

@@ -417,7 +417,7 @@ export default {
     openTab(sub_menu) {
       console.log(sub_menu, "test")
       if (sub_menu === 'settlements') {
-        this.$store.commit("app/set_selected_deal", null);
+        this.$store.commit("app/set_selected_deal_id", null);
       }
       if (sub_menu === 'funding') {
         this.$store.commit("app/set_selected_Settlement", null);
@@ -425,7 +425,9 @@ export default {
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;
       Object.keys(this.tab_active).forEach((v) => (this.tab_active[v] = false));
-      this.tab_active[sub_menu] = true;
+      setTimeout(() => {
+        this.tab_active[sub_menu] = true;
+      }, 10)
     },
     closeTab(sub_menu) {
       this.tab_show[sub_menu] = false;

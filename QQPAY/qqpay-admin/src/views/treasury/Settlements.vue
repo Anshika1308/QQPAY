@@ -52,7 +52,7 @@
             class="menu-sec d-flex justify-content-between align-items-center"
           >
             Balance:
-            <h3>{{ selected_deal.fcy_amount }} USD</h3>
+            <h3>{{ selected_deal.fcy_balance }} USD</h3>
           </div>
         </b-col>
       </b-row>
@@ -126,10 +126,10 @@
         <b>{{ row.item.i_o_IRH }} </b>
       </template> -->
       <template #cell(settl_date)="row"
-        ><b>{{ format(row.item.settl_date) }}</b>
+        >{{ format(row.item.settl_date) }}
       </template>
       <template #cell(authorized_date)="row"
-        ><b>{{ format(row.item.authorized_date) }}</b>
+        >{{ format(row.item.authorized_date) }}
       </template>
       <template #cell(actions)="row" size="sm">
         <div class="action-div">
@@ -257,10 +257,15 @@
         <b-row>
           <b-col>
             <b-form-group label="Payout Partner">
-              <b-form-input
+              <!-- <b-form-input
                 v-model="temp_settlement.payout_partner"
                 size="sm"
-              ></b-form-input>
+              ></b-form-input> -->
+              <b-form-select
+                :v-model="temp_settlement.payout_partner"
+                :options="ppOptions"
+                @change="onChangePPoptions($event)"
+              ></b-form-select>
             </b-form-group>
           </b-col>
           <b-col>
@@ -268,6 +273,7 @@
               <b-form-input
                 v-model="temp_settlement.ccy_cd"
                 size="sm"
+                disabled
               ></b-form-input>
             </b-form-group>
           </b-col>          
@@ -406,23 +412,40 @@ export default {
     CountryFlag,
   },
   created() {
-    if (this.selected_deal) {
+    if (this.selected_deal_id) {
+      this.getSelectedDealDtl();
       this.getSelecedDealSetlement();
     } else {
       this.getAllSettlements();
+    }
+    this.getPPdetails()
+  },
+  watch: {
+    selected_deal_id: function(newValue) {
+      console.log('selected deal changes', newValue);
+      if (newValue) {
+        this.getSelectedDealDtl();
+        this.getSelecedDealSetlement();
+      } else {
+        this.selected_deal = null;
+        this.getAllSettlements();
+      }
     }
   },
   computed: {
     ...mapGetters([
       "token",
       "base_url",
-      "selected_deal"
+      "selected_deal_id"
     ]),
   },
   data() {
     return {
       filter: null,
+      base_url_p8002: 'http://3.111.140.40:8002/api/v1/',
       updateTrigger: false,
+      selected_deal: null,
+      ppOptions: null,
       deal_details: [
         {
           id: 1,
@@ -646,7 +669,7 @@ export default {
     },
     async getSelecedDealSetlement() {
       axios
-        .get(this.base_url + "deal-settlement/get-settlement_belong/" + this.selected_deal.deal_id, {
+        .get(this.base_url + "deal-settlement/get-settlement_belong/" + this.selected_deal_id, {
           headers: {
             Authorization:  `Bearer ${this.token}`,
           },
@@ -662,9 +685,6 @@ export default {
         });
     },
     async getAllSettlements() {
-      console.log('selected_deal', this.selected_deal);
-      console.log("token", this.token);
-
       axios
         .get(this.base_url + "deal-settlement/get-all-deal_settlements", {
           headers: {
@@ -681,6 +701,58 @@ export default {
           console.log(e);
         });
     },
+    async getSelectedDealDtl() {
+      axios
+        .get(this.base_url + "new-contract/get-contract/" + this.selected_deal_id, {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          responseHandler(response.data.status_code, this, response.data.message)
+          this.selected_deal = response.data.data[0];
+        })
+        .catch((e) => {
+          responseHandler(e.status_code, this, e.message)
+          console.log(e);
+        });
+    },
+    async getPPdetails() {
+
+      axios
+        .get(this.base_url_p8002 + "partner_details/get-partners-limited-field", {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // responseHandler(response.data.status_code, this, response.data.message)
+          // this.selected_deal = response.data.data;
+          this.formatPPoptions(response.data.data)
+        })
+        .catch((e) => {
+          responseHandler(e.status_code, this, e.message)
+          console.log(e);
+        });
+    },
+    formatPPoptions(data) {
+      if (data && data.length > 0) {
+        this.ppOptions = [];
+        data.forEach(ele => {
+          this.ppOptions.push({
+            text: ele.name_of_employer,
+            value: ele.name_of_employer,
+            pp_ccy: 'Test'        // Remove after api chnage and uncomment below
+            // pp_ccy: ele.pp_ccy
+          })
+        });
+      }
+    },
+    onChangePPoptions(eve) {
+      console.log(eve)
+      this.temp_settlement.ccy_cd = this.ppOptions.find(ele => ele.value === eve)?.pp_ccy;
+    },
+    
     format(date) {
       if (date) {
         date = new Date(date);
@@ -702,6 +774,7 @@ export default {
             responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.settl_id === this.temp_settlement.settl_id);
             this.items[index] = response.data.data[0];
+            this.getSelectedDealDtl();
           })
           .catch((err) => {
             responseHandler(err.status_code, this, err.message)
@@ -710,7 +783,7 @@ export default {
 
       } else {
         request.purchase_date = this.selected_deal.deal_date
-        request.deal_id = this.selected_deal.deal_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
+        request.deal_id = this.selected_deal_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
         axios.post(this.base_url + "deal-settlement/new-deal-settlement", request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -718,7 +791,8 @@ export default {
           })
           .then((response) => {
             responseHandler(response.data.status_code, this, response.data.message)
-            this.items.push(response.data.data[0]);
+            this.items.unshift(response.data.data[0]);
+            this.getSelectedDealDtl();
           })
           .catch((err) => {
             responseHandler(err.status_code, this, err.message)
