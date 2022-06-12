@@ -60,6 +60,13 @@
       </b-col>
     </b-row>
     <b-row>
+      <b-col>
+        <b-alert v-model="isError" variant="danger" dismissible>
+          {{ this.error }}
+        </b-alert>
+      </b-col>
+    </b-row>
+    <b-row>
       <b-col cols="10">
         <div>
           <b-form-input
@@ -123,44 +130,46 @@
             responsive
             class="align-middle"
           >
-            <template #cell(margin)="row" size="sm">
+            <template #cell(consumer_margin)="row" size="sm">
               <b-form-input
                 id="input-name"
-                v-model="row.item.margin"
+                @blur="onMarginChange(row.item)"
+                v-model="row.item.consumer_margin"
               ></b-form-input>
             </template>
-            <template #cell(gain_loss)="row" size="sm">
+            <template #cell(consumer_gain_or_loss)="row" size="sm">
               <b-icon
-                v-if="row.item.gain_loss == '-1.0122'"
+                v-if="row.item.consumer_gain_or_loss < 1"
                 class="text-danger"
                 icon="arrow-down-circle-fill"
               ></b-icon>
-              {{ row.item.gain_loss }}
+              {{ row.item.consumer_gain_or_loss }}
             </template>
-            <template #cell(br_margin)="row" size="sm">
+            <template #cell(business_margin)="row" size="sm">
               <b-form-input
+                @blur="onMarginChange(row.item)"
                 id="input-name"
-                v-model="row.item.br_margin"
+                v-model="row.item.business_margin"
               ></b-form-input>
             </template>
-            <template #cell(br_gain_loss)="row" size="sm">
+            <template #cell(business_gain_or_loss)="row" size="sm">
               <b-icon
-                v-if="row.item.br_gain_loss == '-1.0122'"
+                v-if="row.item.business_gain_or_loss < 1"
                 class="text-danger"
                 icon="arrow-down-circle-fill"
               ></b-icon>
-              {{ row.item.br_gain_loss }}
+              {{ row.item.business_gain_or_loss }}
             </template>
             <template #cell(actions)="row" size="sm">
               <div class="action-div">
-                <b-button
+                <!-- <b-button
                   variant="light"
                   size="sm"
                   @click="row.toggleDetails"
                   class="mr-2 expand-btn"
                 >
                   <b-icon icon="clock-history"></b-icon>
-                </b-button>
+                </b-button> -->
                 <b-button
                   variant="light"
                   size="sm"
@@ -181,48 +190,51 @@
             responsive
             class="align-middle"
           >
-            <template #cell(margin)="row" size="sm">
+            <template #cell(consumer_margin)="row" size="sm">
               <b-form-input
                 id="input-name"
-                v-model="row.item.margin"
+                @blur="onMarginChange(row.item)"
+                v-model="row.item.consumer_margin"
               ></b-form-input>
             </template>
-            <template #cell(gain_loss)="row" size="sm">
+            <template #cell(consumer_gain_or_loss)="row" size="sm">
               <b-icon
-                v-if="row.item.gain_loss == '-1.0122'"
+                v-if="row.item.consumer_gain_or_loss < 1"
                 class="text-danger"
                 icon="arrow-down-circle-fill"
               ></b-icon>
-              {{ row.item.gain_loss }}
+              {{ row.item.consumer_gain_or_loss }}
             </template>
-            <template #cell(br_margin)="row" size="sm">
+            <template #cell(business_margin)="row" size="sm">
               <b-form-input
+                @blur="onMarginChange(row.item)"
                 id="input-name"
-                v-model="row.item.br_margin"
+                v-model="row.item.business_margin"
               ></b-form-input>
             </template>
-            <template #cell(br_gain_loss)="row" size="sm">
+            <template #cell(business_gain_or_loss)="row" size="sm">
               <b-icon
-                v-if="row.item.br_gain_loss == '-1.0122'"
+                v-if="row.item.business_gain_or_loss < 1"
                 class="text-danger"
                 icon="arrow-down-circle-fill"
               ></b-icon>
-              {{ row.item.br_gain_loss }}
+              {{ row.item.business_gain_or_loss }}
             </template>
             <template #cell(actions)="row" size="sm">
               <div class="action-div">
-                <b-button
+                <!-- <b-button
                   variant="light"
                   size="sm"
                   @click="row.toggleDetails"
                   class="mr-2 expand-btn"
                 >
                   <b-icon icon="clock-history"></b-icon>
-                </b-button>
+                </b-button> -->
                 <b-button
                   variant="light"
                   size="sm"
-                  @click="row.toggleDetails"
+                  title="Tooltip directive content"
+                  @click="edit(row.item)"
                   class="mr-2 expand-btn"
                 >
                   <b-icon icon="three-dots-vertical"></b-icon>
@@ -268,9 +280,20 @@ export default {
       },
       type: null,
       defaultForm: {
-        country: null,
-        search_user: null,
-        filter_option: null,
+        payout_country: null,
+        ccy: null,
+        qqcost_avg_rate: null,
+        lowest_payout_ccy_rate: null,
+        payout_partner_cost_rate: null,
+        qq_offer_rate: null,
+        consumer_margin: null,
+        con_is_pluse: null,
+        consumers_rate: null,
+        consumer_gain_or_loss: null,
+        business_margin: null,
+        bus_is_pluse: null,
+        business_rate: null,
+        business_gain_or_loss: null,
       },
       form: null,
       countryList: [],
@@ -326,7 +349,6 @@ export default {
   },
   methods: {
     resetForm() {
-      debugger; // eslint-disable-line no-debugger
       this.type = Object.assign({}, this.defaultType);
       this.form = Object.assign({}, this.defaultForm);
       this.$v.$reset();
@@ -339,6 +361,44 @@ export default {
         this.items = res.data.data[0];
         this.otherCountriesItems = res.data.data[0];
       });
+    },
+    onMarginChange(item) {
+      //convert to 4 decimal point
+      item.consumer_margin = parseFloat(item.consumer_margin).toFixed(4)
+      item.business_margin = parseFloat(item.business_margin).toFixed(4)
+
+      //convert to float
+      item.consumer_margin = parseFloat(item.consumer_margin)
+      item.business_margin = parseFloat(item.business_margin)
+      
+      if (
+        item.consumer_margin < 1.0001 ||
+        item.consumer_margin > 1.9999 ||
+        item.business_margin < 1.0001 ||
+        item.business_margin > 1.9999
+      ) {
+        this.error = "Please select margin in between 1.0001 and 1.9999";
+        this.isError = true;
+      } else {
+
+        this.form = Object.assign({}, item);
+        this.form.consumers_rate = this.form.qq_offer_rate +  this.form.consumer_margin
+        this.form.business_rate = this.form.qq_offer_rate +  this.form.business_margin
+        this.form.consumer_gain_or_loss = this.form.consumers_rate +  this.form.payout_partner_cost_rate
+
+        update(this.form, this.form.id)
+          .then((res) => {
+            console.log(res);
+            this.resetForm();
+          })
+          .catch((error) => {
+            this.isError = true;
+            this.error = error.message;
+          })
+          .finally(() => {
+            //done()
+          });
+      }
     },
     edit(item) {
       if (item.id > 0) {
@@ -358,7 +418,7 @@ export default {
         return;
       }
       if (this.form.id > 0) {
-        update(this.form)
+        update(this.form, this.form.id)
           .then((res) => {
             console.log(res);
             this.resetForm();

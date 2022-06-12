@@ -15,6 +15,13 @@ export function getById(Id){
     })
 }
 
+export function getPublishRateByCurrency(countryCode){
+    return request({
+        url: `${baseUrl}/get_publish_rate_country_wise/` + countryCode,
+        method: 'get',
+    })
+}
+
 export function getPayoutDetailList(){
     return request({
         url: `${baseUrl}/get_payout_details/`,
@@ -30,9 +37,9 @@ export function save(data){
     })
 }
 
-export function update(data){
+export function update(data, Id){
     return request({
-        url: `${baseUrl}/update_forex_deal/`,
+        url: `${baseUrl}/update_forex_deal/` + Id,
         method: 'put',
         data,
     })

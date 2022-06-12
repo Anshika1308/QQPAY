@@ -123,7 +123,7 @@
               <UpdateLabel label="Country"/>
               <b-form-group id="input-group-country" label="Country" label-for="input-country">
                 <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.country"
-                               :options="companyDetail.countryOptions"/>
+                               :options="companyDetail.countryOptions" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">

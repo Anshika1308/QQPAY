@@ -84,246 +84,169 @@
       size="md"
       variant="primary"
       hide-footer
+      @hide="resetForm()"
     >
       <b-card no-body class="my-custom-class">
         <b-row>
           <b-form>
             <div class="row">
               <b-col cols="12">
-                <v-select
-                  :options="companyList"
-                  label="registered_business_name"
-                  v-model="form.company"
-                  :reduce="(item) => item.business_user_kyc_id"
-                  placeholder="Available options here"
-                  required
-                  :clearable="false"
-                  :class="{
-                    'is-invalid': $v.form.company.$error,
-                  }"
-                  aria-describedby="company-live-feedback"
-                >
-                </v-select>
-                <b-form-invalid-feedback id="company-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group
-              label-cols-sm="12"
-              label-cols-lg="12"
-              content-cols-sm="12"
-              content-cols-lg="12"
-            >
-              <b-dropdown
-                block
-                id="input-relation"
-                :text="form.company"
-                variant="light"
-                label-size="sm"
-              >
-                <b-dropdown-item
-                  v-for="option in company_options"
-                  :key="option.value"
-                  :value="option.value"
-                  size="sm"
-                >
-                  {{ option.text }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="12" class="mt-2">
-                <v-select
-                  :options="currencyList"
-                  label="currency_code"
-                  v-model="form.currency_type"
-                  :reduce="(item) => item.id"
-                  placeholder="Available options here"
-                  required
-                  :clearable="false"
-                  :class="{
-                    'is-invalid': $v.form.currency_type.$error,
-                  }"
-                  aria-describedby="currency_type-live-feedback"
-                >
-                </v-select>
-                <b-form-invalid-feedback id="currency_type-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group
-              label-cols-sm="12"
-              label-cols-lg="12"
-              content-cols-sm="12"
-              content-cols-lg="12"
-            >
-              <b-dropdown
-                block
-                id="input-relation"
-                :text="form.currency_type"
-                variant="light"
-                label-size="sm"
-              >
-                <b-dropdown-item
-                  v-for="option in currency_type_options"
-                  :key="option.value"
-                  :value="option.value"
-                  size="sm"
-                >
-                  {{ option.text }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="6">
-                <b-form-input
-                  type="number"
-                  id="special_rate"
-                  name="special_rate"
-                  class="mt-3"
-                  placeholder="Service Rate"
-                  v-model="form.special_rate"
-                  size="md"
-                  @keypress="onlyForDecimal($event, form.special_rate)"
-                  required
-                  :class="{
-                    'is-invalid': $v.form.special_rate.$error,
-                  }"
-                  aria-describedby="special_rate-live-feedback"
-                ></b-form-input>
-                <b-form-invalid-feedback id="special_rate-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group>
-              <b-form-input
-                class="mt-3"
-                placeholder="Special Rate"
-                v-model="form.special_rate"
-                size="sm"
-              ></b-form-input>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="6">
-                <b-form-input
-                  type="number"
-                  id="publish_Rate"
-                  name="publish_Rate"
-                  class="mt-3"
-                  placeholder="Publish Rate"
-                  v-model="form.publish_Rate"
-                  size="md"
-                  @keypress="onlyForDecimal($event, form.publish_Rate)"
-                  required
-                  :class="{
-                    'is-invalid': $v.form.publish_Rate.$error,
-                  }"
-                  aria-describedby="publish_Rate-live-feedback"
-                ></b-form-input>
-                <b-form-invalid-feedback id="publish_Rate-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group>
-              <b-form-input
-                class="mt-3"
-                placeholder="Publish Rate"
-                v-model="form.publish_Rate"
-                size="sm"
-              ></b-form-input>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="6">
-                <b-form-input
-                  type="number"
-                  id="reuters_rate"
-                  name="reuters_rate"
-                  class="mt-3"
-                  placeholder="Reuters Rate"
-                  v-model="form.reuters_rate"
-                  size="md"
-                  @keypress="onlyForDecimal($event, form.reuters_rate)"
-                  required
-                  :class="{
-                    'is-invalid': $v.form.reuters_rate.$error,
-                  }"
-                  aria-describedby="reuters_rate-live-feedback"
-                ></b-form-input>
-                <b-form-invalid-feedback id="reuters_rate-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group>
-              <b-form-input
-                class="mt-3"
-                placeholder="Reuters Rate"
-                v-model="form.reuters_rate"
-                size="sm"
-              ></b-form-input>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="6">
-                <b-form-input
-                  type="number"
-                  id="paying_amount_min"
-                  name="paying_amount_min"
-                  class="mt-3"
-                  placeholder="Paying Amount(min)"
-                  v-model="form.paying_amount_min"
-                  size="md"
-                  @keypress="onlyForDecimal($event, form.paying_amount_min)"
-                  required
-                  :class="{
-                    'is-invalid': $v.form.paying_amount_min.$error,
-                  }"
-                  aria-describedby="paying_amount_min-live-feedback"
-                ></b-form-input>
-                <b-form-invalid-feedback id="paying_amount_min-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group>
-              <b-form-input
-                class="mt-3"
-                placeholder="Paying Amount(min)"
-                v-model="form.paying_amount_min"
-                size="sm"
-              ></b-form-input>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="6">
-                <b-form-input
-                  type="number"
-                  id="paying_amount_max"
-                  name="paying_amount_max"
-                  class="mt-3"
-                  placeholder="Paying Amount(max)"
-                  v-model="form.paying_amount_max"
-                  size="md"
-                  @keypress="onlyForDecimal($event, form.paying_amount_max)"
-                  required
-                  :class="{
-                    'is-invalid': $v.form.paying_amount_max.$error,
-                  }"
-                  aria-describedby="paying_amount_max-live-feedback"
-                ></b-form-input>
-                <b-form-invalid-feedback id="paying_amount_max-live-feedback">
-                  This is a required field.
-                </b-form-invalid-feedback>
-                <!-- <b-form-group>
-              <b-form-input
-                class="mt-3"
-                placeholder="Paying Amount(max)"
-                v-model="form.paying_amount_max"
-                size="sm"
-                rows="3"
-                max-rows="6"
-              ></b-form-input>
-            </b-form-group> -->
-              </b-col>
-              <b-col cols="6">
-                <b-form-group id="fieldset-1" label-for="example-datepicker">
-                  <b-form-datepicker
-                    class="mt-3"
-                    id="example-datepicker"
-                    v-model="form.processing_date"
-                    size="sm"
-                  ></b-form-datepicker>
+                <b-form-group label="Company">
+                  <v-select
+                    :options="companyList"
+                    label="registered_business_name"
+                    v-model="form.company"
+                    :reduce="(item) => item.business_user_kyc_id"
+                    required
+                    :clearable="false"
+                    :class="{
+                      'is-invalid': $v.form.company.$error,
+                    }"
+                    aria-describedby="company-live-feedback"
+                  >
+                  </v-select>
+                  <b-form-invalid-feedback id="company-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback>
                 </b-form-group>
+              </b-col>
+              <b-col cols="12">
+                <b-form-group label="Currency Type"
+                  ><v-select
+                    :options="currencyList"
+                    label="currency_code"
+                    v-model="form.currency_type"
+                    :reduce="(item) => item.id"
+                    required
+                    @input="onChangeCurrency()"
+                    :clearable="false"
+                    :class="{
+                      'is-invalid': $v.form.currency_type.$error,
+                    }"
+                    aria-describedby="currency_type-live-feedback"
+                  >
+                  </v-select>
+                  <b-form-invalid-feedback id="currency_type-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Service Rate">
+                  <b-form-input
+                    type="number"
+                    id="special_rate"
+                    name="special_rate"
+                    v-model="form.special_rate"
+                    size="md"
+                    @keypress="onlyForDecimal($event, form.special_rate)"
+                    required
+                    :class="{
+                      'is-invalid': $v.form.special_rate.$error,
+                    }"
+                    aria-describedby="special_rate-live-feedback"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="special_rate-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Publish Rate">
+                  <label>
+                    {{ this.publishRate == null ? "N/A" : this.publishRate.publish_rate }}
+                  </label>
+                  <!-- <b-form-input
+                    type="number"
+                    id="publish_Rate"
+                    name="publish_Rate"
+                    v-model="form.publish_Rate"
+                    size="md"
+                    @keypress="onlyForDecimal($event, form.publish_Rate)"
+                    required
+                    :class="{
+                      'is-invalid': $v.form.publish_Rate.$error,
+                    }"
+                    aria-describedby="publish_Rate-live-feedback"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="publish_Rate-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback> -->
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Reuters Rate">
+
+                  <label>
+                    {{ this.publishRate == null ? "N/A" : this.publishRate.reuters_rate }}
+                  </label>
+                  <!-- <b-form-input
+                    type="number"
+                    id="reuters_rate"
+                    name="reuters_rate"
+                    v-model="form.reuters_rate"
+                    size="md"
+                    @keypress="onlyForDecimal($event, form.reuters_rate)"
+                    required
+                    :class="{
+                      'is-invalid': $v.form.reuters_rate.$error,
+                    }"
+                    aria-describedby="reuters_rate-live-feedback"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="reuters_rate-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback>-->
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Paying Amount(min)">
+                  <b-form-input
+                    type="number"
+                    id="paying_amount_min"
+                    name="paying_amount_min"
+                    v-model="form.paying_amount_min"
+                    size="md"
+                    @keypress="onlyForDecimal($event, form.paying_amount_min)"
+                    required
+                    :class="{
+                      'is-invalid': $v.form.paying_amount_min.$error,
+                    }"
+                    aria-describedby="paying_amount_min-live-feedback"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="paying_amount_min-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback></b-form-group
+                >
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Paying Amount(max)"
+                  ><b-form-input
+                    type="number"
+                    id="paying_amount_max"
+                    name="paying_amount_max"
+                    v-model="form.paying_amount_max"
+                    size="md"
+                    @keypress="onlyForDecimal($event, form.paying_amount_max)"
+                    required
+                    :class="{
+                      'is-invalid': $v.form.paying_amount_max.$error,
+                    }"
+                    aria-describedby="paying_amount_max-live-feedback"
+                  ></b-form-input>
+                  <b-form-invalid-feedback id="paying_amount_max-live-feedback">
+                    This is a required field.
+                  </b-form-invalid-feedback>
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Rates Date">
+                  <b-form-group id="fieldset-1" label-for="example-datepicker">
+                    <b-form-datepicker
+                      id="example-datepicker"
+                      v-model="form.processing_date"
+                      size="sm"
+                    ></b-form-datepicker> </b-form-group
+                ></b-form-group>
               </b-col>
             </div>
             <b-row class="float-right">
@@ -334,11 +257,6 @@
           </b-form>
         </b-row>
       </b-card>
-      <!-- <template #modal-footer="{ manage }">
-        <b-button size="lg" variant="primary" @click="manage()">
-          Add Special Rates
-        </b-button>
-      </template> -->
     </b-modal>
   </div>
 </template>
@@ -349,6 +267,7 @@ import { validationMixin } from "@/mixins";
 import { getAll as getCompanyList } from "@/api/businessUserKYC";
 import { getAllCountry } from "@/api/exchangeRates";
 import { getAll as list, getByCompany, save, update } from "@/api/specialRates";
+import { getPublishRateByCurrency } from "@/api/dailyForex";
 export default {
   mixins: [validationMixin],
   data() {
@@ -367,10 +286,9 @@ export default {
       error: null,
       companyList: [],
       currencyList: [],
-
       payoutPartnerList: [],
       paymentModeList: [],
-
+      publishRate: null,
       items: [],
       defaultForm: {
         id: 0,
@@ -471,6 +389,7 @@ export default {
         $event.preventDefault();
       }
     },
+
     resetForm() {
       this.form = Object.assign({}, this.defaultForm);
       this.$v.$reset();
@@ -483,6 +402,22 @@ export default {
         this.items = res.data.data;
         debugger; // eslint-disable-line no-debugger
       });
+    },
+    onChangeCurrency() {
+      debugger; // eslint-disable-line no-debugger
+
+      let result = this.currencyList.find(
+        (el) => el.id === this.form.currency_type
+      );
+      getPublishRateByCurrency(result.currency_code)
+        .then((res) => {
+          debugger; // eslint-disable-line no-debugger
+          this.publishRate = res.data.data[0];
+        })
+        .catch((error) => {
+          this.isError = true;
+          this.error = error.message;
+        });
     },
     edit(item) {
       if (item.id > 0) {

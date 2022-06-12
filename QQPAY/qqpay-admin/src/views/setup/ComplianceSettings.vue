@@ -51,112 +51,121 @@
         </b-alert>
       </b-col>
     </b-row>
-    <b-row v-if="showParameter" class="mt-3">
+    <b-row v-if="showParameter">
       <b-col cols="3">
-        <b-form-input
-          id="parameter_name"
-          name="parameter_name"
-          size="sm"
-          placeholder="Parameter"
-          v-model="parameterForm.parameter_name"
-          required
-          :class="{
-            'is-invalid': $v.parameterForm.parameter_name.$error,
-          }"
-          aria-describedby="parameter_name-live-feedback"
-        ></b-form-input>
-        <b-form-invalid-feedback id="parameter_name-live-feedback">
-          This is a required field.
-        </b-form-invalid-feedback>
+        <b-form-group label="Parameter">
+          <b-form-input
+            id="parameter_name"
+            name="parameter_name"
+            size="sm"
+            v-model="parameterForm.parameter_name"
+            required
+            :class="{
+              'is-invalid': $v.parameterForm.parameter_name.$error,
+            }"
+            aria-describedby="parameter_name-live-feedback"
+          ></b-form-input>
+          <b-form-invalid-feedback id="parameter_name-live-feedback">
+            This is a required field.
+          </b-form-invalid-feedback>
+        </b-form-group>
       </b-col>
       <b-col cols="3">
-        <b-button
-          class="float-left"
-          variant="primary"
-          size="sm"
-          @click="manageParameter()"
-          >Save</b-button
-        >
-        <b-button
-          class="float-left ml-2"
-          variant="primary"
-          size="sm"
-          @click="cancelParameter()"
-          >cancel</b-button
-        >
+        <b-form-group style="margin-top: 31px">
+          <b-button
+            class="float-left"
+            variant="primary"
+            size="sm"
+            @click="manageParameter()"
+            >Save</b-button
+          >
+          <b-button
+            class="float-left ml-2"
+            variant="primary"
+            size="sm"
+            @click="cancelParameter()"
+            >cancel</b-button
+          >
+        </b-form-group>
       </b-col>
     </b-row>
-    <b-row v-if="showValue" class="mt-3">
+    <b-row v-if="showValue">
       <b-col cols="3">
-        <b-form-input
-          id="value"
-          name="value"
-          size="sm"
-          placeholder="Value"
-          v-model="form.value"
-          required
-          :class="{
-            'is-invalid': $v.form.value.$error,
-          }"
-          aria-describedby="value-live-feedback"
-        ></b-form-input>
-        <b-form-invalid-feedback id="value-live-feedback">
-          This is a required field.
-        </b-form-invalid-feedback>
+        <b-form-group label="Value">
+          <b-form-input
+            id="value"
+            name="value"
+            size="sm"
+            v-model="form.value"
+            required
+            :class="{
+              'is-invalid': $v.form.value.$error,
+            }"
+            aria-describedby="value-live-feedback"
+          ></b-form-input>
+          <b-form-invalid-feedback id="value-live-feedback">
+            This is a required field.
+          </b-form-invalid-feedback>
+        </b-form-group>
       </b-col>
       <b-col cols="3">
-        <v-select
-          :options="parameterList"
-          label="parameter_name"
-          v-model="form.parameter_code"
-          :reduce="(item) => item.id"
-          placeholder="Available options here"
-          required
-          :clearable="false"
-          :class="{
-            'is-invalid': $v.form.parameter_code.$error,
-          }"
-          aria-describedby="parameter_code-live-feedback"
-        >
-        </v-select>
-        <b-form-invalid-feedback id="parameter_code-live-feedback">
-          This is a required field.
-        </b-form-invalid-feedback>
+        <b-form-group label="Select Parameter">
+          <v-select
+            :options="parameterList"
+            label="parameter_name"
+            v-model="form.parameter_code"
+            :reduce="(item) => item.id"
+            required
+            :clearable="false"
+            :class="{
+              'is-invalid': $v.form.parameter_code.$error,
+            }"
+            aria-describedby="parameter_code-live-feedback"
+          >
+          </v-select>
+          <b-form-invalid-feedback id="parameter_code-live-feedback">
+            This is a required field.
+          </b-form-invalid-feedback>
+        </b-form-group>
       </b-col>
       <b-col cols="3">
-        <v-select
-          :options="scoreList"
-          label="value"
-          v-model="form.score"
-          :reduce="(item) => item.id"
-          placeholder="Available options here"
-          required
-          :clearable="false"
-          :class="{
-            'is-invalid': $v.form.score.$error,
-          }"
-          aria-describedby="score-live-feedback"
-        >
-        </v-select>
-        <b-form-invalid-feedback id="score-live-feedback">
-          This is a required field.
-        </b-form-invalid-feedback>
+        <b-form-group label="Select Score"
+          ><v-select
+            :options="scoreList"
+            label="value"
+            v-model="form.score"
+            :reduce="(item) => item.id"
+            placeholder="Available options here"
+            required
+            :clearable="false"
+            :class="{
+              'is-invalid': $v.form.score.$error,
+            }"
+            aria-describedby="score-live-feedback"
+          >
+          </v-select>
+          <b-form-invalid-feedback id="score-live-feedback">
+            This is a required field.
+          </b-form-invalid-feedback>
+        </b-form-group>
       </b-col>
       <b-col cols="3">
-        <b-button
-          class="float-left"
-          variant="primary"
-          size="sm"
-          @click="manageValue()"
-          >Save</b-button
-        >
-        <b-button
-          class="float-left ml-2"
-          variant="primary"
-          size="sm"
-          @click="cancelValue()"
-          >cancel</b-button
-        >
+        <b-form-group style="margin-top: 31px">
+          <b-button
+            class="float-left"
+            variant="primary"
+            size="sm"
+            @click="manageValue()"
+            >Save</b-button
+          >
+          <b-button
+            class="float-left ml-2"
+            variant="primary"
+            size="sm"
+            @click="cancelValue()"
+            >cancel</b-button
+          >
+        </b-form-group>
       </b-col>
     </b-row>
     <div>
@@ -178,11 +187,14 @@
                 <b-form-checkbox
                   v-model="row.item.is_active"
                   switch
-                  class="checkbox"
+                  class="
+                     color-checkbox
+                  "
                   @change="onChangeActive(row.item)"
                 >
-                </b-form-checkbox> </template
-              ><template #cell(actions)="row" size="sm">
+                </b-form-checkbox>
+              </template>
+              <template #cell(actions)="row" size="sm">
                 <div class="action-div">
                   <b-button
                     variant="light"
@@ -195,7 +207,7 @@
                   <b-button
                     variant="light"
                     size="sm"
-                    @click="delete row.item"
+                    @click="onDelete(row.item)"
                     class="mr-2 expand-btn"
                   >
                     <b-icon icon="trash"></b-icon>
@@ -222,6 +234,7 @@ import {
   updateParameter,
   saveValue,
   updateValue,
+  onDelete,
 } from "@/api/compliance";
 export default {
   mixins: [validationMixin],
@@ -353,6 +366,16 @@ export default {
           });
       }
     },
+    onDelete(item) {
+      onDelete(item.parameter_code, item.value_code)
+        .then(() => {
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.isError = true;
+          this.error = error.message;
+        });
+    },
     manageParameter() {
       debugger; // eslint-disable-line no-debugger
       this.$v.parameterForm.$touch();
@@ -461,6 +484,39 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+// .custom-control-input:checked ~ .custom-control-label::before {
+//   color: #fff;
+//   border-color: #1eb795 !important;
+//   background-color: #1eb795 !important;
+// }
+// .custom-control-label::before {
+//   color: #fff;
+//   border-color: #1eb795 !important;
+//   background-color: #1eb795 !important;
+// }
+/*sets the background color of
+          switch to violet when it is active*/
+.custom-control-switch:active ~ .custom-control-label::before {
+  background-color: violet !important;
+  border-color: violet !important;
+}
+.custom-control-switch-label::before {
+  border-color: $green !important;
+  background-color: $green !important;
+}
+#checkboxes input[type=checkbox]:checked ::before{
+  color: #fff;
+  border-color: #1eb795 !important;
+  background-color: #1eb795 !important;
+}
+// .custom-control-switch {
+// }
+// .custom-control-label {
+//   background-color: #1eb795 !important;
+// }
+// .custom-control {
+//   background-color: grey;
+// }
 .menu-sec {
   margin-top: 0.5rem;
 }

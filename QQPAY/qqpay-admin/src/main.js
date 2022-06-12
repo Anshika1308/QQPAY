@@ -5,15 +5,16 @@ import { store } from "./store";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+import { i18n } from './locale/index';
+import Vuelidate from 'vuelidate';
 
 
+Vue.use(Vuelidate)
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
 //vuelidate plugin
-import Vuelidate from 'vuelidate'
-Vue.use(Vuelidate)
 
 //vue2-select plugin
 import vSelect from 'vue-select'
@@ -24,5 +25,6 @@ new Vue({
   router,
   store,
   validations: {},
+  i18n,
   render: (h) => h(App)
 }).$mount("#app");

@@ -63,8 +63,9 @@ export default {
   },
   methods: {
     logout(){
+      localStorage.removeItem('isPermitted');
       this.$router.push('login')
-    }
+    },
   }
 };
 </script>
