@@ -7,15 +7,15 @@
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Partner" :error="errors.partner_id"/>
               <b-form-group id="input-group-partner-type" label="Partner" required label-for="input-partner-type">
-                <b-form-select v-model="partnerSelected" :options="partnerType" class="mb-3 form-control"/>
+                <b-form-select v-model="partnerSelected" :options="partnerType" class="mb-3 form-control" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Payment Method"/>
-              <b-form-group id="input-group-payment-method" label="Payment Method" required
+              <b-form-group id="input-group-payment-method" label="Payment Method"
                             label-for="input-payment-method">
                 <b-form-select v-model="paymentMethodSelected" :options="paymentMethodOptions"
-                               class="mb-3 form-control"/>
+                               class="mb-3 form-control" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
@@ -23,29 +23,28 @@
               <b-form-group id="input-group-service-charge-typ" label="Service Charge Type"
                             label-for="input-service-charge-type">
                 <b-form-select v-model="selectedServiceCharge" :options="selectedServiceChargeType"
-                               class="mb-3 form-control" @change="toggleUpperLimit"/>
+                               class="mb-3 form-control" @change="toggleUpperLimit" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Service Charge"/>
               <b-form-group id="input-group-service-charge" label="Service Charge" label-for="input-service-charge">
-                <b-form-input id="input-contact-service-charge" v-model="serviceCharge" type="number"/>
+                <b-form-input id="input-contact-service-charge" v-model="serviceCharge" type="number" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Country"/>
               <b-form-group id="input-group-currency" label="Country" label-for="input-currency">
-                <b-form-select v-model="selectedCountry" :options="countryOptions" class="mb-3 form-control"/>
+                <b-form-select v-model="selectedCountry" :options="countryOptions" class="mb-3 form-control" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Currency"/>
               <b-form-group id="input-group-currency" label="Currency" label-for="input-currency">
-                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control"/>
+                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control" required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
-              <UpdateLabel label="Upper Limit"/>
               <b-form-group id="input-group-upper-limit" label="Upper Limit" label-for="input-group-upper-limit">
                 <b-form-input id="input-group-upper-limit" v-model="upperLimit" type="number"
                               :disabled="isDisableUpperLimit"/>
