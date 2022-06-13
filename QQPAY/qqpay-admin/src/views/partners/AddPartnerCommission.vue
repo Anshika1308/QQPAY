@@ -41,7 +41,8 @@
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Currency"/>
               <b-form-group id="input-group-currency" label="Currency" label-for="input-currency">
-                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control" required/>
+                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control"
+                               required/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
@@ -80,6 +81,7 @@ import UpdateLabel from "@/components/reusable/UpdateLabel";
 
 export default {
   name: 'AddPartnerCommission',
+  props: ["partner_id"],
   components: {
     UpdateLabel,
   },
@@ -87,7 +89,7 @@ export default {
     return {
       errors: {},
       isDisableUpperLimit: false,
-      partnerSelected: null,
+      partnerSelected: this.partner_id,
       partnerType: [
         {value: null, text: 'Please select an option', disabled: true}
       ],
@@ -134,6 +136,8 @@ export default {
       if (res.data.status_code === 200) {
         await this.$emit("getPartnerCommissions")
         this.$bvModal.hide("partner-commission-modal")
+        this.$bvModal.hide("add-default-partner-commission")
+        this.$bvModal.hide("update-partner-modal")
       } else {
         res.data.detail?.map((value) => {
           this.errors[`${value.loc[1]}`] = `${value.msg}`

@@ -39,4 +39,7 @@ export default {
   background-color: #ff6b00 !important;
 
 }
+.table td, .table th {
+    min-width: 100px !important;
+}
 </style>
