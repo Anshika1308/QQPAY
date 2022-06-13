@@ -449,7 +449,7 @@ export default {
         this.$store.commit("app/set_selected_deal_id", null);
       }
       if (sub_menu === 'funding') {
-        this.$store.commit("app/set_selected_Settlement", null);
+        this.$store.commit("app/set_selected_settlement_id", null);
       }
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;

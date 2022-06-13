@@ -379,7 +379,6 @@ export default {
   },
   watch: {
     getAmtAndRate: function (newValue) {
-      console.log(newValue, 'new value')
       if (newValue.amt >= 0 && newValue.rate >= 0) {
         this.temp_deal.lcy_amount = (
           newValue.amt *
@@ -610,7 +609,7 @@ export default {
       this.resetTempDeals();
       this.updateTrigger = false;
       this.temp_deal.status = "open";
-      this.temp_deal.no_of_settlements = 1;
+      this.temp_deal.no_of_settlements = 0;
     },
     resetTempDeals() {
       this.temp_deal = {
