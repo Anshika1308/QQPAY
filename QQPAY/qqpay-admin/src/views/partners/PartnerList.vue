@@ -44,7 +44,7 @@
             <div class="mb-3">Processing...</div>
           </div>
           <div v-else ref="dialog" tabindex="-1" role="dialog" aria-modal="false" aria-labelledby="form-confirm-label"
-            class="text-center p-3">
+               class="text-center p-3">
             <p><strong id="form-confirm-label">Are you sure you want to delete?</strong></p>
             <div class="d-flex">
               <b-button class="mr-3 search-btn" @click="onCancel">
@@ -59,7 +59,7 @@
     <b-modal id="add-partner-modal" hide-footer size="xl" title="Add Partner">
       <AddPartner @getPartners="getPartners" />
     </b-modal>
-    <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner Commission">
+    <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner">
       <UpdatePartner :partner_id="updateSelectedPartner" @getPartners="getPartners" />
     </b-modal>
   </div>
@@ -250,7 +250,7 @@ export default {
     border-color: $primary;
     width: 100%;
     background: transparent !important;
-    color: $primary  !important;
+    color: $primary !important;
   }
 }
 
@@ -264,6 +264,12 @@ export default {
   }
 }
 
+.add-partner-commission {
+  position: absolute;
+  z-index: 99;
+  right: 40px;
+  top: 40px;
+}
 
 .compliance-table {
   text-align: center;

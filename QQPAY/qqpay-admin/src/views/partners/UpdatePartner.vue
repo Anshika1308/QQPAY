@@ -1,5 +1,6 @@
 <template>
   <div class="add-partner">
+    <b-button class="search-btn" @click="handleDefaultPartnerCommissionAdd">Add Partner Commission</b-button>
     <b-container>
       <form @submit.prevent="handleSubmit">
         <b-card class="mt-3" header="Contact Information">
@@ -382,6 +383,9 @@
         </b-row>
       </form>
     </b-container>
+    <b-modal id="add-default-partner-commission" hide-footer size="xl" title="Add Partner">
+      <AddPartnerCommission :partner_id="partner_id"/>
+    </b-modal>
 
   </div>
 </template>
@@ -393,11 +397,13 @@ import {getApiData, putApiData, transactionGetApiData} from "@/helpers/AxiosInst
 import APIS from "@/constants/EndPoint";
 import {responseHandler} from "@/helpers/globalFunctions";
 import UpdateLabel from "@/components/reusable/UpdateLabel";
+import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
 
 export default {
   name: 'UpdatePartner',
   props: ["partner_id"],
   components: {
+    AddPartnerCommission,
     UpdateLabel,
   },
   data() {
@@ -539,7 +545,9 @@ export default {
     }
   },
   methods: {
-
+    handleDefaultPartnerCommissionAdd() {
+      this.$bvModal.show("add-default-partner-commission")
+    },
     async handleSubmit() {
       const formData = JSON.stringify({
         contact_person_1: this.contactInformation.contactPerson1,
@@ -717,5 +725,12 @@ export default {
 .bv-no-focus-ring {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+}
+.search-btn {
+  background-color: $primary;
+  position: absolute;
+  right: 40px;
+  z-index: 99;
+  top: 40px;
 }
 </style>
