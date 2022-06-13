@@ -13,9 +13,9 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     config.baseURL = store.getters.config.VUE_APP_BASE_API;
-    console.log("token in request",this.token);
+    // console.log("token in request",this.token);
 
-    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxMzg2ODgsInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.ZwzomY-yva65lqBcGIyW5jdmbRL1ThYCuJS2KDcpX6o'
+    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxNzgxNzEsInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.pEloeWIz5MiS68Ti_34M_Q9i1-Wlgs_595ctTIcuqZ4'
     config.headers['Authorization'] = 'Bearer ' + authToken
     
     const port  = config.url.slice(0, 4);

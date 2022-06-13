@@ -1,7 +1,7 @@
 // const token = localStorage.getItem('token');
 const state = {
     config: null,
-    token: null,
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxNzgxNzEsInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.pEloeWIz5MiS68Ti_34M_Q9i1-Wlgs_595ctTIcuqZ4',
     base_url: 'http://3.111.140.40:8001/api/v1/',
     selected_deal_id: null, // to be used in settlement page
     selected_Settlement: null, // to be used in prefund page
