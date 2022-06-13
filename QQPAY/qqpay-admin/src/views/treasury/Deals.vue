@@ -56,10 +56,10 @@
  
     >
       <template #cell(item)="row">
-        <b>{{ row.item.deal_type }} </b>
+        {{ row.item.deal_type }}
       </template>
       <template #cell(deal_date)="row"
-        ><b>{{ format(row.item.deal_date) }}</b>
+        >{{ format(row.item.deal_date) }}
       </template>
       <template #cell(actions)="row" size="sm">
         <div class="action-div">
@@ -395,9 +395,9 @@ export default {
       dealsTableData: null,
       updateTrigger: false,
       dealOption: [
-        { value: 'i', text: 'Inward' },
-        { value: 'o', text: 'Outward' },
-        { value: 'irh', text: 'IRH' },        
+        { value: 'I', text: 'Inward' },
+        { value: 'O', text: 'Outward' },
+        { value: 'IRH', text: 'IRH' },        
       ],
       fundSourceOption: [
         { value: 'Public Bank MYR', text: 'Public Bank MYR' }        
@@ -558,7 +558,7 @@ export default {
             responseHandler(response.data.status_code, this, response.data.message)
             // response.data.data[0]['status'] = "open";
             // response.data.data[0]['no_of_settlements'] = 1;
-            this.items.push(response.data.data[0]);
+            this.items.unshift(response.data.data[0]);
           })
           .catch((err) => {
             responseHandler(err.data.status_code, this, err.data.message)
@@ -638,7 +638,7 @@ export default {
     },
     newSettlementClicked(selectedRow) {
       this.$emit('openTab', 'settlements')
-      this.$store.commit("app/set_selected_deal", selectedRow);
+      this.$store.commit("app/set_selected_deal_id", selectedRow.deal_id);
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character
