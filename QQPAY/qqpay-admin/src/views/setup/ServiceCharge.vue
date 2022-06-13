@@ -133,7 +133,7 @@
     </div>
     <b-modal
       id="scs-country-wise"
-      ref="serviceCharge-modal"
+      ref="charge-modal"
       title="Service Charge Setup"
       size="md"
       variant="primary"
@@ -585,7 +585,7 @@ export default {
       ],
       isError: false,
       error: null,
-      tabIndex: 1,
+      tabIndex: 0,
       defaultForm: {
         country_name: null,
         search_user: null,
@@ -663,7 +663,7 @@ export default {
         required,
       },
       country: {
-        required: requiredIf((prop) => prop.payment_partner == null)
+        required: requiredIf((prop) => prop.payment_partner == null),
       },
       service_charge_type: {
         required,
@@ -762,7 +762,7 @@ export default {
         this.countryWiseForm.qqpay_commission;
     },
     edit(item) {
-      if (item.id > 0) {
+      if (item != null) {
         getById(item.id)
           .then((res) => {
             this.countryWiseForm = Object.assign({}, res.data.data[0]);
@@ -775,7 +775,7 @@ export default {
             } else {
               this.tabIndex = 1;
             }
-            this.$refs["serviceCharge-modal"].show();
+            this.$refs["charge-modal"].show();
           })
           .catch((error) => {
             this.isError = true;
@@ -786,6 +786,7 @@ export default {
     onChangeActive(item) {
       update(item)
         .then((res) => {
+          this.$refs["charge-modal"].hide();
           console.log(res);
           this.resetForm();
         })
@@ -821,6 +822,7 @@ export default {
         debugger; // eslint-disable-line no-debugger
         update(this.countryWiseForm)
           .then((res) => {
+            this.$refs["charge-modal"].hide();
             console.log(res);
             this.resetForm();
           })
@@ -835,6 +837,7 @@ export default {
         debugger; // eslint-disable-line no-debugger
         save(this.countryWiseForm)
           .then((res) => {
+            this.$refs["charge-modal"].hide();
             console.log(res);
             this.resetForm();
           })
