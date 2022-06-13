@@ -27,7 +27,9 @@ export const accessToken = () => {
   const authToken = JSON.parse(getKey('userAuth'));
   console.log(authToken);
   // let {accessToken} = authToken;
-  const token = localStorage.getItem('token');
-  let accessToken = token
+
+  // const token = null;
+  
+  let accessToken = this.token
   return accessToken
 }

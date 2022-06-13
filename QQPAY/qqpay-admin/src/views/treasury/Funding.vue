@@ -123,10 +123,10 @@
       class="align-middle"
     >
       <template #cell(payout_partner)="row">
-        <b>{{ row.item.payout_partner }} </b>
+        {{ row.item.payout_partner }}
       </template>
       <template #cell(funding_date)="row"
-        ><b>{{ row.item.funding_date }}</b>
+        >{{ row.item.funding_date }}
       </template>
       <template #cell(actions)="row" size="sm">
         <div class="action-div">
@@ -196,6 +196,13 @@
                         class="d-flex justify-content-between align-items-center"
                       >
 
+                      <label>Bank Name</label>
+                        <label>{{ row.item.bank_name }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item
+                        class="d-flex justify-content-between align-items-center"
+                      >
+
                       <label>created_by</label>
                         <label>{{ row.item.created_by }}</label>
                       </b-list-group-item>
@@ -260,11 +267,16 @@
       <b-card header="Funding Details" header-tag="header">
         <b-row>
           <b-col>
-               <b-form-group label="Payout Partner">
-              <b-form-input
+            <b-form-group label="Payout Partner">
+              <!-- <b-form-input
                 v-model="temp_funding.payout_partner"
                 size="sm"
-              ></b-form-input>
+              ></b-form-input> -->
+              <b-form-select
+                :v-model="temp_funding.payout_partner"
+                :options="ppOptions"
+                @change="onChangePPoptions($event)"
+              ></b-form-select>
             </b-form-group>
             
           </b-col>
@@ -273,6 +285,7 @@
               <b-form-input
                 v-model="temp_funding.coll_ccy_pay_ccy"
                 size="sm"
+                disabled
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -383,9 +396,9 @@
            </b-col> 
 
            <b-col>
-            <b-form-group label="Bank">
+            <b-form-group label="Bank Name">
               <b-form-input
-                v-model="temp_funding.Bank"
+                v-model="temp_funding.bank_name"
                 size="sm"
               ></b-form-input>
             </b-form-group>
@@ -410,6 +423,7 @@ import { mapGetters } from "vuex";
 import axios from "axios";
 import {responseHandler} from "@/helpers/globalFunctions";
 
+
 export default {
   name: "Funding",
   components: {
@@ -421,6 +435,7 @@ export default {
     } else {
       this.getFunds();
     }
+    this.getPPdetails();
   },
   computed: {
     ...mapGetters([
@@ -432,6 +447,8 @@ export default {
   data() {
     return {
       updateTrigger: false,
+      ppOptions: null,
+      base_url_p8002: 'http://3.111.140.40:8002/api/v1/',
       filter: null,
       deal_details: [
         {
@@ -505,6 +522,7 @@ export default {
           parent_lcy_rate: "",
 
           bank_charges: "",
+          bank_name: ""
 
 
 
@@ -657,7 +675,7 @@ export default {
           })
           .then((response) => {
             responseHandler(response.data.status_code, this, response.data.message)
-            this.items.push(response.data.data[0]);
+            this.items.unshift(response.data.data[0]);
           })
           .catch((err) => {
             responseHandler(err.data.status_code, this, err.data.message)
@@ -707,7 +725,42 @@ export default {
       if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
       // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
       else e.preventDefault(); // If not match, don't add to input text
-    }
+    },
+    async getPPdetails() {
+
+      axios
+        .get(this.base_url_p8002 + "partner_details/get-partners-limited-field", {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // responseHandler(response.data.status_code, this, response.data.message)
+          // this.selected_deal = response.data.data;
+          this.formatPPoptions(response.data.data)
+        })
+        .catch((e) => {
+          responseHandler(e.status_code, this, e.message)
+          console.log(e);
+        });
+    },
+    formatPPoptions(data) {
+      if (data && data.length > 0) {
+        this.ppOptions = [];
+        data.forEach(ele => {
+          this.ppOptions.push({
+            text: ele.name_of_employer,
+            value: ele.name_of_employer,
+            pp_ccy: 'Test'        // Remove after api chnage and uncomment below
+            // pp_ccy: ele.pp_ccy
+          })
+        });
+      }
+    },
+    onChangePPoptions(eve) {
+      console.log(eve)
+      this.temp_funding.coll_ccy_pay_ccy = this.ppOptions.find(ele => ele.value === eve)?.pp_ccy;
+    },
   },
 };
 </script>

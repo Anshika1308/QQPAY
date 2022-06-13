@@ -162,6 +162,28 @@
                       </template>
                       <ServiceCharge />
                     </b-tab>
+                    <b-tab
+                      v-if="tab_show.dealsbu"
+                      :active="tab_active.dealsbu"
+                    >
+                      <template #title>
+                        <b-icon
+                          icon="diagram3-fill"
+                          aria-hidden="true"
+                        ></b-icon>
+                        DealsBusiness
+                        <b-button
+                          variant="outline-light"
+                          size="sm"
+                          @click="closeTab('dealsbu')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <DealsBu @openTab="openTab"
+                    /></b-tab>
 
                     <b-tab v-if="tab_show.specialRates" :active="tab_active.specialRates">
                       <template #title>
@@ -247,6 +269,7 @@ import ManageScore from "@/views/setup/ManageScore.vue";
 import Service from "./ServiceCharge/Service.vue";
 import PPComm from "./ServiceCharge/PPComm.vue";
 import ComplianceSettings from "@/views/setup/ComplianceSettings.vue";
+import DealsBu from "./treasury/DealsBu.vue";
 export default {
   name: "Home",
   components: {
@@ -268,6 +291,7 @@ export default {
     Service,
     PPComm,
     ComplianceSettings,
+    DealsBu
   },
   data() {
     return {
@@ -287,6 +311,7 @@ export default {
         manageScore: false,
         Service: true,
         PPComm: true,
+        dealsbu: false,
       },
       tab_active: {
         deals: false,
@@ -301,7 +326,8 @@ export default {
         manageScore: false,
         Service: false,
         PPComm: false,
-        user: false
+        user: false,
+        dealsbu: false,
       },
       menus: [
         {
@@ -336,6 +362,10 @@ export default {
             {
               title: "Deals",
               value: "deals",
+            },
+            {
+              title: "Deals Business",
+              value: "dealsbu",
             },
             {
               title: "Settlements",
@@ -415,9 +445,8 @@ export default {
   },
   methods: {
     openTab(sub_menu) {
-      console.log(sub_menu, "test")
       if (sub_menu === 'settlements') {
-        this.$store.commit("app/set_selected_deal", null);
+        this.$store.commit("app/set_selected_deal_id", null);
       }
       if (sub_menu === 'funding') {
         this.$store.commit("app/set_selected_Settlement", null);
@@ -425,12 +454,13 @@ export default {
       this.tab_show[sub_menu] = true;
       this.tab_active[sub_menu] = true;
       Object.keys(this.tab_active).forEach((v) => (this.tab_active[v] = false));
-      this.tab_active[sub_menu] = true;
+      setTimeout(() => {
+        this.tab_active[sub_menu] = true;
+      }, 10)
     },
     closeTab(sub_menu) {
       this.tab_show[sub_menu] = false;
       this.tab_active[sub_menu] = false;
-      console.log(sub_menu)
     },
   },
 };

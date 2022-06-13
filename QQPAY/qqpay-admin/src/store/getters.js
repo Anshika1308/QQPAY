@@ -10,8 +10,8 @@ export const getters = {
         console.log('state', state)
         return state.app.base_url;
     },
-    selected_deal: state => {
-        return state.app.selected_deal;
+    selected_deal_id: state => {
+        return state.app.selected_deal_id;
     },
     selected_Settlement: state => {
         return state.app.selected_Settlement;
