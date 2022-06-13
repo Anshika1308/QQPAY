@@ -76,6 +76,28 @@
       <template #cell(special_rate)="row">
         <strong>{{ row.item.special_rate }}</strong>
       </template>
+      <template #cell(is_active)="row">
+        <b-form-checkbox
+          v-model="row.item.is_active"
+          switch
+          class="checkbox"
+          variant="success"
+          @change="onChangeActive(row.item)"
+        >
+        </b-form-checkbox>
+      </template>
+      <template #cell(actions)="row">
+        <div class="action-div">
+          <b-button
+            variant="light"
+            size="sm"
+            @click="edit(row.item)"
+            class="mr-2 expand-btn"
+          >
+            <b-icon icon="pencil-square"></b-icon>
+          </b-button>
+        </div>
+      </template>
     </b-table>
     <b-modal
       id="sr-country-wise"
@@ -132,7 +154,7 @@
                 </b-form-group>
               </b-col>
               <b-col cols="6">
-                <b-form-group label="Service Rate">
+                <b-form-group label="Special Rate">
                   <b-form-input
                     type="number"
                     id="special_rate"
@@ -154,7 +176,11 @@
               <b-col cols="6">
                 <b-form-group label="Publish Rate">
                   <label>
-                    {{ this.publishRate == null ? "N/A" : this.publishRate.publish_rate }}
+                    {{
+                      this.publishRate == null
+                        ? "N/A"
+                        : this.publishRate.publish_rate
+                    }}
                   </label>
                   <!-- <b-form-input
                     type="number"
@@ -176,9 +202,12 @@
               </b-col>
               <b-col cols="6">
                 <b-form-group label="Reuters Rate">
-
                   <label>
-                    {{ this.publishRate == null ? "N/A" : this.publishRate.reuters_rate }}
+                    {{
+                      this.publishRate == null
+                        ? "N/A"
+                        : this.publishRate.reuters_rate
+                    }}
                   </label>
                   <!-- <b-form-input
                     type="number"
@@ -313,6 +342,8 @@ export default {
         { key: "max_paying_amount", label: "Paying Amount(max)" },
         { key: "processing_date", label: "Processing Date" },
         { key: "created_by", label: "Created By" },
+        { key: "is_active", label: "Active" },
+        { key: "actions", label: "Action" },
       ],
       company_options: [
         {
@@ -384,7 +415,7 @@ export default {
       if (
         val != null &&
         val.toString().indexOf(".") != -1 &&
-        val.toString().split(".")[1].length > 1
+        val.toString().split(".")[1].length > 3
       ) {
         $event.preventDefault();
       }

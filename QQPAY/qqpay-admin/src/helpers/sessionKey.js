@@ -1,3 +1,4 @@
+// import { store } from "@/store";
 //  set session key
 export function setKey(key, value) {
   window.sessionStorage.setItem(key, value);
@@ -22,7 +23,7 @@ export const removeKey = (key) => {
   }
 };
 
-
+// console.log("token dddd",store.token)
 export const accessToken = () => {
   const authToken = JSON.parse(getKey('userAuth'));
   console.log(authToken);
@@ -30,6 +31,6 @@ export const accessToken = () => {
 
   // const token = null;
   
-  let accessToken = this.token
+  let accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxMzg2ODgsInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.ZwzomY-yva65lqBcGIyW5jdmbRL1ThYCuJS2KDcpX6o'
   return accessToken
 }
