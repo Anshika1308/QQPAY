@@ -262,7 +262,7 @@
                 size="sm"
               ></b-form-input> -->
               <b-form-select
-                :v-model="temp_settlement.payout_partner"
+                v-model="temp_settlement.payout_partner"
                 :options="ppOptions"
                 @change="onChangePPoptions($event)"
               ></b-form-select>
@@ -422,7 +422,6 @@ export default {
   },
   watch: {
     selected_deal_id: function(newValue) {
-      console.log('selected deal changes', newValue);
       if (newValue) {
         this.getSelectedDealDtl();
         this.getSelecedDealSetlement();
@@ -797,8 +796,7 @@ export default {
           .catch((err) => {
             responseHandler(err.status_code, this, err.message)
             console.log('Deal not posted', err);
-        });
-        
+        });        
       }
     },
     getRequest() {
@@ -818,7 +816,7 @@ export default {
     },
     newFundClicked(selectedRow) {
       this.$emit('openTab', 'funding')
-      this.$store.commit("app/set_selected_Settlement", selectedRow);
+      this.$store.commit("app/set_selected_settlement_id", selectedRow.settl_id);
     },
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character

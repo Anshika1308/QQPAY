@@ -13,7 +13,7 @@ export const getters = {
     selected_deal_id: state => {
         return state.app.selected_deal_id;
     },
-    selected_Settlement: state => {
-        return state.app.selected_Settlement;
+    selected_settlement_id: state => {
+        return state.app.selected_settlement_id;
     },
 }
