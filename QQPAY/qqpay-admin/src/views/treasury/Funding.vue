@@ -42,7 +42,7 @@
                 class="d-flex justify-content-between align-items-center"
               >
                 <small>Fund in USD</small>
-                <small>{{ selected_Settlement.lcy_amount }} USD</small>
+                <small>{{ selected_Settlement.credit_amount }} USD</small>
               </b-list-group-item>
             </b-list-group>
           </div>
@@ -52,7 +52,7 @@
             class="menu-sec d-flex justify-content-between "
           >
             Balance:
-            <h3>{{ selected_Settlement.credit_amount }} USD</h3>
+            <h3>{{ selected_Settlement.settle_balance }} USD</h3>
           </div>
         </b-col>
       </b-row>
@@ -273,7 +273,7 @@
                 size="sm"
               ></b-form-input> -->
               <b-form-select
-                :v-model="temp_funding.payout_partner"
+                v-model="temp_funding.payout_partner"
                 :options="ppOptions"
                 @change="onChangePPoptions($event)"
               ></b-form-select>
@@ -323,17 +323,15 @@
           </b-col>
 
            <b-col>
-            <b-form-group label="Funding No" label-for="input-1">
+            <b-form-group label="Funding No" label-for="funding-number-id">
               <b-form-input
-                id="input-1"
+                id="funding-number-id"
                 v-model="temp_funding.funding_number"
                 size="sm"
               ></b-form-input>
             </b-form-group>
           </b-col>
         </b-row>
-         
-         
 
       </b-card>
     
@@ -430,23 +428,36 @@ export default {
     CountryFlag,
   },
   created() {
-    if (this.selected_Settlement) {
-      this.getSelectedSettlemntFunds()
+    if (this.selected_settlement_id) {
+      this.getSelectedSettDtl();
+      this.getSelectedSettlemntFunds();
     } else {
-      this.getFunds();
+      this.getAllFunds();
     }
     this.getPPdetails();
+  },
+  watch: {
+    selected_settlement_id: function(newValue) {
+      if (newValue) {
+        this.getSelectedSettDtl();
+        this.getSelectedSettlemntFunds();
+      } else {
+        this.selected_Settlement = null;
+        this.getAllFunds();
+      }
+    }
   },
   computed: {
     ...mapGetters([
       "token",
       "base_url",
-      "selected_Settlement"
+      "selected_settlement_id"
     ]),
   },
   data() {
     return {
       updateTrigger: false,
+      selected_Settlement: null,
       ppOptions: null,
       base_url_p8002: 'http://3.111.140.40:8002/api/v1/',
       filter: null,
@@ -606,7 +617,7 @@ export default {
     async getSelectedSettlemntFunds() {
 
       axios
-        .get(this.base_url + "prefund/get-prefund_belong/" + this.selected_Settlement.settl_id, {
+        .get(this.base_url + "prefund/get-prefund_belong/" + this.selected_settlement_id, {
           headers: {
             Authorization:  `Bearer ${this.token}`,
           },
@@ -620,7 +631,25 @@ export default {
           console.log(e);
         });
     },
-    async getFunds() {
+    async getSelectedSettDtl() {
+
+      axios
+        .get(this.base_url + "deal-settlement/get-settlement/" + this.selected_settlement_id, {
+          headers: {
+            Authorization:  `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // responseHandler(response.data.status_code, this, response.data.message)
+          // this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+          this.selected_Settlement = response.data.data[0];
+        })
+        .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
+          console.log(e);
+        });
+    },
+    async getAllFunds() {
 
       axios
         .get(this.base_url + "prefund/get-all-prefunds", {
@@ -660,6 +689,7 @@ export default {
             responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.fund_id === this.temp_funding.fund_id);
             this.items[index] = response.data.data[0];
+            this.getSelectedSettDtl();
           })
           .catch((err) => {
             responseHandler(err.data.status_code, this, err.data.message)
@@ -667,7 +697,7 @@ export default {
         });
 
       } else {
-        request.settl_id = this.selected_Settlement.settl_id; 
+        request.settl_id = this.selected_settlement_id;
         axios.post(this.base_url + "prefund/prefund-partner", request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -676,6 +706,7 @@ export default {
           .then((response) => {
             responseHandler(response.data.status_code, this, response.data.message)
             this.items.unshift(response.data.data[0]);
+            this.getSelectedSettDtl();
           })
           .catch((err) => {
             responseHandler(err.data.status_code, this, err.data.message)

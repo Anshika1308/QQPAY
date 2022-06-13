@@ -3,7 +3,7 @@ const state = {
     token: null,
     base_url: 'http://3.111.140.40:8001/api/v1/',
     selected_deal_id: null, // to be used in settlement page
-    selected_Settlement: null, // to be used in prefund page
+    selected_settlement_id: null, // to be used in prefund page
 };
 
 const mutations = {
@@ -16,8 +16,8 @@ const mutations = {
     set_selected_deal_id: (state, payload) => {
         state.selected_deal_id = payload
     },
-    set_selected_Settlement: (state, payload) => {
-        state.selected_Settlement = payload
+    set_selected_settlement_id: (state, payload) => {
+        state.selected_settlement_id = payload
     },
 };
 
