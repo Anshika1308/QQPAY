@@ -189,6 +189,7 @@
                   variant="outline-light"
                   size="sm"
                   class="wd-100p mb-2 btn-light"
+                  @click="deleteDeal(row.item)"
                 >
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                 </b-button>
@@ -634,6 +635,24 @@ export default {
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
       this.temp_deal = selectedRow;
+    },
+    deleteDeal(selectedRow) {
+      axios.delete(this.base_url + "new-contract/delete-contract/" + selectedRow.deal_id, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          responseHandler(response.data.status_code, this, response.data.message)
+          if (response.data.success) {
+            const index = this.items.findIndex(ele => ele.deal_id === selectedRow.deal_id);
+            this.items.splice(index, 1);
+          }
+        })
+        .catch((err) => {
+          responseHandler(err.data.status_code, this, err.data.message)
+          console.log('Deal not posted', err);
+      });
     },
     newSettlementClicked(selectedRow) {
       this.$emit('openTab', 'settlements')

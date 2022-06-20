@@ -246,6 +246,7 @@
                   variant="outline-light"
                   size="sm"
                   class="wd-100p mb-2 btn-light"
+                  @click="deleteFund(row.item)"
                 >
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                 </b-button>
@@ -791,6 +792,25 @@ export default {
     onChangePPoptions(eve) {
       console.log(eve)
       this.temp_funding.coll_ccy_pay_ccy = this.ppOptions.find(ele => ele.value === eve)?.pp_ccy;
+    },
+    deleteFund(selectedRow) {
+      axios.delete(this.base_url + "prefund/delete-prefund/" + selectedRow.fund_id, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          responseHandler(response.data.status_code, this, response.data.message)
+          if (response.data.success) {
+            const index = this.items.findIndex(ele => ele.fund_id === selectedRow.fund_id);
+            this.items.splice(index, 1);
+            this.getSelectedSettDtl();
+          }
+        })
+        .catch((err) => {
+          responseHandler(err.data.status_code, this, err.data.message)
+          console.log('Deal not posted', err);
+      });
     },
   },
 };
