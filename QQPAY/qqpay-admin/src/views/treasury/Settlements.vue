@@ -236,6 +236,7 @@
                     variant="outline-light"
                     size="sm"
                     class="wd-100p mb-2 btn-light"
+                    @click="deleteSettlement(row.item)"
                   >
                     <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                   </b-button>
@@ -813,6 +814,25 @@ export default {
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
       this.temp_settlement = selectedRow;
+    },
+    deleteSettlement(selectedRow) {
+      axios.delete(this.base_url + "deal-settlement/delete-settlement/" + selectedRow.settl_id, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          responseHandler(response.data.status_code, this, response.data.message)
+          if (response.data.success) {
+            const index = this.items.findIndex(ele => ele.settl_id === selectedRow.settl_id);
+            this.items.splice(index, 1);
+            this.getSelectedDealDtl();
+          }
+        })
+        .catch((err) => {
+          responseHandler(err.data.status_code, this, err.data.message)
+          console.log('Deal not posted', err);
+      });
     },
     newFundClicked(selectedRow) {
       this.$emit('openTab', 'funding')
