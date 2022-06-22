@@ -76,12 +76,34 @@
       <template #cell(special_rate)="row">
         <strong>{{ row.item.special_rate }}</strong>
       </template>
+      <template #cell(is_active)="row">
+        <b-form-checkbox
+          v-model="row.item.is_active"
+          switch
+          class="checkbox"
+          variant="success"
+          @change="onChangeActive(row.item)"
+        >
+        </b-form-checkbox>
+      </template>
+      <template #cell(actions)="row">
+        <div class="action-div">
+          <b-button
+            variant="light"
+            size="sm"
+            @click="edit(row.item)"
+            class="mr-2 expand-btn"
+          >
+            <b-icon icon="pencil-square"></b-icon>
+          </b-button>
+        </div>
+      </template>
     </b-table>
     <b-modal
       id="sr-country-wise"
-      ref="modal"
       title="Special Rates"
       size="md"
+      ref="rates-modal"
       variant="primary"
       hide-footer
       @hide="resetForm()"
@@ -132,7 +154,7 @@
                 </b-form-group>
               </b-col>
               <b-col cols="6">
-                <b-form-group label="Service Rate">
+                <b-form-group label="Special Rate">
                   <b-form-input
                     type="number"
                     id="special_rate"
@@ -154,31 +176,38 @@
               <b-col cols="6">
                 <b-form-group label="Publish Rate">
                   <label>
-                    {{ this.publishRate == null ? "N/A" : this.publishRate.publish_rate }}
+                    {{
+                      this.publishRate == null
+                        ? "N/A"
+                        : this.publishRate.publish_rate
+                    }}
                   </label>
                   <!-- <b-form-input
                     type="number"
-                    id="publish_Rate"
-                    name="publish_Rate"
-                    v-model="form.publish_Rate"
+                    id="publish_rate"
+                    name="publish_rate"
+                    v-model="form.publish_rate"
                     size="md"
-                    @keypress="onlyForDecimal($event, form.publish_Rate)"
+                    @keypress="onlyForDecimal($event, form.publish_rate)"
                     required
                     :class="{
-                      'is-invalid': $v.form.publish_Rate.$error,
+                      'is-invalid': $v.form.publish_rate.$error,
                     }"
-                    aria-describedby="publish_Rate-live-feedback"
+                    aria-describedby="publish_rate-live-feedback"
                   ></b-form-input>
-                  <b-form-invalid-feedback id="publish_Rate-live-feedback">
+                  <b-form-invalid-feedback id="publish_rate-live-feedback">
                     This is a required field.
                   </b-form-invalid-feedback> -->
                 </b-form-group>
               </b-col>
               <b-col cols="6">
                 <b-form-group label="Reuters Rate">
-
                   <label>
-                    {{ this.publishRate == null ? "N/A" : this.publishRate.reuters_rate }}
+                    {{
+                      this.publishRate == null
+                        ? "N/A"
+                        : this.publishRate.reuters_rate
+                    }}
                   </label>
                   <!-- <b-form-input
                     type="number"
@@ -295,7 +324,7 @@ export default {
         company: null,
         currency_type: null,
         special_rate: null,
-        publish_Rate: null,
+        publish_rate: null,
         reuters_rate: null,
         paying_amount_min: null,
         paying_amount_max: null,
@@ -313,6 +342,8 @@ export default {
         { key: "max_paying_amount", label: "Paying Amount(max)" },
         { key: "processing_date", label: "Processing Date" },
         { key: "created_by", label: "Created By" },
+        { key: "is_active", label: "Active" },
+        { key: "actions", label: "Action" },
       ],
       company_options: [
         {
@@ -353,7 +384,7 @@ export default {
       special_rate: {
         required,
       },
-      publish_Rate: {
+      publish_rate: {
         required,
       },
       reuters_rate: {
@@ -384,7 +415,7 @@ export default {
       if (
         val != null &&
         val.toString().indexOf(".") != -1 &&
-        val.toString().split(".")[1].length > 1
+        val.toString().split(".")[1].length > 3
       ) {
         $event.preventDefault();
       }
@@ -420,10 +451,15 @@ export default {
         });
     },
     edit(item) {
+      debugger; // eslint-disable-line no-debugger
       if (item.id > 0) {
+          debugger; // eslint-disable-line no-debugger
         getByCompany(item.id)
           .then((res) => {
+              debugger; // eslint-disable-line no-debugger
             this.form = Object.assign({}, res.data);
+
+            this.$refs["rates-modal"].show();
             console.log(res);
           })
           .catch((error) => {
@@ -435,6 +471,19 @@ export default {
     manage() {
       debugger; // eslint-disable-line no-debugger
       console.log(this.form);
+
+      if (this.publishRate == null) {
+        this.isError = true;
+        this.error = "Publish rate required";
+        return;
+      }
+      if (
+        this.publishRate.publish_rate > 0 &&
+        this.publishRate.reuters_rate > 0
+      ) {
+        this.form.publish_rate = this.publishRate.publish_rate;
+        this.form.reuters_rate = this.publishRate.reuters_rate;
+      }
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
@@ -444,6 +493,7 @@ export default {
         debugger; // eslint-disable-line no-debugger
         update(this.form)
           .then((res) => {
+            this.$refs["rates-modal"].hide();
             console.log(res);
           })
           .catch((error) => {
@@ -457,6 +507,7 @@ export default {
         debugger; // eslint-disable-line no-debugger
         save(this.form)
           .then((res) => {
+            this.$refs["rates-modal"].hide();
             console.log(res);
           })
           .catch((error) => {

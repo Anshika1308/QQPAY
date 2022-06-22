@@ -162,19 +162,3 @@ $green: #1eb795;
 .form-control {
 	padding: 3px 5px !important;
 }
-
-.color-checkbox {
-	color: $green  !important;
-
-	.custom-control-label {
-		color: #1eb795;
-		border-color: #1eb795 !important;
-		background-color: #1eb795 !important;
-	}
-}
-
-.custom-control-input:checked~.custom-control-label::before {
-	color: #fff;
-	border-color: #1eb795 !important;
-	background-color: #1eb795 !important;
-}

@@ -133,7 +133,7 @@
     </div>
     <b-modal
       id="scs-country-wise"
-      ref="serviceCharge-modal"
+      ref="charge-modal"
       title="Service Charge Setup"
       size="md"
       variant="primary"
@@ -141,11 +141,18 @@
       @hide="resetForm()"
     >
       <b-card no-body class="my-custom-class">
-        <b-tabs pills card variant="primary">
-          <b-tab title="Country Wise" active style="background-color: #ff6b00"
+        <b-tabs pills card variant="primary" v-model="tabIndex">
+          <b-tab title="Country Wise" style="background-color: #ff6b00"
             ><b-card-text>
               <b-card>
                 <b-form>
+                  <b-row>
+                    <b-col>
+                      <b-alert v-model="isError" variant="danger" dismissible>
+                        {{ this.error }}
+                      </b-alert>
+                    </b-col>
+                  </b-row>
                   <b-row>
                     <b-col cols="12">
                       <b-form-group label="Payment Mode">
@@ -171,7 +178,7 @@
                       </b-form-group>
                     </b-col>
                     <b-col cols="12">
-                      <b-form-group label="County">
+                      <b-form-group label="Country">
                         <v-select
                           :options="countryList"
                           label="country_name"
@@ -183,7 +190,6 @@
                             'is-invalid': $v.countryWiseForm.country.$error,
                           }"
                           aria-describedby="country-live-feedback"
-                          @change="onChangeCounty()"
                         >
                         </v-select>
                         <b-form-invalid-feedback id="country-live-feedback">
@@ -241,7 +247,10 @@
                       >if <strong>percentage</strong> selected then Upper Limit
                       will be disabled.</small
                     >
-                    <b-col cols="12">
+                    <b-col
+                      cols="12"
+                      v-if="countryWiseForm.service_charge_type == 57"
+                    >
                       <b-form-group label="Upper Limit">
                         <b-form-input
                           type="number"
@@ -268,6 +277,7 @@
                           id="qqpay_commission"
                           name="qqpay_commission"
                           v-model="countryWiseForm.qqpay_commission"
+                          @blur="onChangeTotalCommission()"
                           size="md"
                           @keypress="onForInteger($event)"
                           :class="{
@@ -286,6 +296,7 @@
                     <b-col cols="6">
                       <b-form-group label="Pay Commission">
                         <b-form-input
+                          disabled
                           type="number"
                           id="payout_partner_commission"
                           name="payout_partner_commission"
@@ -334,7 +345,7 @@
                 <b-form>
                   <div class="row">
                     <b-col cols="12">
-                      <b-form-group label="PAyment Mode">
+                      <b-form-group label="Payment Mode">
                         <v-select
                           :options="paymentModeList"
                           label="value"
@@ -356,11 +367,11 @@
                         </b-form-invalid-feedback>
                       </b-form-group>
                     </b-col>
-                    <b-col cols="6" class="mt-3">
+                    <b-col cols="6">
                       <b-form-group label="Payment Partner">
                         <v-select
                           :options="payoutPartnerList"
-                          label="company_name"
+                          label="name_of_employer"
                           v-model="countryWiseForm.payment_partner"
                           :reduce="(item) => item.agent_id"
                           required
@@ -382,7 +393,6 @@
                     <b-col cols="6">
                       <b-form-group label="Receive Country">
                         <b-form-input
-                          class="mt-3"
                           v-model="countryWiseDefaultForm.receive_country"
                           size="sm"
                         ></b-form-input>
@@ -439,7 +449,10 @@
                       >if <strong>percentage</strong> selected then Upper Limit
                       will be disabled.</small
                     >
-                    <b-col cols="12">
+                    <b-col
+                      cols="12"
+                      v-if="countryWiseForm.service_charge_type == 57"
+                    >
                       <b-form-group label="Upper Limit">
                         <b-form-input
                           type="number"
@@ -461,7 +474,7 @@
                       </b-form-group>
                     </b-col>
                     <b-col cols="6">
-                      <b-form-group label="RemTotal Commissionarks">
+                      <b-form-group label="Receiving Commission">
                         <b-form-input
                           type="number"
                           id="qqpay_commission"
@@ -513,7 +526,6 @@
                       <b-form-group label="Remarks">
                         <b-form-textarea
                           id="remarks"
-                          class="mt-3"
                           v-model="countryWiseForm.remarks"
                           size="sm"
                           rows="3"
@@ -544,7 +556,7 @@
 
 <script>
 //import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, requiredIf, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll } from "@/api/country";
 import { getList } from "@/api/partnerDetails";
@@ -573,6 +585,7 @@ export default {
       ],
       isError: false,
       error: null,
+      tabIndex: 0,
       defaultForm: {
         country_name: null,
         search_user: null,
@@ -650,7 +663,7 @@ export default {
         required,
       },
       country: {
-        required,
+        required: requiredIf((prop) => prop.payment_partner == null),
       },
       service_charge_type: {
         required,
@@ -660,7 +673,7 @@ export default {
         minLength: minLength(1),
       },
       upper_limit: {
-        required,
+        required: requiredIf((prop) => prop.service_charge_type == 57),
         minLength: minLength(1),
       },
       qqpay_commission: {
@@ -718,12 +731,51 @@ export default {
         this.items = res.data.data;
       });
     },
+    onChangeTotalCommission() {
+      debugger; // eslint-disable-line no-debugger
+      this.countryWiseForm.qqpay_commission = parseInt(
+        this.countryWiseForm.qqpay_commission
+      );
+      this.countryWiseForm.service_charge = parseInt(
+        this.countryWiseForm.service_charge
+      );
+
+      if (
+        this.countryWiseForm.service_charge < 0 ||
+        this.countryWiseForm.qqpay_commission < 0
+      ) {
+        this.isError = true;
+        this.error =
+          "Service charge and Total Commission must be greater than 0.";
+        return;
+      }
+      if (
+        this.countryWiseForm.service_charge <
+        this.countryWiseForm.qqpay_commission
+      ) {
+        this.isError = true;
+        this.error = "Service change must be greater than Total Commission";
+        return;
+      }
+      this.countryWiseForm.payout_partner_commission =
+        this.countryWiseForm.service_charge -
+        this.countryWiseForm.qqpay_commission;
+    },
     edit(item) {
-      if (item.id > 0) {
+      if (item != null) {
         getById(item.id)
           .then((res) => {
             this.countryWiseForm = Object.assign({}, res.data.data[0]);
-            this.$refs["serviceCharge-modal"].show();
+            debugger; // eslint-disable-line no-debugger
+            if (
+              this.countryWiseForm.payment_partner == null ||
+              this.countryWiseForm.payment_partner == 0
+            ) {
+              this.tabIndex = 0;
+            } else {
+              this.tabIndex = 1;
+            }
+            this.$refs["charge-modal"].show();
           })
           .catch((error) => {
             this.isError = true;
@@ -734,6 +786,7 @@ export default {
     onChangeActive(item) {
       update(item)
         .then((res) => {
+          this.$refs["charge-modal"].hide();
           console.log(res);
           this.resetForm();
         })
@@ -757,12 +810,19 @@ export default {
     // },
     manage() {
       this.$v.$touch();
+
+      if (this.countryWiseForm.payment_partner == null) {
+        this.countryWiseForm.payment_partner = 0;
+      }
+      debugger; // eslint-disable-line no-debugger
       if (this.$v.$invalid) {
         return;
       }
       if (this.countryWiseForm.id > 0) {
+        debugger; // eslint-disable-line no-debugger
         update(this.countryWiseForm)
           .then((res) => {
+            this.$refs["charge-modal"].hide();
             console.log(res);
             this.resetForm();
           })
@@ -774,8 +834,10 @@ export default {
             //done()
           });
       } else {
+        debugger; // eslint-disable-line no-debugger
         save(this.countryWiseForm)
           .then((res) => {
+            this.$refs["charge-modal"].hide();
             console.log(res);
             this.resetForm();
           })

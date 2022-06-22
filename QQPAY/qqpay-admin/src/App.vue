@@ -39,6 +39,7 @@ export default {
   background-color: #ff6b00 !important;
 
 }
+ @import './assets/styles/custom.scss';
 .table td, .table th {
     min-width: 100px !important;
 }

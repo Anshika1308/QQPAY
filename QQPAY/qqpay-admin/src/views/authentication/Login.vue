@@ -125,10 +125,13 @@ export default {
       const responseData = await this.$store.dispatch('AuthenticationService/login', userDetails);
       if (responseData && responseData.data[0].is_admin) {
         const isPermitted = true;
+        // const token = responseData.data[0].token;
         localStorage.setItem('isPermitted', isPermitted);
+        // localStorage.setItem('token', token);
         this.loader = false
         this.$store.commit("app/set_token", responseData.data[0].token);
         this.$router.push({name: 'Home'})
+        // location.reload();
       } else {
         this.loader = false;
         this.errorMessage = 'User is not permitted to access admin portal';

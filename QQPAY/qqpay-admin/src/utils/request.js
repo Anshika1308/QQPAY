@@ -8,18 +8,19 @@ const service = axios.create({
     "content-type": "application/json",
   },
 });
-
+// const token = localStorage.getItem('token');
 //request interceptor
 service.interceptors.request.use(
   (config) => {
     config.baseURL = store.getters.config.VUE_APP_BASE_API;
+    // console.log("token in request",this.token);
 
-    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUwMDcxNzMsInN1YiI6ImphdGluQHNvZnRkZXZlbHMuY29tIn0.A2roEPnQ-xe0XTczmDCuoqoVRpSqMute9kh4V0blh4Q'
+    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxNzgxNzEsInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.pEloeWIz5MiS68Ti_34M_Q9i1-Wlgs_595ctTIcuqZ4'
     config.headers['Authorization'] = 'Bearer ' + authToken
     
     const port  = config.url.slice(0, 4);
     config.url = config.url.substring(4);
-    config.baseURL = config.baseURL + port
+    config.baseURL = config.baseURL + port  
 
     return config;
   },
