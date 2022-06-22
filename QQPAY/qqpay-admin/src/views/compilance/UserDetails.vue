@@ -393,8 +393,8 @@ export default {
 
   data() {
     return {
-      base_url: 'http://3.111.140.40:5000/api/v1/',
-      transaction_base_url: 'http://3.111.140.40:8000/api/v1/',
+      base_url: process.env.VUE_APP_USER_SERVICE,
+      transaction_base_url: process.env.VUE_APP_TRANSACTION_SERVICE,
       value: 75,
       rows: 100,
       currentPage: 1,
@@ -432,7 +432,7 @@ export default {
       console.log("token", this.token, this.transaction_base_url);
 
       axios
-        .get(this.transaction_base_url + "transaction/transaction/" + this.selectedData[0].Remitter_code, {
+        .get(this.transaction_base_url + "/transaction/transaction/" + this.selectedData[0].Remitter_code, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },

@@ -228,7 +228,6 @@ export default {
   computed: {
     ...mapGetters([
       "token",
-      "base_url",
     ]),
     getAmtAndRate() {
       return {
@@ -251,6 +250,7 @@ export default {
 
   data() {
     return {
+      base_url: process.env.VUE_APP_TREASURY_SERVICE,
       filter: null,
       dealsTableData: null,
       updateTrigger: false,

@@ -227,7 +227,7 @@ export default {
   },
   data() {
     return {
-      base_url: 'http://3.111.140.40:5000/api/v1/',
+      base_url: process.env.VUE_APP_USER_SERVICE,
       showUserDetails: false,
       riskChangeComment: '',
       selectMode: "single",
