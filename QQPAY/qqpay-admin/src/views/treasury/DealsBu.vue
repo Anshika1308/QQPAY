@@ -5,7 +5,7 @@
       <b-col>
         <div>
           <b-button-group size="sm">
-            <b-button variant="outline-light" v-b-modal.add-dealBu @click="updateTrigger = false;">
+            <b-button variant="outline-light" v-b-modal.add-dealBu @click="newDeal();">
               <b-icon icon="file-earmark-plus-fill"></b-icon>
               New Deal
             </b-button>
@@ -30,9 +30,9 @@
     </b-row>
     <b-table :items="items" :fields="fields" :filter="filter" responsive class="align-middle">
       <template #cell(item)="row">
-        <b>{{ row.item.remitter }} </b>
+        {{ row.item.remitter }}
       </template>
-      <template #cell(deal_date)="row"><b>{{ format(row.item.deal_date) }}</b>
+      <template #cell(deal_date)="row">{{ format(row.item.deal_date) }}
       </template>
       <template #cell(actions)="row" size="sm">
         <div class="action-div">
@@ -56,19 +56,16 @@
                         <label>{{ row.item.deal_no }}</label>
                       </b-list-group-item>
                       <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <label>Source of Fund</label>
+                        <label>{{ row.item.source_of_funds }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <label>PP CCY</label>
+                        <label>{{ row.item.pp_ccy }}</label>
+                      </b-list-group-item>
+                      <b-list-group-item class="d-flex justify-content-between align-items-center">
                         <label>Purchase Date</label>
                         <label>{{ format(row.item.purchase_date) }}</label>
-                      </b-list-group-item>
-
-                      <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <label>Created by</label>
-                        <label>{{ row.item.created_by }}</label>
-                      </b-list-group-item>
-
-
-                      <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <label>Bank POC</label>
-                        <label>{{ row.item.bank_poc }}</label>
                       </b-list-group-item>
 
                     </b-list-group>
@@ -78,27 +75,20 @@
                 <b-col sm="12" md="6" lg="6">
                   <div class="menu-sec">
                     <b-list-group flush>
-
-
-                      <!-- <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <label>Target of funds</label>
-                        <label>{{ row.item.TOF }}</label>
-                      </b-list-group-item> -->
-
-                      <!-- <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <label>Edited by</label>
-                        <label>{{ row.item.edited_by }}</label>
-                      </b-list-group-item> -->
-
-                      <!-- <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <label>Service Charge</label>
-                        <label>{{ row.item.bank_charge }}</label>
+                      <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <label>Dealer</label>
+                        <label>{{ row.item.bank_poc }}</label>
                       </b-list-group-item>
 
                       <b-list-group-item class="d-flex justify-content-between align-items-center">
-                        <label>Service Tax</label>
-                        <label>{{ row.item.tax }}</label>
-                      </b-list-group-item> -->
+                        <label>Created by</label>
+                        <label>{{ row.item.created_by }}</label>
+                      </b-list-group-item>
+
+                      <b-list-group-item class="d-flex justify-content-between align-items-center">
+                        <label>Edited by</label>
+                        <label>{{ row.item.edited_by }}</label>
+                      </b-list-group-item>                                           
                     </b-list-group>
                   </div>
                 </b-col>
@@ -118,7 +108,7 @@
                   Update
                 </b-button>
 
-                <b-button variant="outline-light" size="sm" class="wd-100p mb-2 btn-light">
+                <b-button variant="outline-light" size="sm" class="wd-100p mb-2 btn-light" @click="deleteClick(row.item)">
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon> Delete
                 </b-button>
               </div>
@@ -182,7 +172,7 @@
       <b-card header="Purchase Details" header-tag="header">
         <b-row>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group id="purchase-date" label="Purchase Date" label-for="purchase-datepicker">
+            <b-form-group id="purchase-date" label="Value Date" label-for="purchase-datepicker">
               <b-form-datepicker id="purchase-datepicker" v-model="temp_dealBu.purchase_date" class="mb-2" size="sm">
               </b-form-datepicker>
             </b-form-group>
@@ -202,7 +192,7 @@
 
         <b-row align-h="start">
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Bank POC">
+            <b-form-group label="Dealer">
               <b-form-input v-model="temp_dealBu.bank_poc" size="sm"></b-form-input>
             </b-form-group>
           </b-col>
@@ -226,6 +216,7 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
+import {responseHandler} from "@/helpers/globalFunctions";
 export default {
   name: "DealsBu",
   components: {
@@ -237,7 +228,6 @@ export default {
   computed: {
     ...mapGetters([
       "token",
-      "base_url",
     ]),
     getAmtAndRate() {
       return {
@@ -260,6 +250,7 @@ export default {
 
   data() {
     return {
+      base_url: process.env.VUE_APP_TREASURY_SERVICE,
       filter: null,
       dealsTableData: null,
       updateTrigger: false,
@@ -274,19 +265,19 @@ export default {
       ],
 
       temp_dealBu: {
-        remitter: "1000",
-        deal_date: "2022-06-07",
-        source_of_funds: "Business",
-        coll_amount: 70000,
-        rate_usd_myr: 0.4231,
-        usd_amount: 60098,
-        rate_coll: 17,
-        pp_ccy: "INR",
-        pp_amount: 407323,
-        deal_no: 123,
-        purchase_date: "2022-06-07T05:02:37.635Z",
+        remitter: "",
+        deal_date: "",
+        source_of_funds: "",
+        coll_amount: null,
+        rate_usd_myr: null,
+        usd_amount: null,
+        rate_coll: null,
+        pp_ccy: "",
+        pp_amount: null,
+        deal_no: null,
+        purchase_date: "",
         status: "open",
-        bank_poc: "shiva",
+        bank_poc: "",
         // deal_id: 0,
         // created_by: "string",
         // created_date: "2022-06-07T05:20:33.164Z",
@@ -311,12 +302,12 @@ export default {
         },
         {
           key: 'deal_date',
-          label: 'Deal Date',
+          label: 'Input Date',
         },
-        {
-          key: 'source_of_funds',
-          label: 'Source of Funds',
-        },
+        // {
+        //   key: 'source_of_funds',
+        //   label: 'Source of Funds',
+        // },
 
         {
           key: ' rate_usd_myr',
@@ -329,44 +320,26 @@ export default {
         },
 
         {
-          key: ' usd_amount',
+          key: 'usd_amount',
           label: 'Amount in USD',
         },
 
-        {
-          key: 'pp_ccy',
-          label: 'PP CCY',
-        },
+        // {
+        //   key: 'pp_ccy',
+        //   label: 'PP CCY',
+        // },
 
         {
           key: 'pp_amount',
           label: 'PPCCY Amt',
         },
+        {
+          key: 'status',
+          label: 'Status',
+        },
         { key: "actions", label: "" },
       ],
-      items: [
-         {
-         remitter: "1000",
-         deal_date: "2022-06-07",
-         source_of_funds: "Business",
-         coll_amount: 70000,
-         rate_usd_myr: 0.4231,
-         usd_amount: 60098,
-         rate_coll: 17,
-         pp_ccy: "INR",
-         pp_amount: 407323,
-         deal_no: 123,
-         purchase_date: "2022-06-07T05:02:37.635Z",
-         status: "open",
-         bank_poc: "shiva",
-         deal_id: 0,
-         created_by: "string",
-         created_date: "2022-06-07T05:20:33.164Z",
-         modified_by: "string",
-         modified_date: "2022-06-07T05:20:33.164Z"
-         }
-
-      ],
+      items: [],
     };
   },
   methods: {
@@ -386,11 +359,13 @@ export default {
           },
         })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             console.log(response.data.data);
             const index = this.items.findIndex(ele => ele.deal_id === this.temp_dealBu.deal_id);
             this.items[index] = response.data.data[0];
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
           });
 
@@ -404,10 +379,12 @@ export default {
           },
         })
           .then((response) => {
+            responseHandler(response.data.status_code, this, response.data.message)
             console.log(response.data.data)
             this.items.push(response.data.data[0]);
           })
           .catch((err) => {
+            responseHandler(err.data.status_code, this, err.data.message)
             console.log('Deal not posted', err);
           });
 
@@ -437,13 +414,11 @@ export default {
           },
         })
         .then(response => {
-          // this.dealsTableData = JSON.parse(response.data.data);
+          responseHandler(response.data.status_code, this, response.data.message)
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("JSON.parse",JSON.parse(JSON.stringify(response.data.data[0])));
-          console.log("JSON.stringify",JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
         })
         .catch((e) => {
+          responseHandler(e.data.status_code, this, e.data.message)
           console.log(e);
         });
     },
@@ -459,12 +434,47 @@ export default {
       console.log('slected', selectedRow)
       this.temp_dealBu = selectedRow;
     },
-    // newSettlementClicked(selectedRow) {
-    //   console.log(selectedRow);
-    //   console.log('new clicked', this.$emit('openTab', 'settlements'));
-    //   this.$emit('openTab', 'settlements')
-    //   this.$store.commit("set_selected_deal", selectedRow);
-    // }
+    newDeal() {
+      this.updateTrigger = false;
+      this.temp_dealBu = {
+        remitter: "",
+        deal_date: "",
+        source_of_funds: "",
+        coll_amount: null,
+        rate_usd_myr: null,
+        usd_amount: null,
+        rate_coll: null,
+        pp_ccy: "",
+        pp_amount: null,
+        deal_no: null,
+        purchase_date: "",
+        status: "open",
+        bank_poc: "",
+        // deal_id: 0,
+        // created_by: "string",
+        // created_date: "2022-06-07T05:20:33.164Z",
+        // modified_by: "string",
+        // modified_date: "2022-06-07T05:20:33.164Z"
+      }
+    },
+    deleteClick(selectedRow) {
+      axios.delete(this.base_url + "business/delete-business-deal/" + selectedRow.deal_id, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          responseHandler(response.data.status_code, this, response.data.message)
+          if (response.data.success) {
+            const index = this.items.findIndex(ele => ele.deal_id === selectedRow.deal_id);
+            this.items.splice(index, 1);
+          }
+        })
+        .catch((err) => {
+          responseHandler(err.data.status_code, this, err.data.message)
+          console.log('Deal not posted', err);
+      });
+    },
   },
 };
 

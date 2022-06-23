@@ -92,7 +92,7 @@
                     <b-list-group-item
                       class="d-flex justify-content-between align-items-center"
                     >
-                      <label>Purchase Date</label>
+                      <label>Value Date</label>
                       <label>{{ format(row.item.purchase_date) }}</label>
                     </b-list-group-item>
 
@@ -113,7 +113,7 @@
                     <b-list-group-item
                       class="d-flex justify-content-between align-items-center"
                     >
-                      <label>Bank POC</label>
+                      <label>Dealer</label>
                       <label>{{ row.item.bank_poc }}</label>
                     </b-list-group-item>
 
@@ -126,12 +126,12 @@
                   <b-list-group flush>
                     
 
-                    <b-list-group-item
+                    <!-- <b-list-group-item
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Target of funds</label>
                       <label>{{ row.item.tof }}</label>
-                    </b-list-group-item>
+                    </b-list-group-item> -->
 
                     <b-list-group-item
                       class="d-flex justify-content-between align-items-center"
@@ -223,7 +223,7 @@
           <b-col sm="12" md="4" lg="4">
             <b-form-group
               id="fieldset-1"
-              label="Deal Date"
+              label="Input Date"
               label-for="example-datepicker"
             >
               <b-form-datepicker
@@ -288,7 +288,7 @@
       <b-card header="Purchase Details" header-tag="header">
         <b-row>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group id="purchase-date" label="Purchase Date" label-for="purchase-datepicker">
+            <b-form-group id="purchase-date" label="Value Date" label-for="purchase-datepicker">
               <b-form-datepicker
                 id="purchase-datepicker"
                 v-model="temp_deal.purchase_date"
@@ -311,16 +311,16 @@
             <!-- <b-form-group label="Target of Fund">
               <b-form-input v-model="temp_deal.tof" size="sm"></b-form-input>
             </b-form-group> -->
-            <b-form-group label="Target of Fund">
+            <!-- <b-form-group label="Target of Fund">
               <b-form-select v-model="temp_deal.tof" :options="targetOfFundOption"></b-form-select>
-            </b-form-group>
+            </b-form-group> -->
           </b-col>          
 
         </b-row>
 
         <b-row align-h="start">  
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Bank POC">
+            <b-form-group label="Dealer">
               <b-form-input
                 v-model="temp_deal.bank_poc"
                 size="sm"
@@ -358,6 +358,7 @@
 import axios from "axios";
 import { mapGetters } from "vuex";
 import {responseHandler} from "@/helpers/globalFunctions";
+
 export default {
   name: "Deals",
   components: {
@@ -391,6 +392,7 @@ export default {
   
   data() {
     return {
+      treasury_ser_base_url: process.env.VUE_APP_TREASURY_SERVICE,
       filter: null,
       dealsTableData: null,
       updateTrigger: false,
@@ -474,7 +476,7 @@ export default {
         },
         {
           key: 'deal_date',
-          label: 'Deal Date',
+          label: 'Input Date',
         },
         {
           key: 'source_of_funds',
@@ -533,7 +535,7 @@ export default {
       const request = this.getRequest();
       // console.log('req', JSON.parse(JSON.stringify(request)))
       if (this.updateTrigger) {
-        axios.put(this.base_url + "new-contract/update-contract/" + request.deal_id, request, {
+        axios.put(this.treasury_ser_base_url + "new-contract/update-contract/" + request.deal_id, request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
@@ -549,7 +551,7 @@ export default {
         });
 
       } else {
-        axios.post(this.base_url + "new-contract/new-contract", request, {
+        axios.post(this.treasury_ser_base_url + "new-contract/new-contract", request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
@@ -580,10 +582,8 @@ export default {
     },
 
     async getContract() {
-      console.log("token", this.token);
-
       axios
-        .get(this.base_url + "new-contract/get-all-contract", {
+        .get(this.treasury_ser_base_url + "new-contract/get-all-contract", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -637,7 +637,7 @@ export default {
       this.temp_deal = selectedRow;
     },
     deleteDeal(selectedRow) {
-      axios.delete(this.base_url + "new-contract/delete-contract/" + selectedRow.deal_id, {
+      axios.delete(this.treasury_ser_base_url + "new-contract/delete-contract/" + selectedRow.deal_id, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },

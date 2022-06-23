@@ -435,14 +435,14 @@ export default {
   computed: {
     ...mapGetters([
       "token",
-      "base_url",
       "selected_deal_id"
     ]),
   },
   data() {
     return {
       filter: null,
-      base_url_p8002: 'http://3.111.140.40:8002/api/v1/',
+      base_url: process.env.VUE_APP_TREASURY_SERVICE,
+      base_url_p8002: process.env.VUE_APP_SERVER_ENDPOINT,
       updateTrigger: false,
       selected_deal: null,
       ppOptions: null,
@@ -720,7 +720,7 @@ export default {
     async getPPdetails() {
 
       axios
-        .get(this.base_url_p8002 + "partner_details/get-partners-limited-field", {
+        .get(this.base_url_p8002 + "/partner_details/get-partners-limited-field", {
           headers: {
             Authorization:  `Bearer ${this.token}`,
           },
