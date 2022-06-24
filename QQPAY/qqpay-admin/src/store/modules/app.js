@@ -29,6 +29,19 @@ const actions = {
 
 };
 
+export const accessToken = () => {
+    // console.log("token dddd",this.$store.token)
+    // const authToken = JSON.parse(getKey('userAuth'));
+    // console.log(authToken);
+    // let {accessToken} = authToken;
+  
+    // const token = null;
+    
+    let accessToken = state.token;
+    return accessToken
+    
+}
+
 export const app = {
     namespaced: true,
     state,
