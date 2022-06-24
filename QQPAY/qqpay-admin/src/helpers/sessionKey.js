@@ -23,14 +23,19 @@ export const removeKey = (key) => {
   }
 };
 
-// console.log("token dddd",store.token)
-export const accessToken = () => {
-  const authToken = JSON.parse(getKey('userAuth'));
-  console.log(authToken);
-  // let {accessToken} = authToken;
 
-  // const token = null;
+
+
+// export const accessToken = () => {
+//   // console.log("token dddd",this.$store.token)
+//   const authToken = JSON.parse(getKey('userAuth'));
+//   console.log(authToken);
+//   // let {accessToken} = authToken;
+
+//   // const token = null;
   
-  let accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTUxNzgxNzEsInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.pEloeWIz5MiS68Ti_34M_Q9i1-Wlgs_595ctTIcuqZ4'
-  return accessToken
-}
+//   let accessToken = localStorage.getItem('token');
+//   // console.log("accessToken",accessToken)
+//   return accessToken
+  
+// }

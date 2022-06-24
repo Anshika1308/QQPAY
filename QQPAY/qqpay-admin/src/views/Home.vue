@@ -23,12 +23,12 @@
           </b-list-group>
         </b-col>
         <b-col col sm="12" md="8" lg="10" class="px-0">
-          <NavBar title="" />
+          <NavBar title="Welcome to QQPay Admin Portal !" />
           <b-container>
             <b-row align-v="center" align-h="center" class="mt-5">
               <b-col col sm="12" md="12" lg="12">
                 <b-card no-body>
-                  <b-tabs pills card>
+                  <b-tabs pills card>    
                     <b-tab v-if="tab_show.user" :active="tab_active.user">
                       <template #title>
                         <b-icon icon="journal-check" aria-hidden="true"></b-icon>
@@ -218,7 +218,7 @@
                     <b-tab v-if="tab_show.PPComm" :active="tab_active.PPComm">
                       <template #title>
                         <b-icon icon="cash-stack" aria-hidden="true"></b-icon>
-                        PP Comm
+                        PP Comm 
                         <b-button variant="outline-light" size="sm" @click="closeTab('PPComm')">
                           <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
                         </b-button>
@@ -309,8 +309,8 @@ export default {
         serviceCharge: false,
         specialRates: false,
         manageScore: false,
-        Service: true,
-        PPComm: true,
+        Service: false,
+        PPComm: false,
         dealsbu: false,
       },
       tab_active: {
@@ -335,16 +335,16 @@ export default {
           title: "Dashboard",
           sub_menus: {},
         },
-        {
-          id: 2,
-          title: "KYC",
-          sub_menus: {},
-        },
-        {
-          id: 3,
-          title: "Transactions",
-          sub_menus: {},
-        },
+        // {
+        //   id: 2,
+        //   title: "KYC",
+        //   sub_menus: {},
+        // },
+        // {
+        //   id: 3,
+        //   title: "Transactions",
+        //   sub_menus: {},
+        // },
         {
           id: 4,
           title: "Compliance",
@@ -379,10 +379,10 @@ export default {
               title: "Daily Forex",
               value: "dailyForex",
             },
-            {
-              title: "A/C Statement",
-              value: "statement",
-            },
+            // {
+            //   title: "A/C Statement",
+            //   value: "statement",
+            // },
           ],
         },
         {
@@ -398,26 +398,26 @@ export default {
             },
           ],
         },
-        {
-          id: 7,
-          title: "Master Settings",
-          sub_menus: {},
-        },
-        {
-          id: 8,
-          title: "Service charge",
-          sub_menus: [
-            {
-              title: "All setups",
-              value: "Service",
-            },
+        // {
+        //   id: 7,
+        //   title: "Master Settings",
+        //   sub_menus: {},
+        // },
+        // {
+        //   id: 8,
+        //   title: "Service charge",
+        //   sub_menus: [
+        //     {
+        //       title: "All setups",
+        //       value: "Service",
+        //     },
 
-            {
-              title: "PP Comm Charge",
-              value: "PPComm",
-            },
-          ],
-        },
+        //     {
+        //       title: "PP Comm Charge",
+        //       value: "PPComm",
+        //     },
+        //   ],
+        // },
         {
           id: 9,
           title: "Setup",
@@ -463,6 +463,7 @@ export default {
       this.tab_active[sub_menu] = false;
     },
   },
+  
 };
 </script>
 

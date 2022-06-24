@@ -1,8 +1,11 @@
 import Axios from 'axios';
-import {accessToken} from "./sessionKey";
+// import {accessToken} from "../store/modules/app";
+import { store } from "../store";
+
 
 const API_ROOT = process.env.VUE_APP_SERVER_ENDPOINT
 const TRANSACTION_SERVICE = process.env.VUE_APP_TRANSACTION_SERVICE
+const TOKEN = store.getters.token
 
 
 //create axios instance
@@ -23,6 +26,7 @@ export const transactionInstance = Axios.create({
 
 //get data from api
 export const getApiData = async (url, param = null) => {
+  // console.log("test", store.getters.token)
   let response;
   try {
     response = await instance({
@@ -30,7 +34,7 @@ export const getApiData = async (url, param = null) => {
       url: `${url}`,
       params: param,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       transformResponse: [function (responseData) {
         // Do whatever you want to transform the data
@@ -53,7 +57,7 @@ export const transactionGetApiData = async (url, param = null) => {
       url: `${url}`,
       params: param,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       transformResponse: [function (responseData) {
         // Do whatever you want to transform the data
@@ -76,7 +80,7 @@ export const postApiData = async (url, formData) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -120,7 +124,7 @@ export const putApiData = async (url, formData) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -143,7 +147,7 @@ export const deleteApiData = async (url) => {
     url: url,
     // params: param,
     headers: {
-      Authorization: `Bearer ${accessToken()}`,
+      Authorization: `Bearer ${TOKEN}`,
     },
   });
   return response;
@@ -159,7 +163,7 @@ export const bulkDeleteApiData = async (data) => {
     data: formData,
     // params: param,
     headers: {
-      Authorization: `Bearer ${accessToken()}`,
+      Authorization: `Bearer ${TOKEN}`,
     },
   });
   return response;
@@ -174,7 +178,7 @@ export const patchApiData = async (url, formData) => {
       url: `${url}`,
       data: formData,
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       transformResponse: [function (responseData) {
         //Do whatever you want to transform the data
@@ -196,7 +200,7 @@ export const downloadApiData = async (url, fileName) => {
       url: url,
       responseType: 'blob',
       headers: {
-        Authorization: `Bearer ${accessToken()}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
     }).then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
