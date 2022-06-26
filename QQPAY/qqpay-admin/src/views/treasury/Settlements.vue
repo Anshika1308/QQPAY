@@ -189,7 +189,7 @@
                         <b-list-group-item
                           class="d-flex justify-content-between align-items-center"
                         >
-                          <label>PP Bank POC</label>
+                          <label>Settler</label>
                           <label>{{ row.item.pp_bank_poc }}</label>
                         </b-list-group-item>
                         <b-list-group-item
@@ -265,7 +265,7 @@
               <b-form-select
                 v-model="temp_settlement.payout_partner"
                 :options="ppOptions"
-                @change="onChangePPoptions($event)"
+                @change="onChangePPoptions($event)"           
               ></b-form-select>
             </b-form-group>
           </b-col>
@@ -384,7 +384,7 @@
             </b-form-group>
           </b-col>
           <b-col>
-            <b-form-group label="PP Bank POC">
+            <b-form-group label="Settler">
               <b-form-input
                 v-model="temp_settlement.pp_bank_poc"
                 size="sm"
@@ -413,6 +413,7 @@ export default {
     CountryFlag,
   },
   created() {
+    this.$root.$refs.Settlements = this;
     if (this.selected_deal_id) {
       this.getSelectedDealDtl();
       this.getSelecedDealSetlement();
@@ -668,6 +669,9 @@ export default {
       console.log('nav update')
     },
     async getSelecedDealSetlement() {
+      if (!this.selected_deal_id) {
+        return;
+      }
       axios
         .get(this.base_url + "deal-settlement/get-settlement_belong/" + this.selected_deal_id, {
           headers: {
@@ -711,6 +715,7 @@ export default {
         .then(response => {
           responseHandler(response.data.status_code, this, response.data.message)
           this.selected_deal = response.data.data[0];
+          this.triggerUpdateDeal();
         })
         .catch((e) => {
           responseHandler(e.status_code, this, e.message)
@@ -762,6 +767,10 @@ export default {
     },
 
     postSettlmentData() {
+      if (!this.temp_settlement.payout_partner) {
+        responseHandler(500, this, 'Settement not added - Payout Partner cannot be empty');
+        return;
+      }
       const request = this.getRequest();
       // console.log('req', JSON.parse(JSON.stringify(request)))
       if (this.updateTrigger) {
@@ -777,7 +786,11 @@ export default {
             this.getSelectedDealDtl();
           })
           .catch((err) => {
-            responseHandler(err.status_code, this, err.message)
+            if (err.response && err.response.data && err.response.data.message) {
+              responseHandler(err.status_code, this, err.response.data.message)
+            } else {
+              responseHandler(err.status_code, this, err.message)
+            }
             console.log('Deal not posted', err);
         });
 
@@ -795,11 +808,24 @@ export default {
             this.getSelectedDealDtl();
           })
           .catch((err) => {
-            responseHandler(err.status_code, this, err.message)
+            if (err.response && err.response.data && err.response.data.message) {
+              responseHandler(err.status_code, this, err.response.data.message)
+            } else {
+              responseHandler(err.status_code, this, err.message)
+            }
             console.log('Deal not posted', err);
         });        
       }
     },
+    /**
+     * Used to get updated deal in deal page - Settlement number and staus
+     */
+    triggerUpdateDeal() {
+      if (this.$root.$refs.Deals) {
+          this.$root.$emit('selectedDealEventing', this.selected_deal);
+      }
+    },
+
     getRequest() {
       const req = this.temp_settlement;
       for (const key of Object.keys(req)) {
