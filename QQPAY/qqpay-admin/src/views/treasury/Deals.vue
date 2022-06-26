@@ -100,7 +100,7 @@
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Created by</label>
-                      <label>{{ row.item.created_by }}</label>
+                      <label>{{ row.item.created_by_name }}</label>
                     </b-list-group-item>
 
                     <b-list-group-item
@@ -137,7 +137,7 @@
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Edited by</label>
-                      <label>{{ row.item.edited_by }}</label>
+                      <label>{{ row.item.updated_by_name }}</label>
                     </b-list-group-item>
 
                     <b-list-group-item
@@ -279,7 +279,11 @@
         <b-row align-h="start">
           <b-col sm="12" md="4" lg="4">
             <b-form-group label="Source of funds">
-              <b-form-select v-model="temp_deal.source_of_funds" :options="fundSourceOption"></b-form-select>
+              <b-form-input v-if="temp_deal.deal_type !== 'O'"
+                v-model="temp_deal.source_of_funds"
+                size="sm"
+              ></b-form-input>
+              <b-form-select v-if="temp_deal.deal_type === 'O'" v-model="temp_deal.source_of_funds" :options="fundSourceOption"></b-form-select>
             </b-form-group>
           </b-col>            
         </b-row>
@@ -365,7 +369,17 @@ export default {
     
   },
   created() {
+    this.$root.$refs.Deals = this;
     this.getContract();
+  },
+  mounted() {
+    this.$root.$on('selectedDealEventing', data => {
+      if (data) {
+        const index = this.items.findIndex(ele => ele.deal_id === data.deal_id);
+        this.items[index] = data;
+        this.items = JSON.parse(JSON.stringify(this.items));  
+      }
+    });
   },
   computed: {
     ...mapGetters([
@@ -544,6 +558,9 @@ export default {
             responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.deal_id === this.temp_deal.deal_id);
             this.items[index] = response.data.data[0];
+            if (this.$root.$refs.Settlements) {
+              this.$root.$refs.Settlements.getSelectedDealDtl();
+            }
           })
           .catch((err) => {
             responseHandler(err.data.status_code, this, err.data.message)
