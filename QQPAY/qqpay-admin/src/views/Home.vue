@@ -364,7 +364,7 @@ export default {
               value: "deals",
             },
             {
-              title: "Deals Business",
+              title: "B2B",
               value: "dealsbu",
             },
             {

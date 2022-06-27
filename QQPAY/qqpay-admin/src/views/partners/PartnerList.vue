@@ -7,9 +7,16 @@
     <b-container>
       <div class="search-area">
         <b-row>
-          <b-col class="input-field" cols='8' v-click-outside="onClickOutside">
-            <span class="partner-filter" @click="togglePartnerFilter = !togglePartnerFilter">Filter</span>
-            <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
+          <b-col class="input-field" cols="8" v-click-outside="onClickOutside">
+            <span
+              class="partner-filter"
+              @click="togglePartnerFilter = !togglePartnerFilter"
+              >Filter</span
+            >
+            <b-form-input
+              v-model="searchValue"
+              placeholder="Search for user"
+            ></b-form-input>
             <div v-show="togglePartnerFilter" class="partner-filter-content">
               <b-row cols="2 m-1">
                 <b-col cols="8" class="text-left">Country</b-col>
@@ -19,33 +26,72 @@
               </b-row>
             </div>
           </b-col>
-          <b-col cols='2'>
+          <b-col cols="2">
             <b-button class="search-btn">Search</b-button>
           </b-col>
-          <b-col cols='2'>
-            <b-button class="status-btn" v-b-modal.add-partner-modal>Add Partner</b-button>
+          <b-col cols="2">
+            <b-button class="status-btn" v-b-modal.add-partner-modal
+              >Add Partner</b-button
+            >
           </b-col>
         </b-row>
       </div>
       <div class="compliance-table">
-        <b-table class="table-hover" :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable" selectable  @row-selected="onRowSelected">
+        <b-table
+          class="table-hover"
+          :items="items"
+          :fields="fields"
+          :select-mode="selectMode"
+          responsive="sm"
+          ref="selectableTable"
+        >
           <template v-slot:cell(action)="row">
-            <template v-if="row.item.action">
-              <b-icon class="btn" icon="pencil-square" variant="success"
-                @click="handleOpenUpdatePartner(row.item.action)" />
-              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)" />
+            <template v-if="row.item.action" >
+            <!-- <i class="bi bi-eye-fill"></i> -->
+              <b-icon
+                class="btn mr-3"
+                icon="eye"
+                variant="primary"
+                @click="onRowSelected(row.item.action)"
+              />
+              <b-icon
+                class="btn"
+                icon="pencil-square"
+                variant="success"
+                @click="handleOpenUpdatePartner(row.item.action)"
+              />
+              <b-icon
+                class=" btn"
+                icon="trash-fill"
+                variant="danger"
+                @click="onSubmit(row.item.action)"
+              />
             </template>
           </template>
         </b-table>
       </div>
       <b-overlay :show="deleteConfirm" no-wrap>
         <template #overlay>
-          <div v-if="processing" class="text-center p-4 loading text-light rounded">
+          <div
+            v-if="processing"
+            class="text-center p-4 loading text-light rounded"
+          >
             <div class="mb-3">Processing...</div>
           </div>
-          <div v-else ref="dialog" tabindex="-1" role="dialog" aria-modal="false" aria-labelledby="form-confirm-label"
-               class="text-center p-3">
-            <p><strong id="form-confirm-label">Are you sure you want to delete?</strong></p>
+          <div
+            v-else
+            ref="dialog"
+            tabindex="-1"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="form-confirm-label"
+            class="text-center p-3"
+          >
+            <p>
+              <strong id="form-confirm-label"
+                >Are you sure you want to delete?</strong
+              >
+            </p>
             <div class="d-flex">
               <b-button class="mr-3 search-btn" @click="onCancel">
                 Cancel
@@ -59,11 +105,22 @@
     <b-modal id="add-partner-modal" hide-footer size="xl" title="Add Partner">
       <AddPartner @getPartners="getPartners" />
     </b-modal>
-    <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner">
-      <UpdatePartner :partner_id="updateSelectedPartner" @getPartners="getPartners" />
+    <b-modal
+      id="update-partner-modal"
+      hide-footer
+      size="xl"
+      title="Update Partner"
+    >
+      <UpdatePartner
+        :partner_id="updateSelectedPartner"
+        @getPartners="getPartners"
+      />
     </b-modal>
-     <b-modal id="view-partner-modal" hide-footer size="xl" title="View Partner">
-      <ViewPartners :partner_id="updateSelectedPartner" @getPartners="getPartners" />
+    <b-modal id="view-partner-modal" hide-footer size="xl" title="View Partner">
+      <ViewPartners
+        :partner_id="updateSelectedPartner"
+        @getPartners="getPartners"
+      />
     </b-modal>
   </div>
 </template>
@@ -97,7 +154,7 @@ export default {
   components: {
     AddPartner,
     UpdatePartner,
-    ViewPartners
+    ViewPartners,
   },
   data() {
     return {
@@ -130,46 +187,58 @@ export default {
         { value: "High risk", text: "High risk" },
         { value: "Critical risk", text: "Critical risk" },
       ],
-      searchValue: ''
+      searchValue: "",
     };
   },
   methods: {
-      onRowSelected(data) {
-      console.log(data[0].id);
-      this.updateSelectedPartner = data[0].id
-      this.$bvModal.show("view-partner-modal")
+    onRowSelected(id) {
+      console.log(id);
+      this.updateSelectedPartner = id;
+      this.$bvModal.show("view-partner-modal");
       // this.$router.push("userDetails");
     },
     onSubmit(id) {
-      this.deleteSelectedId = id
-      this.processing = false
-      this.deleteConfirm = true
+      this.deleteSelectedId = id;
+      this.processing = false;
+      this.deleteConfirm = true;
     },
     onCancel() {
-      this.deleteConfirm = false
+      this.deleteConfirm = false;
     },
     async onOK() {
-      this.deleteConfirm = false
-      const response = await deleteApiData(`${APIS.DELETE_PARTNER}/${this.deleteSelectedId}`);
-      await responseHandler(response.data.status_code, this, response.data.message)
+      this.deleteConfirm = false;
+      const response = await deleteApiData(
+        `${APIS.DELETE_PARTNER}/${this.deleteSelectedId}`
+      );
+      await responseHandler(
+        response.data.status_code,
+        this,
+        response.data.message
+      );
       if (response.data.status_code === 200) {
-        this.getPartners()
+        this.getPartners();
       }
     },
     onClickOutside() {
       if (this.togglePartnerFilter)
-        this.togglePartnerFilter = !this.togglePartnerFilter
+        this.togglePartnerFilter = !this.togglePartnerFilter;
     },
     handleOpenUpdatePartner(id) {
-      this.updateSelectedPartner = id
-      this.$bvModal.show("update-partner-modal")
+      this.updateSelectedPartner = id;
+      
+      this.$bvModal.show("update-partner-modal");
+      this.$bvModal.hide("view-partner-modal");
     },
 
     async getPartners() {
       const response = await getApiData(APIS.GET_PARTNER_LIST);
-      await responseHandler(response.data.status_code, this, response.data.message)
+      await responseHandler(
+        response.data.status_code,
+        this,
+        response.data.message
+      );
       if (response.data.status_code === 200) {
-        this.items = response.data.data.map(item => ({
+        this.items = response.data.data.map((item) => ({
           partner_name: item.name_of_employer,
           id: item.agent_id,
           contact_person: item.contact_person_1,
@@ -178,20 +247,18 @@ export default {
           country: item.country_name,
           partner_type: item.partner_type.toUpperCase().replaceAll("_", " "),
           action: item.agent_id,
-        }))
+        }));
       }
     },
   },
 
   async created() {
-    await this.getPartners()
-  }
+    await this.getPartners();
+  },
 };
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
-
-
 
 .search-btn {
   background-color: $primary;
@@ -202,7 +269,6 @@ export default {
 
 .loading {
   background-color: $primary;
-
 }
 
 .partner-filter {

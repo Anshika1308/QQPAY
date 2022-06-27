@@ -209,10 +209,10 @@
       size="xl"
       variant="primary"
     >
-      <b-card header="Contract Details" header-tag="header">
+      <b-card header="Deal Details" header-tag="header">
         <b-row>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Contract Type">
+            <b-form-group label="Deal Type">
               <!-- <b-form-input
                 v-model="temp_deal.deal_type"
                 size="sm"
@@ -236,7 +236,7 @@
             </b-form-group>
           </b-col>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Contract No">
+            <b-form-group label="Deal No">
               <b-form-input
                 v-model="temp_deal.deal_no"
                 size="sm"
@@ -250,7 +250,6 @@
             <b-form-group label="USD Amount">
               <b-form-input
                 v-model="temp_deal.fcy_amount"
-                @change="handleChange"
                 size="sm"
                 v-on:keypress="isNumber($event)"
               ></b-form-input>
@@ -290,7 +289,7 @@
         </b-row>
       </b-card>
 
-      <b-card header="" header-tag="header">
+      <b-card header="Purchase Details" header-tag="header">
         <b-row>
           <b-col sm="12" md="4" lg="4">
             <b-form-group id="purchase-date" label="Value Date" label-for="purchase-datepicker">
@@ -332,7 +331,7 @@
               ></b-form-input>
             </b-form-group>
           </b-col>
-          <!-- <b-col  sm="12" md="4" lg="4">
+          <b-col  sm="12" md="4" lg="4">
             <b-form-group label="Service Tax">
               <b-form-input
                 v-model="temp_deal.tax"
@@ -340,7 +339,7 @@
                 v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
-          </b-col> -->
+          </b-col>
 
         </b-row>
       </b-card>
@@ -540,15 +539,6 @@ export default {
     };
   },
   methods: {
-    handleChange(value) {
-        console.log(value);
-        // let vm = this;
-        let res = value.toString().replace(/\D/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        console.log(res)
-        this.$set(this.temp_deal.fcy_amount,res);
-        
-    },
     ok() {
       console.log("ok");
     },

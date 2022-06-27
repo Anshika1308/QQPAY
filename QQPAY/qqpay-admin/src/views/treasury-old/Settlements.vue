@@ -51,7 +51,7 @@
           <div
             class="menu-sec d-flex justify-content-between align-items-center"
           >
-            Outstanding Amount:
+            Balance:
             <h3>{{ selected_deal.fcy_balance }} USD</h3>
           </div>
         </b-col>
@@ -747,7 +747,7 @@ export default {
           this.ppOptions.push({
             text: ele.name_of_employer,
             value: ele.name_of_employer,
-            pp_ccy: ele.local_currency        // Remove after api chnage and uncomment below
+            pp_ccy: 'Test'        // Remove after api chnage and uncomment below
             // pp_ccy: ele.pp_ccy
           })
         });

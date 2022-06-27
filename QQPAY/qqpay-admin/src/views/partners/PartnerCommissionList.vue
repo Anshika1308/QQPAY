@@ -7,37 +7,81 @@
     <b-container>
       <div class="search-area">
         <b-row>
-          <b-col class="input-field" cols='8'>
-            <b-form-select v-model="country" :options="countryOptions"></b-form-select>
-            <b-form-input v-model="searchValue" placeholder="Search for user"></b-form-input>
+          <b-col class="input-field" cols="8">
+            <b-form-select
+              v-model="country"
+              :options="countryOptions"
+            ></b-form-select>
+            <b-form-input
+              v-model="searchValue"
+              placeholder="Search for user"
+            ></b-form-input>
           </b-col>
-          <b-col cols='2'>
+          <b-col cols="2">
             <b-button class="search-btn">Search</b-button>
           </b-col>
-          <b-col cols='2'>
-            <b-button class="status-btn" v-b-modal.partner-commission-modal>Add P.C.</b-button>
+          <b-col cols="2">
+            <b-button class="status-btn" v-b-modal.partner-commission-modal
+              >Add P.C.</b-button
+            >
           </b-col>
         </b-row>
       </div>
       <div class="compliance-table">
-        <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable">
+        <b-table
+        class="table-hover"
+          :items="items"
+          :fields="fields"
+          :select-mode="selectMode"
+          responsive="sm"
+          ref="selectableTable"
+        >
           <template v-slot:cell(action)="row">
             <template v-if="row.item.action">
-              <b-icon class="btn" icon="pencil-square" variant="success"
-                @click="handleOpenUpdatePartnerCommission(row.item.action)" />
-              <b-icon class="mr-3 btn" icon="trash-fill" variant="danger" @click="onSubmit(row.item.action)" />
+              <b-icon
+                class="btn"
+                icon="eye"
+                variant="primary"
+                @click="onRowSelected(row.item.action)"
+              />
+              <b-icon
+                class="btn"
+                icon="pencil-square"
+                variant="success"
+                @click="handleOpenUpdatePartnerCommission(row.item.action)"
+              />
+              <b-icon
+                class="mr-3 btn"
+                icon="trash-fill"
+                variant="danger"
+                @click="onSubmit(row.item.action)"
+              />
             </template>
           </template>
         </b-table>
       </div>
       <b-overlay :show="deleteConfirm" no-wrap>
         <template #overlay>
-          <div v-if="processing" class="text-center p-4 loading text-light rounded">
+          <div
+            v-if="processing"
+            class="text-center p-4 loading text-light rounded"
+          >
             <div class="mb-3">Processing...</div>
           </div>
-          <div v-else ref="dialog" tabindex="-1" role="dialog" aria-modal="false" aria-labelledby="form-confirm-label"
-            class="text-center p-3">
-            <p><strong id="form-confirm-label">Are you sure you want to delete?</strong></p>
+          <div
+            v-else
+            ref="dialog"
+            tabindex="-1"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="form-confirm-label"
+            class="text-center p-3"
+          >
+            <p>
+              <strong id="form-confirm-label"
+                >Are you sure you want to delete?</strong
+              >
+            </p>
             <div class="d-flex">
               <b-button class="mr-3 search-btn" @click="onCancel">
                 Cancel
@@ -48,12 +92,35 @@
         </template>
       </b-overlay>
     </b-container>
-    <b-modal id="partner-commission-modal" hide-footer size="xl" title="Add Partner Commission">
+    <b-modal
+      id="partner-commission-modal"
+      hide-footer
+      size="xl"
+      title="Add Partner Commission"
+    >
       <AddPartnerCommission @getPartnerCommissions="getPartnerCommissions" />
     </b-modal>
-    <b-modal id="update-partner-commission-modal" hide-footer size="xl" title="Update Partner Commission">
-      <UpdatePartnerCommission :partner_commission_id="updatePartnerCommissionId"
-        @getPartnerCommissions="getPartnerCommissions" />
+    <b-modal
+      id="update-partner-commission-modal"
+      hide-footer
+      size="xl"
+      title="Update Partner Commission"
+    >
+      <UpdatePartnerCommission
+        :partner_commission_id="updatePartnerCommissionId"
+        @getPartnerCommissions="getPartnerCommissions"
+      />
+    </b-modal>
+    <b-modal
+      id="view-partner-commission-modal"
+      hide-footer
+      size="xl"
+      title="View Partner Commission"
+    >
+      <ViewPartnerCommission
+        :partner_commission_id="updatePartnerCommissionId"
+        @getPartnerCommissions="getPartnerCommissions"
+      />
     </b-modal>
   </div>
 </template>
@@ -62,14 +129,14 @@
 <script>
 import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
 import UpdatePartnerCommission from "@/views/partners/UpdatePartnerCommission";
+import ViewPartnerCommission from "@/views/partners/ViewPartnerCommission";
 import { responseHandler } from "@/helpers/globalFunctions";
 import { deleteApiData, getApiData } from "@/helpers/AxiosInstance";
 import APIS from "@/constants/EndPoint";
 
-
 export default {
   name: "PartnerCommissions",
-  components: { UpdatePartnerCommission, AddPartnerCommission },
+  components: { UpdatePartnerCommission, AddPartnerCommission , ViewPartnerCommission },
   data() {
     return {
       updatePartnerCommissionId: null,
@@ -88,7 +155,7 @@ export default {
         "upper_limit",
         "comm_charge_ccy",
         "active",
-        "action"
+        "action",
       ],
       items: [],
       riskStatusOptions: [
@@ -96,54 +163,71 @@ export default {
         { value: "High risk", text: "High risk" },
         { value: "Critical risk", text: "Critical risk" },
       ],
-      searchValue: ''
+      searchValue: "",
     };
   },
   methods: {
+    onRowSelected(id) {
+      console.log("commistion id " ,id);
+      this.updatePartnerCommissionId = id;
+      this.$bvModal.show("view-partner-commission-modal");
+    },
     handleOpenUpdatePartnerCommission(id) {
-      this.updatePartnerCommissionId = id
-      this.$bvModal.show("update-partner-commission-modal")
+      this.updatePartnerCommissionId = id;
+      this.$bvModal.show("update-partner-commission-modal");
     },
     onSubmit(id) {
-      this.deleteSelectedId = id
-      this.processing = false
-      this.deleteConfirm = true
+      this.deleteSelectedId = id;
+      this.processing = false;
+      this.deleteConfirm = true;
     },
     onCancel() {
-      this.deleteConfirm = false
+      this.deleteConfirm = false;
     },
     async onOK() {
-      this.deleteConfirm = false
-      const response = await deleteApiData(`${APIS.DELETE_PARTNER_COMMISSION}/${this.deleteSelectedId}`);
-      await responseHandler(response.data.status_code, this, response.data.message)
+      this.deleteConfirm = false;
+      const response = await deleteApiData(
+        `${APIS.DELETE_PARTNER_COMMISSION}/${this.deleteSelectedId}`
+      );
+      await responseHandler(
+        response.data.status_code,
+        this,
+        response.data.message
+      );
       if (response.data.status_code === 200) {
-        this.getPartnerCommissions()
+        this.getPartnerCommissions();
       }
     },
     onClickOutside() {
       if (this.togglePartnerFilter)
-        this.togglePartnerFilter = !this.togglePartnerFilter
+        this.togglePartnerFilter = !this.togglePartnerFilter;
     },
     async getPartnerCommissions() {
       const response = await getApiData(APIS.GET_PARTNER_COMMISSION_LIST);
       console.log(response, "data");
-      await responseHandler(response.data.status_code, this, response.data.message)
+      await responseHandler(
+        response.data.status_code,
+        this,
+        response.data.message
+      );
       if (response.data.status_code === 200) {
-        this.items = response.data.data.map(item => ({
+        this.items = response.data.data.map((item) => ({
           country: item.country_name,
           partner: item.name_of_employer,
-          payment_method: item.payment_method.replaceAll("_", " ").toUpperCase(),
+          payment_method: item.payment_method
+            .replaceAll("_", " ")
+            .toUpperCase(),
           comm_charge_ccy: item.currency,
           upper_limit: item.upper_limit,
           active: item.is_active,
           action: item.id,
-        }))
+        }));
       }
     },
   },
   async created() {
-    await this.getPartnerCommissions()
-  }
+    await this.getPartnerCommissions();
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -158,7 +242,6 @@ export default {
 
 .loading {
   background-color: $primary;
-
 }
 
 .partner-filter {
@@ -219,7 +302,7 @@ export default {
     border-color: $primary;
     width: 100%;
     background: transparent !important;
-    color: $primary  !important;
+    color: $primary !important;
   }
 }
 
@@ -232,7 +315,6 @@ export default {
     width: 50px;
   }
 }
-
 
 .compliance-table {
   text-align: center;

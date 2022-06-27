@@ -1,11 +1,11 @@
 import Axios from 'axios';
 // import {accessToken} from "../store/modules/app";
-import { store } from "../store";
+// import { store } from "../store";
 
 
 const API_ROOT = process.env.VUE_APP_SERVER_ENDPOINT
 const TRANSACTION_SERVICE = process.env.VUE_APP_TRANSACTION_SERVICE
-const TOKEN = store.getters.token
+const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY0MDU4NjksInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.2LtF97vlybR6mvSpwSxklPPMXxQ8yuP2tEgLyBwWZgc'
 
 
 //create axios instance
@@ -26,7 +26,7 @@ export const transactionInstance = Axios.create({
 
 //get data from api
 export const getApiData = async (url, param = null) => {
-  // console.log("test", store.getters.token)
+  // console.log("test", store.getters.AuthenticationService.loginData.data)
   let response;
   try {
     response = await instance({
