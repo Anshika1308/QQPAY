@@ -28,7 +28,7 @@
         </b-row>
       </div>
       <div class="compliance-table">
-        <b-table :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable">
+        <b-table class="table-hover" :items="items" :fields="fields" :select-mode="selectMode" responsive="sm" ref="selectableTable" selectable  @row-selected="onRowSelected">
           <template v-slot:cell(action)="row">
             <template v-if="row.item.action">
               <b-icon class="btn" icon="pencil-square" variant="success"
@@ -62,6 +62,9 @@
     <b-modal id="update-partner-modal" hide-footer size="xl" title="Update Partner">
       <UpdatePartner :partner_id="updateSelectedPartner" @getPartners="getPartners" />
     </b-modal>
+     <b-modal id="view-partner-modal" hide-footer size="xl" title="View Partner">
+      <ViewPartners :partner_id="updateSelectedPartner" @getPartners="getPartners" />
+    </b-modal>
   </div>
 </template>
 
@@ -69,6 +72,7 @@
 <script>
 import Vue from "vue";
 import UpdatePartner from "@/views/partners/UpdatePartner";
+import ViewPartners from "@/views/partners/ViewPartners";
 import { deleteApiData, getApiData } from "@/helpers/AxiosInstance";
 import APIS from "@/constants/EndPoint";
 import { responseHandler } from "@/helpers/globalFunctions";
@@ -92,7 +96,8 @@ export default {
   name: "PartnerList",
   components: {
     AddPartner,
-    UpdatePartner
+    UpdatePartner,
+    ViewPartners
   },
   data() {
     return {
@@ -129,6 +134,12 @@ export default {
     };
   },
   methods: {
+      onRowSelected(data) {
+      console.log(data[0].id);
+      this.updateSelectedPartner = data[0].id
+      this.$bvModal.show("view-partner-modal")
+      // this.$router.push("userDetails");
+    },
     onSubmit(id) {
       this.deleteSelectedId = id
       this.processing = false
@@ -179,6 +190,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+
+
 
 .search-btn {
   background-color: $primary;

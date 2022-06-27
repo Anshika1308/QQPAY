@@ -32,7 +32,7 @@
             responsive="sm"
             ref="selectableTable"
             selectable
-            @row-selected="onRowSelected"
+            @row-selected="onRowSelected" 
           >
             <!-- Example scoped slot for select state illustrative purposes -->
             <!-- <template #cell(selected)="{ rowSelected }">
