@@ -7,7 +7,7 @@
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Partner"/>
               <b-form-group id="input-group-partner-type" label="Partner" required label-for="input-partner-type">
-                <b-form-select v-model="partnerSelected" :options="partnerType" class="mb-3 form-control" required/>
+                <b-form-select v-model="partnerSelected" :options="partnerType" class="mb-3 form-control" required disabled/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
@@ -35,13 +35,13 @@
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Country"/>
               <b-form-group id="input-group-currency" label="Country" label-for="input-currency">
-                <b-form-select v-model="selectedCountry" :options="countryOptions" class="mb-3 form-control" required/>
+                <b-form-select v-model="selectedCountry" :options="countryOptions" class="mb-3 form-control" required disabled/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
               <UpdateLabel label="Currency"/>
               <b-form-group id="input-group-currency" label="Currency" label-for="input-currency">
-                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control" required/>
+                <b-form-select v-model="selectedCurrency" :options="selectedCurrencyType" class="mb-3 form-control" required disabled/>
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="6" xl="6">
@@ -141,6 +141,7 @@ export default {
       if (response.data.status_code === 200) {
         await this.$emit("getPartnerCommissions")
         this.$bvModal.hide("update-partner-commission-modal")
+        await this.getPartnerCommissions();
       } else {
         response.data.detail?.map((value) => {
           this.errors[`${value.loc[1]}`] = `${value.msg}`

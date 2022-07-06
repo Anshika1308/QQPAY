@@ -49,7 +49,7 @@
     </b-row>
     <b-table
       :items="items"
-      :fields="fields"
+      :fields="fields"  
       :filter="filter"
       responsive
       class="align-middle"
@@ -605,7 +605,7 @@ export default {
         const weekday = date.getDay()
         const day = date.getDate()
         // Return `true` if the date should be disabled
-        return weekday === 0 || weekday === 6 || day ===  1 || day ===  2 || day ===  3 || day ===  7 || day ===  8 || day ===  9 || day ===  10 || day ===  11 || day ===  12 || day ===  13 || day ===  14 || day ===  15 || day ===  16 || day ===  17
+        return weekday === 0 || weekday === 6 || day ===  1 || day ===  2 || day ===  3 || day ===  4  || day ===  5  || day ===  9 || day ===  10 || day ===  11 || day ===  12 || day ===  13 || day ===  14 || day ===  15 || day ===  16 || day ===  17
                || day ===  18 || day ===  19 || day ===  20 || day ===  21 || day ===  22 || day ===  23 || day ===  24 || day ===  25 || day ===   26 || day ===   27|| day ===  28 || day ===  29 || day ===  30
     },
     handleChange() {
@@ -614,12 +614,7 @@ export default {
           var temp_lcy_amount = (this.parseUSD(this.temp_deal.fcy_amount) * this.temp_deal.fcy_deal_rate).toFixed(2);
           this.temp_deal.lcy_amount = this.formatUSD(temp_lcy_amount);
           this.temp_deal.remarks = "Buying USD " +  this.temp_deal.fcy_amount + "@" +  this.temp_deal.fcy_deal_rate + " by selling MYR " + this.temp_deal.lcy_amount;
-        }
-        // let res = this.temp_deal.fcy_amount.toString().replace(/\D/g, "")
-        //     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        // console.log(res)
-        // this.$set(this.temp_deal.fcy_amount,res);
-        
+        }   
     },
     ok() {
       console.log("ok closing ");

@@ -29,7 +29,7 @@
       </div>
       <div class="compliance-table">
         <b-table
-        class="table-hover"
+          class="table-hover"
           :items="items"
           :fields="fields"
           :select-mode="selectMode"

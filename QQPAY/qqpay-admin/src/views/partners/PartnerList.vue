@@ -1,41 +1,54 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between">
-      <h1>Partner List</h1>
-      <b-button class="search-btn">Export</b-button>
-    </div>
+    <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
+   
     <b-container>
-      <div class="search-area">
-        <b-row>
-          <b-col class="input-field" cols="8" v-click-outside="onClickOutside">
-            <span
-              class="partner-filter"
-              @click="togglePartnerFilter = !togglePartnerFilter"
-              >Filter</span
-            >
+      <b-row>
+      <b-col>
+        <div>
+          <b-button-group size="sm">
+            <b-button variant="outline-light" v-b-modal.add-partner-modal>
+              <b-icon
+                icon="file-earmark-plus-fill" 
+              ></b-icon>
+              New Partner
+            </b-button>
+            <b-button variant="outline-light">
+              <b-icon icon="cloud-download-fill"></b-icon> Export XLS
+            </b-button>
+          </b-button-group>
+        </div>
+      </b-col>
+      <b-col>
+        <b-form-group
+          label-for="filter-input"
+          label-cols-sm="0"
+          label-cols-lg="0"
+          label-align-lg="right"
+          content-cols-sm="12"
+          content-cols-lg="8"
+          label-align-sm="right"
+          label-size="sm"
+          class="mb-2"
+        >
+          <b-input-group size="sm">
             <b-form-input
-              v-model="searchValue"
-              placeholder="Search for user"
+              id="filter-input"
+              v-model="filter"
+              type="search"
+              placeholder="Type to Search"
             ></b-form-input>
-            <div v-show="togglePartnerFilter" class="partner-filter-content">
-              <b-row cols="2 m-1">
-                <b-col cols="8" class="text-left">Country</b-col>
-                <b-col cols="4" class="text-right">Column</b-col>
-                <b-col cols="8" class="text-left">Partner Type</b-col>
-                <b-col cols="4" class="text-right">Column</b-col>
-              </b-row>
-            </div>
-          </b-col>
-          <b-col cols="2">
-            <b-button class="search-btn">Search</b-button>
-          </b-col>
-          <b-col cols="2">
-            <b-button class="status-btn" v-b-modal.add-partner-modal
-              >Add Partner</b-button
-            >
-          </b-col>
-        </b-row>
-      </div>
+
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''"
+                >Clear</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
+    </b-row>
+      
       <div class="compliance-table">
         <b-table
           class="table-hover"
@@ -164,6 +177,7 @@ export default {
       processing: false,
       deleteSelectedId: null,
       selectMode: "single",
+      filter:'',
       filterOptions: [
         { value: "null", text: "Filter" },
         { value: "a", text: "This is First option" },
@@ -171,6 +185,16 @@ export default {
       ],
       filterSelected: null,
       selected: [],
+      menu_hierarchy: [
+        {
+          text: "Treasury",
+          active: true,
+        },
+        {
+          text: "Deals",
+          active: true,
+        },
+      ],
       fields: [
         "id",
         "partner_name",
@@ -257,6 +281,30 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+
+
+::v-deep th {
+  color: $txt !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+::v-deep td {
+  font-size: 12px !important;
+}
+
+::v-deep .col-form-label {
+  color: $dimgrey;
+}
+
+.btn-outline-light {
+  color: $txt !important;
+  border-color: $primary !important;
+}
+
+.btn-secondary {
+  background: $txt !important;
+}
 
 .search-btn {
   background-color: $primary;

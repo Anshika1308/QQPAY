@@ -390,7 +390,7 @@
       </form>
     </b-container>
     <b-modal id="add-default-partner-commission" hide-footer size="xl" title="Add Partner">
-      <AddPartnerCommission :partner_id="partner_id"/>
+      <AddPartnerCommission :partner_id="partner_id" :partner_name="companyDetail.nameOfEmployer" :partner_country="companyDetail.company_country" :curruncy = "bankAndBranchAccountDetail.localCurrency" />
     </b-modal>
 
   </div>
@@ -555,7 +555,12 @@ export default {
   },
   methods: {
     handleDefaultPartnerCommissionAdd() {
-      this.$bvModal.show("add-default-partner-commission")
+      // this.$bvModal.hide("update-partner-modal").then(() => {
+      //     this.$bvModal.show("add-default-partner-commission");
+      // });
+       this.$bvModal.show("add-default-partner-commission");
+      //  this.$bvModal.hide("update-partner-modal");
+     
     },
     async handleSubmit() {
       const formData = JSON.stringify({

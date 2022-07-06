@@ -15,6 +15,7 @@ const APIS = {
 
   //PARTNER COMMISSION SERVICE
   GET_PARTNER_COMMISSION_LIST: '/partner_commission/get_partner_commissions',
+  GET_PARTNER_COMMISSION_LIST_BY_PARTNER: 'partner_commission/get_partner_commission_by_partner_id',
   GET_PARTNER_COMMISSION: '/partner_commission/get_partner_commission_by_id',
   DELETE_PARTNER_COMMISSION: '/partner_commission/delete_partner_commission_by_id',
   CREATE_PARTNER_COMMISSION: '/partner_commission/create-partner-commission',
