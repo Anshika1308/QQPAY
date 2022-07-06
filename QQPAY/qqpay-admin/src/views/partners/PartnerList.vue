@@ -49,7 +49,7 @@
             <template v-if="row.item.action" >
             <!-- <i class="bi bi-eye-fill"></i> -->
               <b-icon
-                class="btn mr-3"
+                class="btn"
                 icon="eye"
                 variant="primary"
                 @click="onRowSelected(row.item.action)"
@@ -172,11 +172,9 @@ export default {
       filterSelected: null,
       selected: [],
       fields: [
-        "partner_name",
         "id",
+        "partner_name",
         "contact_person",
-        "number",
-        "email",
         "country",
         "partner_type",
         "action",
@@ -244,7 +242,7 @@ export default {
           contact_person: item.contact_person_1,
           number: item.company_phone_1,
           email: item.company_email,
-          country: item.country_name,
+          country: item.company_country,
           partner_type: item.partner_type.toUpperCase().replaceAll("_", " "),
           action: item.agent_id,
         }));

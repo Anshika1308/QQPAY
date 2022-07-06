@@ -10,7 +10,7 @@ export function getAll(){
 
 export function getByCompany(Id){
     return request({
-        url: `${baseUrl}/special_rates_by_company/` + Id,
+        url: `${baseUrl}/get_special_rates_by_company/` + Id,
         method: 'get',
     })
 }

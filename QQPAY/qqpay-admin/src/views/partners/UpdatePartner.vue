@@ -123,7 +123,7 @@
             <b-col md="6" sm="12" lg="4" xl="4">
               <UpdateLabel label="Country"/>
               <b-form-group id="input-group-country" label="Country" label-for="input-country">
-                <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.country"
+                <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.company_country"
                                :options="companyDetail.countryOptions" required/>
               </b-form-group>
             </b-col>
@@ -284,10 +284,16 @@
             <b-col md="12" sm="12" lg="12" xl="12">
               <b-form-group id="input-group-partner-settlement-in" label="Payment Mode Allowed"
                             label-for="input-partner-settlement-in">
-                <b-form-checkbox-group v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
+                              <multiselect
+                              v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
+                              :multiple="true"
+                              :options="bankAndBranchAccountDetail.paymentMethodAllowedOptions" @input="ChangeCheckbox">
+                            </multiselect>
+                <!-- <b-form-checkbox-group v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
                                        :options="bankAndBranchAccountDetail.paymentMethodAllowedOptions" class="mb-3"
                                        value-field="item"
-                                       text-field="name" disabled-field="notEnabled"/>
+                                       text-field="name" disabled-field="notEnabled"/> -->
+
               </b-form-group>
             </b-col>
             <b-col md="12" sm="12" lg="12" xl="12">
@@ -398,6 +404,7 @@ import APIS from "@/constants/EndPoint";
 import {responseHandler} from "@/helpers/globalFunctions";
 import UpdateLabel from "@/components/reusable/UpdateLabel";
 import AddPartnerCommission from "@/views/partners/AddPartnerCommission";
+import Multiselect from 'vue-multiselect'
 
 export default {
   name: 'UpdatePartner',
@@ -405,6 +412,7 @@ export default {
   components: {
     AddPartnerCommission,
     UpdateLabel,
+    Multiselect
   },
   data() {
     return {
@@ -446,7 +454,8 @@ export default {
         address: "",
         licenseExpiryDate: "",
         city: "",
-        country: "",
+        company_country: "",
+        iso_alpha3:"",
         countryOptions: [],
         phone1: "",
         phone2: "",
@@ -566,7 +575,8 @@ export default {
         company_address: this.companyDetail.address,
         license_expiry_date: moment(this.companyDetail.licenseExpiryDate).toDate(),
         company_city: this.companyDetail.city,
-        company_country: this.companyDetail.country,
+        company_country: this.companyDetail.company_country,
+        company_country_code:this.companyDetail.iso_alpha3,
         company_phone_1: this.companyDetail.phone1,
         company_phone_2: this.companyDetail.phone2,
         company_email: this.companyDetail.email,
@@ -590,7 +600,7 @@ export default {
         risk_level: this.bankAndBranchAccountDetail.riskLevels,
         tax_type: this.bankAndBranchAccountDetail.taxType,
         settlement_date: this.bankAndBranchAccountDetail.settlementDate ? moment(this.bankAndBranchAccountDetail.settlementDate).format("YYYY-MM-DD") : null,
-        payment_mode_allowed: this.bankAndBranchAccountDetail.paymentMethodAllowedOptions.toString(),
+        payment_mode_allowed: this.bankAndBranchAccountDetail.paymentMethodAllowedSelected.toString(),
         remarks: this.bankAndBranchAccountDetail.remarks,
         print_receipt_information: this.bankAndBranchAccountDetail.printReceiptInformation,
         fund_collection_day: this.bankAndBranchAccountDetail.fundCollectionDay,
@@ -640,7 +650,7 @@ export default {
           address: res.data.data[0].company_address,
           licenseExpiryDate: moment(res.data.data[0].license_expiry_date).format("YYYY-MM-DD"),
           city: res.data.data[0].company_city,
-          country: res.data.data[0].company_country,
+          company_country: res.data.data[0].company_country,
           phone1: res.data.data[0].company_phone_1,
           phone2: res.data.data[0].company_phone_2,
           email: res.data.data[0].company_email,
@@ -655,7 +665,7 @@ export default {
           doNotAllowSameUserToApprove: res.data.data[0].do_not_allow_same_user_to_approve_transaction,
           creditLimitToSDNTRN: res.data.data[0].credit_limit_to_sdn_trn,
           creditLimitToSBNTRN: res.data.data[0].credit_limit_to_sbn_trn,
-          localCurrency: res.data.data[0].currency_type,
+          localCurrency: res.data.data[0].local_currency,
           mileageDefined: res.data.data[0].mileage_defined,
           maxPayoutAmtPerTXNCashPay: res.data.data[0].max_payout_amt_per_txn_cash_pay,
           maxPayoutAmtPerTXNACDeposit: res.data.data[0].max_payout_amt_per_txn_ac_deposit,
@@ -691,8 +701,8 @@ export default {
       this.companyDetail = {
         ...this.companyDetail,
         countryOptions: res?.data?.map(item => ({
-          value: item.id,
-          text: item.nationality
+          value: item.country_name,
+          text: item.country_name
         })),
       };
       this.bankAndBranchAccountDetail = {
@@ -711,7 +721,10 @@ export default {
   }
 }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss" scoped>
+
 @import "@/global.scss";
 
 .submit-btn {

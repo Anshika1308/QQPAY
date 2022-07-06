@@ -1,7 +1,33 @@
 import request from '@/utils/request'
 const baseUrl = '8000/api/v1/forex_deal'
 
-export function getAll(){
+
+
+
+
+export function saveBusinus(data){
+    return request({
+        url: `${baseUrl}/add_business_forex_deal/`,
+        method: 'post',
+        data,
+    })
+}
+
+export function getBusinusForex(){
+    return request({
+        url: `${baseUrl}/get-business-forex-deals-by-country/`,
+        method: 'get',
+    })
+}
+
+export function getAll(deal_type){
+    return request({
+        url: `${baseUrl}/get-forex-deals-by-country?deal_type=${deal_type}`,
+        method: 'get',
+    })
+}
+
+export function getAllafterSave(){
     return request({
         url: `${baseUrl}/all_forex_deals/`,
         method: 'get',

@@ -393,7 +393,7 @@
                     <b-col cols="6">
                       <b-form-group label="Receive Country">
                         <b-form-input
-                          v-model="countryWiseDefaultForm.receive_country"
+                          v-model="countryWiseDefaultForm.country"
                           size="sm"
                         ></b-form-input>
                       </b-form-group>
@@ -605,7 +605,7 @@ export default {
         country: null,
         service_charge_type: null,
         service_charge: null,
-        upper_limit: null,
+        upper_limit: 0.00,
         qqpay_commission: null,
         payout_partner_commission: null,
         remarks: null,

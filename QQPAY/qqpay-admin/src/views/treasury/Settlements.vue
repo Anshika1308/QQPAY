@@ -77,7 +77,7 @@
       <b-col class="col-p5">
         <div>
           <b-button-group size="sm">
-            <b-button v-if="selected_deal"  variant="outline-light" v-b-modal.add-settlement @click="newSettlementlick()">
+            <b-button v-if="selected_deal && selected_deal.fcy_balance > 0"  variant="outline-light" @click="newSettlementlick()">
               <b-icon icon="file-earmark-plus-fill"></b-icon> New Settlement
             </b-button>
             <b-button variant="outline-light">
@@ -248,154 +248,211 @@
     </b-table>
     <b-modal
       id="add-settlement"
-      ref="modal"
+      ref="add-settlement"
       title="Settlement Details"
-      @ok="nav_update"
+      @hidden="onHidden()"
       size="xl"
       variant="primary"
     >
-      <b-card header="Settlement Details" header-tag="header">
+      <b-card  :header="this.updateTrigger ? 'Basic Details' : '' " header-tag="header">
         <b-row>
-          <b-col>
+          <div class="errorstyles">
+              <div class="z-index">{{ apiSideMessage }}</div>
+          </div>
+          <b-col md="4">
             <b-form-group label="Payout Partner">
-              <!-- <b-form-input
-                v-model="temp_settlement.payout_partner"
-                size="sm"
-              ></b-form-input> -->
               <b-form-select
                 v-model="temp_settlement.payout_partner"
                 :options="ppOptions"
-                @change="onChangePPoptions($event)"           
+                @change="onChangePPoptions($event)"
+                :disabled ="updateTrigger ? true : false"           
               ></b-form-select>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_settlement_error.payout_partner_error }}</div>
+          </div>
           </b-col>
-          <b-col>
-            <b-form-group label="PP CCY">
-              <b-form-input
-                v-model="temp_settlement.ccy_cd"
-                size="sm"
-                disabled
-              ></b-form-input>
-            </b-form-group>
-          </b-col>          
-          
-          <b-col>
-            <b-form-group label="USD Amt">
+          <b-col md="4">
+            <b-form-group label="USD Amount">
               <b-form-input
                 v-model="temp_settlement.credit_amount"
                 size="sm"
-                v-on:keypress="isNumber($event)"
+                @input="isValidAmount()"
+                :disabled ="updateTrigger ? true : false"
               ></b-form-input>
             </b-form-group>
+            <div class="errorstyles" v-if="amountValidity === 'invalid'">
+              <div class="z-index">{{ amountExceedError }}</div>
+            </div>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_settlement_error.credit_amount_error }}</div>
+          </div>
           </b-col>
 
-        </b-row>
+        <!-- </b-row>
 
-        <b-row>
-          <b-col>
-            <b-form-group label="Swift Charges">
+        <b-row> -->
+          <b-col md="4">
+            <b-form-group label="LCY Amount">
               <b-form-input
-                v-model="temp_settlement.swift_charge"
+                v-model="temp_settlement.lcy_amount"
                 size="sm"
                 v-on:keypress="isNumber($event)"
+                disabled
               ></b-form-input>
             </b-form-group>
           </b-col>
-          <b-col>
-            <b-form-group label="PP Sharing Charges">
+          <b-col md="4">
+            <b-form-group label="Bank Charge">
               <b-form-input
-                v-model="temp_settlement.coll_ccy_pay_ccy_wrong"
+                id="input-1"
+                v-model="temp_settlement.bank_charge"
                 size="sm"
                 v-on:keypress="isNumber($event)"
+                :disabled ="updateTrigger ? true : false"
               ></b-form-input>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_settlement_error.bank_charge_error }}</div>
+          </div>
           </b-col>
-          <b-col>
-            <b-form-group label="Tax">
+          <b-col md="4">
+            <b-form-group label="Service Tax">
               <b-form-input
-                v-model="temp_settlement.tax"
+                v-model="temp_settlement.service_tax"
                 size="sm"
                 v-on:keypress="isNumber($event)"
+                :disabled ="updateTrigger ? true : false"
               ></b-form-input>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_settlement_error.service_tax_error }}</div>
+          </div>
           </b-col>
-        </b-row>
-      </b-card>
-
-      <b-card header="Purchase Details" header-tag="header">
-        <b-row>
-          <b-col>
+          <b-col md="4">
             <b-form-group
-              id="fieldset-1"
-              label="Transaction Date"
-              label-for="settl-date-id"
+              label="Value Date"
             >
               <b-form-datepicker
                 id="settl-date-id"
                 v-model="temp_settlement.settl_date"
                 class="mb-2"
                 size="sm"
+                disabled
               ></b-form-datepicker>
             </b-form-group>
           </b-col>
 
-          <b-col>
-            <b-form-group label="Transaction Number">
+          <b-col md="4">
+            <b-form-group label="Deal Number">
               <b-form-input
-                v-model="temp_settlement.settle_srl_num"
+                v-model="temp_settlement.deal_no"
                 size="sm"
+                disabled
               ></b-form-input>
             </b-form-group>
           </b-col>
 
-          <b-col>
-            <b-form-group label="US in PP" label-for="input-1">
+          <b-col md="4">
+            <b-form-group label="Deal Rate">
               <b-form-input
-                id="input-1"
-                v-model="temp_settlement.coll_ccy_pay_ccy"
+                v-model="temp_settlement.fcy_deal_rate"
                 size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-
-        </b-row>
-        <b-row>
-          <b-col>
-            <b-form-group label="MYR in PP" label-for="input-1">
-              <b-form-input
-                id="input-1"
-                v-model="temp_settlement.lcy_amount"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group
-              id="fieldset-1"
-              label="PP CCY Dates"
-              label-for="example-datepicker"
-            >
-              <b-form-datepicker
-                id="example-datepicker"
-                v-model="temp_settlement.authorized_date"
-                class="mb-2"
-                size="sm"
-              ></b-form-datepicker>
-            </b-form-group>
-          </b-col>
-          <b-col>
-            <b-form-group label="Settler">
-              <b-form-input
-                v-model="temp_settlement.pp_bank_poc"
-                size="sm"
+                disabled
               ></b-form-input>
             </b-form-group>
           </b-col>
         </b-row>
       </b-card>
+      <b-card v-if="updateTrigger" header="Fund Receiving Confirmation" header-tag="header">
+        <b-row>
+          <b-col md="4">
+            <b-form-group label="Receving Date">
+              <b-form-datepicker
+                id="example-datepicker"
+                v-model="temp_settlement.receving_date"
+                class="mb-2"
+                size="sm"
+              >
+              </b-form-datepicker>
+            </b-form-group>
+          </b-col>
+          <b-col md="4">
+            <b-form-group label="Receving Amount">
+              <b-form-input
+                v-model="temp_settlement.receving_amount"
+                @input="CalculateSwiftCharge"
+                size="md"
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="4">
+            <b-form-group label="Swift Charge">
+              <b-form-input
+                v-model="temp_settlement.swift_charge"
+                size="md"
+                disabled
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-card>
+      <b-card v-if="updateTrigger" header="Audit Details" header-tag="header">
+        <b-row> 
+         <b-col  md="6">
+            <b-form-group label="Created By">
+              <b-form-input
+                v-model="temp_settlement.created_by"
+                size="sm"
+                disabled
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Created Date">
+               <b-form-datepicker
+                id="example-datepicker"
+                v-model="temp_settlement.created_date"
+                class="mb-2"
+                size="sm"
+                disabled
+              >
+              </b-form-datepicker>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Update By">
+              <b-form-input
+                v-model="temp_settlement.updated_by"
+                size="sm"
+                disabled
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Update Date">
+              <b-form-datepicker
+                id="example-datepicker"
+                v-model="temp_settlement.updated_date"
+                class="mb-2"
+                size="sm"
+                disabled
+              >
+              </b-form-datepicker>
+            </b-form-group>
+          </b-col>
 
-      <template #modal-footer="{ ok }">
-        <b-button variant="primary" @click="ok();postSettlmentData()"> SUBMIT </b-button>
+        </b-row>
+      </b-card>
+      <b-form-textarea
+        id="textarea"
+        v-model="temp_settlement.remarks"
+        rows="3"
+        max-rows="6"
+      >
+      </b-form-textarea>
+      <template #modal-footer="{}">
+        <b-button variant="primary" @click="postSettlmentData()"> SUBMIT </b-button>
       </template>
     </b-modal>
   </div>
@@ -431,7 +488,7 @@ export default {
         this.selected_deal = null;
         this.getAllSettlements();
       }
-    }
+    },
   },
   computed: {
     ...mapGetters([
@@ -535,48 +592,56 @@ export default {
           ],
         },
       ],
+      amountExceedError:"",
+      amountValidity:"pending",
+      apiSideMessage:"",
+      temp_settlement_error: {
+        fcy_deal_rate_error:"",
+        service_tax_error:"",
+        bank_charge_error:"",
+        payout_partner_error: "",
+        settl_date_error: "",
+        deal_no_error: "",
+        credit_amount_error: "",
+        authorized_date_error: "",
+        coll_ccy_pay_ccy_error: null,
+        lcy_amount_error: null,
+        purchase_date_error:"2022-06-28",
+        ccy_cd_error: "",
+        swift_charge_error: 0.00,
+        receving_amount_error:0.00,
+        receving_date_error:"",
+        coll_ccy_pay_ccy_wrong_error: 0.0,  // Need to capture
+        created_by_error: "",
+        updated_by_error: "",
+        pp_bank_poc_error: "",  // Not captured
+        tax_error: null,             // Not captured
+        deal_id_error: "",         // Need to add settlement in a particular deal
+        remarks_error:"",
+      },
       temp_settlement: {
-/*         i_o_IRH: "O",
-        settlement_date: "",
-        source_of_funds: "Maybank",
-        amount_in_USD: "66,509 USD",
-        exchange_rate: "",
-        amount_in_MYR: "2,80,003.89 MYR",
-        contract_no: "S1341125",
-        purchase_date: "02 Nov 21",
-        status: "Open",
-        created_by: "Deepu",
-        break_down: "0",
-        edited_by: "",
-        comment: "", */
-
+        fcy_deal_rate:"",
+        service_tax:"",
+        bank_charge:"",
         payout_partner: "",
         settl_date: "",
-        settle_srl_num: "",
+        deal_no: "",
         credit_amount: "",
         authorized_date: "",
         coll_ccy_pay_ccy: null,
         lcy_amount: null,
-
+        purchase_date:"2022-06-28",
         ccy_cd: "",
-        purchase_date: "",
-        swift_charge: "",
-        coll_ccy_pay_ccy_wrong: "",  // Need to capture
+        swift_charge: null,
+        receving_amount:0.00,
+        receving_date:"",
+        coll_ccy_pay_ccy_wrong: 0.0,  // Need to capture
         created_by: "",
         updated_by: "",
         pp_bank_poc: "",  // Not captured
         tax: null,             // Not captured
         deal_id: "",         // Need to add settlement in a particular deal
-
-/*         PP_CCY: "",
-        swift_charges: "",
-        PP_sharing_charges: "",
-        created_by: "",
-        edited_by: "",
-        // PP_CCY_DT: "2021-11-01",
-        PP_Bank_POC: "",
-        tax: "" */
-    
+        remarks:"",
       },
       menu_hierarchy: [
         {
@@ -599,66 +664,62 @@ export default {
           label: 'Settlement Date'
         },
         {
-          key: 'settle_srl_num',
-          label: 'Transaction Number'
+          key: 'deal_no',
+          label: 'Deal Number'
         },
         {
           key: 'credit_amount',
           label: 'USD Amount'
         },
         {
-          key: 'authorized_date',  //  Need to check that
-          label: 'PP CCY Date'
+          key: 'fcy_deal_rate',
+          label: 'Deal Rate'
         },
-        {
-          key: 'coll_ccy_pay_ccy',
-          label: 'USD in PP' 
-        },
-        {
-          key: 'lcy_amount',
-          label: 'MYR in PP'
-        },
-
-
-
-/*         "payout_partner",
-        "settl_date",
-        "settle_srl_num",
-        "PP_CCY",
-        "USD_Amt",
-        "swift_charges",
-        "PP_sharing_charges",
-        "created_by",
-        "edited_by",
-        "USD_in_PP",
-        "MYR_in_PP",
-        "PP_CCY_DT",
-        "PP_Bank_POC",
-        "tax", */
         { key: "actions", label: "" },
       ],
       items: [
-/*         {
-          payout_partner: "Axis",
-          PP_CCY: "USD",
-          USD_Amt: "66,509 USD",
-          swift_charges: "10$",
-          PP_sharing_charges: "N/A",
-          settle_srl_num: "D+PP",
-          settl_date: "01 Nov 21",
-          created_by: "",
-          edited_by: "",
-          USD_in_PP: 74.50,
-          MYR_in_PP: 17.50,
-          PP_CCY_DT: "01 Nov 21",
-          PP_Bank_POC: "",
-          tax: ""
-
-        }, */
       ],
     };
   },
   methods: {
+    onHidden(){
+      if(this.updateTrigger){
+            console.log("model closing bro when updating");
+           this.getAllSettlements();
+      }else{
+            console.log("model closing bro when adding");
+      }
+    },
+    CalculateSwiftCharge(){
+      this.temp_settlement.swift_charge = this.parseUSD(this.temp_settlement.credit_amount) - this.temp_settlement.receving_amount
+    },
+    isValidAmount(){
+      this.temp_settlement.credit_amount = this.formatUSD(this.parseUSD(this.temp_settlement.credit_amount));
+      if(this.temp_settlement.credit_amount){
+        this.temp_settlement.remarks = "Settlement to " +  this.temp_settlement.payout_partner + " " + this.temp_settlement.credit_amount + " USD " +  "@" + this.temp_settlement.fcy_deal_rate;
+      }
+      if(this.temp_settlement.credit_amount){
+          var temp_lcy_amount = (this.parseUSD(this.temp_settlement.credit_amount) * this.temp_settlement.fcy_deal_rate).toFixed(4);
+          this.temp_settlement.lcy_amount = this.formatUSD(temp_lcy_amount);
+      }
+      if(this.selected_deal.fcy_balance < this.temp_settlement.credit_amount){
+        this.amountValidity = "invalid",
+        this.amountExceedError = "Amount shoud be less than outstanding amount"
+      }else{
+        this.amountValidity = "valid",
+        this.amountExceedError = ""
+      }
+    },
+    formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
     submitSettlementModal() {
       // this.items.push(this.temp_settlement);
     },
@@ -714,7 +775,10 @@ export default {
         })
         .then(response => {
           responseHandler(response.data.status_code, this, response.data.message)
+          console.log("response.data.data[0].deal_no", response.data.data[0].deal_no)
           this.selected_deal = response.data.data[0];
+          this.temp_settlement.deal_no = response.data.data[0].deal_no;
+          console.log(" this.temp_settlement.deal_no",  this.temp_settlement.deal_no)
           this.triggerUpdateDeal();
         })
         .catch((e) => {
@@ -766,24 +830,54 @@ export default {
       }
     },
 
-    postSettlmentData() {
-      if (!this.temp_settlement.payout_partner) {
-        responseHandler(500, this, 'Settement not added - Payout Partner cannot be empty');
-        return;
-      }
+    postSettlmentData() { 
       const request = this.getRequest();
       // console.log('req', JSON.parse(JSON.stringify(request)))
-      if (this.updateTrigger) {
+      if(!this.temp_settlement.payout_partner){
+        this.temp_settlement_error.payout_partner_error = "Please Select Payout Partner"
+      }else{
+        this.temp_settlement_error.payout_partner_error = ""
+      }
+      if(!this.temp_settlement.credit_amount){
+        this.temp_settlement_error.credit_amount_error = "Please Enter the USD Amount"
+      }else{
+        this.temp_settlement_error.credit_amount_error = ""
+      }
+      if(!this.temp_settlement.bank_charge){
+        this.temp_settlement_error.bank_charge_error = "Please Enter a Bank Charge"
+      }else{
+        this.temp_settlement_error.bank_charge_error = ""
+      }    
+    if (this.updateTrigger) {
+      request.credit_amount = this.parseUSD(request.credit_amount);
+      request.lcy_amount = this.parseUSD(request.lcy_amount);
+      console.log("request",request.purchase_date)
+      const date = new Date(request.purchase_date);
+      const mnth = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
+      request.purchase_date = [date.getFullYear(), mnth, day].join("-");
+
         axios.put(this.base_url + "deal-settlement/update-settlement/" + request.settl_id, request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
           })
           .then((response) => {
+            if(response.data.status_code === 200){
+              
+                this.$refs['add-settlement'].hide();
+                this.$swal({
+                        title: "Settlment Updated Succesfully",
+                        icon: "success",
+                        button: "Done",
+                });
+                this.apiSideMessage = "";
+            }
             responseHandler(response.data.status_code, this, response.data.message)
             const index = this.items.findIndex(ele => ele.settl_id === this.temp_settlement.settl_id);
             this.items[index] = response.data.data[0];
             this.getSelectedDealDtl();
+            
           })
           .catch((err) => {
             if (err.response && err.response.data && err.response.data.message) {
@@ -797,13 +891,30 @@ export default {
       } else {
         request.purchase_date = this.selected_deal.deal_date
         request.deal_id = this.selected_deal_id; // Need to check when we dont have deal ie when we click settlement from the sub menu.
-        axios.post(this.base_url + "deal-settlement/new-deal-settlement", request, {
+        if(request.payout_partner && request.credit_amount && request.bank_charge){
+          request.service_tax = 0.00;
+          request.credit_amount = this.parseUSD(request.credit_amount);
+          request.lcy_amount = this.parseUSD(request.lcy_amount);
+          axios.post(this.base_url + "deal-settlement/new-deal-settlement", request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
           })
           .then((response) => {
             responseHandler(response.data.status_code, this, response.data.message)
+            if(response.data.status_code === 200){
+                this.$refs['add-settlement'].hide();
+                this.$swal({
+                        title: "Settlment Added Succesfully",
+                        icon: "success",
+                        button: "Done",
+                });
+                this.apiSideMessage = "";
+            }
+            if(response.data.status_code !== 200){
+                this.apiSideMessage = response.data.message;
+            }
+            
             this.items.unshift(response.data.data[0]);
             this.getSelectedDealDtl();
           })
@@ -814,7 +925,9 @@ export default {
               responseHandler(err.status_code, this, err.message)
             }
             console.log('Deal not posted', err);
-        });        
+          });  
+        }
+              
       }
     },
     /**
@@ -822,6 +935,8 @@ export default {
      */
     triggerUpdateDeal() {
       if (this.$root.$refs.Deals) {
+        console.log("comming hear", this.selected_deal.deal_no);
+        this.temp_settlement.deal_no = this.selected_deal.deal_no;
           this.$root.$emit('selectedDealEventing', this.selected_deal);
       }
     },
@@ -839,7 +954,36 @@ export default {
     },
     onclickUpdate(selectedRow) {
       this.updateTrigger = true;
+      selectedRow.credit_amount = this.formatUSD(selectedRow.credit_amount);
+      selectedRow.lcy_amount = this.formatUSD(selectedRow.lcy_amount);
+      this.temp_settlement_error = {
+        fcy_deal_rate_error:"",
+        service_tax_error:"",
+        bank_charge_error:"",
+        payout_partner_error: "",
+        settl_date_error: "",
+        deal_no_error: "",
+        credit_amount_error: "",
+        authorized_date_error: "",
+        coll_ccy_pay_ccy_error: null,
+        lcy_amount_error: null,
+        purchase_date_error:"2022-06-28",
+        ccy_cd_error: "",
+        swift_charge_error: 0.00,
+        receving_amount_error:0.00,
+        receving_date_error:"",
+        coll_ccy_pay_ccy_wrong_error: 0.0,  // Need to capture
+        created_by_error: "",
+        updated_by_error: "",
+        pp_bank_poc_error: "",  // Not captured
+        tax_error: null,             // Not captured
+        deal_id_error: "",         // Need to add settlement in a particular deal
+        remarks_error:"",
+      };
+      console.log("selectedRow",selectedRow)
+       console.log("selectedRow",selectedRow.purchase_date)
       this.temp_settlement = selectedRow;
+   
     },
     deleteSettlement(selectedRow) {
       axios.delete(this.base_url + "deal-settlement/delete-settlement/" + selectedRow.settl_id, {
@@ -872,20 +1016,51 @@ export default {
       else e.preventDefault(); // If not match, don't add to input text
     },
     newSettlementlick() {
+      this.$refs['add-settlement'].show();
       this.updateTrigger = false;
+        const date = new Date(this.selected_deal.purchase_date);
+        const mnth = ("0" + (date.getMonth() + 1)).slice(-2);
+        const day = ("0" + date.getDate()).slice(-2);
+        this.selected_deal.purchase_date = [date.getFullYear(), mnth, day].join("-");
+      this.temp_settlement_error = {
+        fcy_deal_rate_error:"",
+        service_tax_error:"",
+        bank_charge_error:"",
+        payout_partner_error: "",
+        settl_date_error: "",
+        deal_no_error: "",
+        credit_amount_error: "",
+        authorized_date_error: "",
+        coll_ccy_pay_ccy_error: null,
+        lcy_amount_error: null,
+        purchase_date_error:"2022-06-28",
+        ccy_cd_error: "",
+        swift_charge_error: 0.00,
+        receving_amount_error:0.00,
+        receving_date_error:"",
+        coll_ccy_pay_ccy_wrong_error: 0.0,  // Need to capture
+        created_by_error: "",
+        updated_by_error: "",
+        pp_bank_poc_error: "",  // Not captured
+        tax_error: null,             // Not captured
+        deal_id_error: "",         // Need to add settlement in a particular deal
+        remarks_error:"",
+      };
       this.temp_settlement = {
         payout_partner: "",
-        settl_date: "",
-        settle_srl_num: "",
+        settl_date: this.selected_deal.purchase_date,
+        deal_no: this.selected_deal.deal_no,
+        fcy_deal_rate:this.selected_deal.fcy_deal_rate,
         credit_amount: "",
         authorized_date: "",
         coll_ccy_pay_ccy: null,
         lcy_amount: null,
-
+        bank_charge:0.00,
+        service_tax:0.00,
         ccy_cd: "",
-        purchase_date: "",
-        swift_charge: "",
-        coll_ccy_pay_ccy_wrong: "",  // Need to capture
+        swift_charge: 0.00,
+        purchase_date: "2022-06-28",
+        coll_ccy_pay_ccy_wrong: 0.00,  // Need to capture
         created_by: "",
         updated_by: "",
         pp_bank_poc: "",  // Not captured
@@ -896,10 +1071,25 @@ export default {
     }
     
   },
+
 };
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+
+.invalid input {
+  border-color: rgb(248, 146, 146);
+}
+.errorstyles {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: red;
+
+}
+
 .col-p5 {
   padding-right: 5px !important;
   padding-left: 5px !important;

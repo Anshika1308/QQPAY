@@ -61,6 +61,8 @@
                       </template>
                       <FruadUsers />
                     </b-tab>
+
+
                     <b-tab v-if="tab_show.deals" :active="tab_active.deals">
                       <template #title>
                         <b-icon icon="journal-check" aria-hidden="true"></b-icon>
@@ -94,7 +96,7 @@
                     <b-tab v-if="tab_show.dailyForex" :active="tab_active.dailyForex">
                       <template #title>
                         <b-icon icon="graph-up" aria-hidden="true"></b-icon>
-                        Daily Forex
+                        Daily Forex -IND
                         <b-button variant="outline-light" size="sm" @click="closeTab('dailyForex')">
                           <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
                         </b-button>
@@ -185,6 +187,30 @@
                       <DealsBu @openTab="openTab"
                     /></b-tab>
 
+                    <b-tab
+                      v-if="tab_show.Reports"
+                      :active="tab_active.Reports"
+                    >
+                      <template #title>
+                        <b-icon
+                          icon="diagram3-fill"
+                          aria-hidden="true"
+                        ></b-icon>
+                        Reports
+                        <b-button
+                          variant="outline-light"
+                          size="sm"
+                          @click="closeTab('Reports')"
+                          ><b-icon
+                            icon="x-circle-fill"
+                            aria-hidden="true"
+                          ></b-icon
+                        ></b-button>
+                      </template>
+                      <Reports @openTab="openTab"
+                    /></b-tab>
+
+                    
                     <b-tab v-if="tab_show.specialRates" :active="tab_active.specialRates">
                       <template #title>
                         <b-icon icon="graph-up" aria-hidden="true"></b-icon>
@@ -215,6 +241,17 @@
                       </template>
                       <ManageScore />
                     </b-tab>
+                    <b-tab v-if="tab_show.DailyForexBUS" :active="tab_active.DailyForexBUS">
+                      <template #title>
+                        <b-icon icon="graph-up" aria-hidden="true"></b-icon>
+                          DailyForex - BUS
+                        <b-button variant="outline-light" size="sm" @click="closeTab('DailyForexBUS')">
+                          <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
+                        </b-button>
+                      </template>
+                      <DailyForexBUS />
+                    </b-tab>
+                    
                     <b-tab v-if="tab_show.PPComm" :active="tab_active.PPComm">
                       <template #title>
                         <b-icon icon="cash-stack" aria-hidden="true"></b-icon>
@@ -262,6 +299,7 @@ import PartnerCommissionList from "@/views/partners/PartnerCommissionList";
 
 //import Business from "./compilance/Business.vue";
 import DailyForex from "@/views/treasury/DailyForex.vue";
+import DailyForexBUS from "@/views/treasury/DailyForexBus.vue";
 //import { component } from 'vue/types/umd';
 import ServiceCharge from "@/views/setup/ServiceCharge.vue";
 import SpecialRates from "@/views/setup/SpecialRates.vue";
@@ -270,6 +308,8 @@ import Service from "./ServiceCharge/Service.vue";
 import PPComm from "./ServiceCharge/PPComm.vue";
 import ComplianceSettings from "@/views/setup/ComplianceSettings.vue";
 import DealsBu from "./treasury/DealsBu.vue";
+import Reports from "./treasury/Report.vue";
+
 export default {
   name: "Home",
   components: {
@@ -291,8 +331,11 @@ export default {
     Service,
     PPComm,
     ComplianceSettings,
-    DealsBu
+    DealsBu,
+    Reports,
+    DailyForexBUS
   },
+  // flag
   data() {
     return {
       deals: "Deals",
@@ -312,6 +355,8 @@ export default {
         Service: false,
         PPComm: false,
         dealsbu: false,
+        Reports:false,
+        DailyForexBUS:false
       },
       tab_active: {
         deals: false,
@@ -328,6 +373,8 @@ export default {
         PPComm: false,
         user: false,
         dealsbu: false,
+        Reports:false,
+        DailyForexBUS:false
       },
       menus: [
         {
@@ -376,9 +423,17 @@ export default {
               value: "funding",
             },
             {
-              title: "Daily Forex",
+              title: "Daily Forex - IND",
               value: "dailyForex",
             },
+             {
+              title: "Daily Forex -BUS",
+              value: "DailyForexBUS",
+            },
+            {
+              title : "Reports",
+              value :"Reports",
+            }
             // {
             //   title: "A/C Statement",
             //   value: "statement",
@@ -386,7 +441,7 @@ export default {
           ],
         },
         {
-          id: 6,
+          id: 7,
           title: "Partners",
           sub_menus: [
             {
@@ -419,7 +474,7 @@ export default {
         //   ],
         // },
         {
-          id: 9,
+          id: 8,
           title: "Setup",
           sub_menus: [
             {

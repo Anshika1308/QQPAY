@@ -158,8 +158,8 @@ export default {
     async getCountryList() {
       const res = await transactionGetApiData(`${APIS.GET_COUNTRY_NAME}`);
       this.countryOptions = res?.data?.map(item => ({
-        value: item.id,
-        text: item.nationality
+        value: item.country_name,
+        text: item.country_name
       }))
       this.selectedCurrencyType = res?.data?.map(item => ({
         value: item.currency_code,

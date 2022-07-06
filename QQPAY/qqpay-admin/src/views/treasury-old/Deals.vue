@@ -223,7 +223,7 @@
           <b-col sm="12" md="4" lg="4">
             <b-form-group
               id="fieldset-1"
-              label="Input Date"
+              label="Booking Date"
               label-for="example-datepicker"
             >
               <b-form-datepicker
@@ -266,7 +266,7 @@
           </b-col>
 
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="MYR Amount">
+            <b-form-group label="LCY Amount">
               <b-form-input
                 v-model="temp_deal.lcy_amount"
                 size="sm"
@@ -301,7 +301,7 @@
               ></b-form-datepicker>
             </b-form-group>
           </b-col>
-          <b-col sm="12" md="4" lg="4">
+          <!-- <b-col sm="12" md="4" lg="4">
             <b-form-group label="Bank Charge" label-for="input-1">
               <b-form-input
                 id="input-1"
@@ -310,7 +310,7 @@
                 v-on:keypress="isNumber($event)"
               ></b-form-input>
             </b-form-group>
-          </b-col>
+          </b-col> -->
           <b-col sm="12" md="4" lg="4">
             <!-- <b-form-group label="Target of Fund">
               <b-form-input v-model="temp_deal.tof" size="sm"></b-form-input>
@@ -672,7 +672,8 @@ export default {
       });
     },
     newSettlementClicked(selectedRow) {
-      this.$emit('openTab', 'settlements')
+      this.$emit('openTab', 'SettlementsOld')
+      this.$store.commit("app/set_selected_deal_id", selectedRow.deal_id);
       this.$store.commit("app/set_selected_deal_id", selectedRow.deal_id);
     },
     isNumber(e) {

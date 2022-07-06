@@ -5,7 +5,7 @@
       <b-col>
         <div>
           <b-button-group size="sm">
-            <b-button variant="outline-light" v-b-modal.add-deal @click="newDealClicked()">
+            <b-button variant="outline-light"  @click="newDealClicked()">
               <b-icon
                 icon="file-earmark-plus-fill"
                 
@@ -58,6 +58,9 @@
       <template #cell(item)="row">
         {{ row.item.deal_type }}
       </template>
+      <!-- <template #cell(fcy_amount)="row">
+        {{ formatUsd(parseUSD(row.item.fcy_amount)) }}
+      </template> -->
       <template #cell(deal_date)="row"
         >{{ format(row.item.deal_date) }}
       </template>
@@ -140,7 +143,7 @@
                       <label>{{ row.item.updated_by_name }}</label>
                     </b-list-group-item>
 
-                    <b-list-group-item
+                    <!-- <b-list-group-item
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Service Charge</label>
@@ -152,7 +155,7 @@
                     >
                       <label>Service Tax</label>
                       <label>{{ row.item.tax }}</label>
-                    </b-list-group-item>
+                    </b-list-group-item> -->
                   </b-list-group>
                 </div>
               </b-col>
@@ -171,7 +174,6 @@
                   size="sm"
                   class="wd-100p mb-2 btn-light"
                   @click="onclickUpdate(row.item)"
-                  v-b-modal.add-deal
                 >
                   <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
                   Update
@@ -203,45 +205,66 @@
     </b-table>
     <b-modal
       id="add-deal"
-      ref="modal"
+      ref="add-deal"
       title="Deal Details"
-      @ok="nav_update"
       size="xl"
+      @ok="ok"
+      @hidden="onHidden()"
       variant="primary"
+      no-close-on-backdrop
     >
-      <b-card header="Contract Details" header-tag="header">
+      <b-card :header="this.updateTrigger ? 'Basic Details' : '' " header-tag="header">
         <b-row>
+          
+          <div class="errorstyles">
+              <div class="z-index">{{ apiSideMessage }}</div>
+            </div>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Contract Type">
+            <b-form-group label="Deal Type">
               <!-- <b-form-input
                 v-model="temp_deal.deal_type"
                 size="sm"
               ></b-form-input> -->
-              <b-form-select v-model="temp_deal.deal_type" :options="dealOption"></b-form-select>
+              <b-form-select v-model="temp_deal.deal_type" :options="dealOption" required></b-form-select>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.deal_type_error }}</div>
+            </div>
           </b-col>
           <b-col sm="12" md="4" lg="4">
             <b-form-group
-              id="fieldset-1"
-              label="Input Date"
-              label-for="example-datepicker"
+              label="Booking Date"
             >
               <b-form-datepicker
                 id="example-datepicker"
                 v-model="temp_deal.deal_date"
+                :min="new Date().toISOString().substr(0, 10)"
                 class="mb-2"
+                :date-disabled-fn="dateDisabled" 
                 size="sm"
+                required
               >
               </b-form-datepicker>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.deal_date_error }}</div>
+            </div>
           </b-col>
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Contract No">
+            <b-form-group label="Deal No">
               <b-form-input
                 v-model="temp_deal.deal_no"
+                @input = "CheckDealNo"
                 size="sm"
+                required
               ></b-form-input>
             </b-form-group>
+            <div class="errorstyles" v-if="deal_no_exsites_error_status === 'invalid'">
+              <div class="z-index">{{ deal_no_exsites_error }}</div>
+            </div>
+             <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.deal_no_error }}</div>
+            </div>
           </b-col>
         </b-row>
 
@@ -251,27 +274,39 @@
               <b-form-input
                 v-model="temp_deal.fcy_amount"
                 @change="handleChange"
+                @input="ChangeUsdAmountFormat();handleChange()"
                 size="sm"
-                v-on:keypress="isNumber($event)"
+                required
               ></b-form-input>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.fcy_amount_error }}</div>
+            </div>
           </b-col>
           <b-col sm="12" md="4" lg="4">
             <b-form-group label="Exchange Rate">
               <b-form-input
                 v-model="temp_deal.fcy_deal_rate"
+                @input="handleChange"
                 size="sm"
                 v-on:keypress="isNumber($event)"
+                required
               ></b-form-input>
             </b-form-group>
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.fcy_deal_rate_error }}</div>
+            </div>
           </b-col>
 
           <b-col sm="12" md="4" lg="4">
-            <b-form-group label="MYR Amount">
+            <b-form-group label="LCY Amount">
               <b-form-input
                 v-model="temp_deal.lcy_amount"
+                @change="handleChange"
                 size="sm"
                 v-on:keypress="isNumber($event)"
+                required
+                disabled
               ></b-form-input>
             </b-form-group>
           </b-col>
@@ -283,47 +318,29 @@
               <b-form-input v-if="temp_deal.deal_type !== 'O'"
                 v-model="temp_deal.source_of_funds"
                 size="sm"
+                required
               ></b-form-input>
               <b-form-select v-if="temp_deal.deal_type === 'O'" v-model="temp_deal.source_of_funds" :options="fundSourceOption"></b-form-select>
             </b-form-group>
-          </b-col>            
-        </b-row>
-      </b-card>
-
-      <b-card header="" header-tag="header">
-        <b-row>
+            <!-- <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.source_of_funds_error }}</div>
+            </div> -->
+          </b-col>  
           <b-col sm="12" md="4" lg="4">
-            <b-form-group id="purchase-date" label="Value Date" label-for="purchase-datepicker">
+            <b-form-group label="Value Date">
               <b-form-datepicker
                 id="purchase-datepicker"
                 v-model="temp_deal.purchase_date"
+                :date-disabled-fn="dateDisabled" 
                 class="mb-2"
                 size="sm"
+                required
               ></b-form-datepicker>
             </b-form-group>
-          </b-col>
-          <b-col sm="12" md="4" lg="4">
-            <b-form-group label="Bank Charge" label-for="input-1">
-              <b-form-input
-                id="input-1"
-                v-model="temp_deal.bank_charge"
-                size="sm"
-                v-on:keypress="isNumber($event)"
-              ></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col sm="12" md="4" lg="4">
-            <!-- <b-form-group label="Target of Fund">
-              <b-form-input v-model="temp_deal.tof" size="sm"></b-form-input>
-            </b-form-group> -->
-            <!-- <b-form-group label="Target of Fund">
-              <b-form-select v-model="temp_deal.tof" :options="targetOfFundOption"></b-form-select>
-            </b-form-group> -->
-          </b-col>          
-
-        </b-row>
-
-        <b-row align-h="start">  
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.purchase_date_error }}</div>
+            </div>
+          </b-col> 
           <b-col sm="12" md="4" lg="4">
             <b-form-group label="Dealer">
               <b-form-input
@@ -331,29 +348,70 @@
                 size="sm"
               ></b-form-input>
             </b-form-group>
-          </b-col>
-          <!-- <b-col  sm="12" md="4" lg="4">
-            <b-form-group label="Service Tax">
+            <div class="errorstyles">
+              <div class="z-index">{{ temp_deal_errors.bank_poc_error }}</div>
+            </div>
+          </b-col>         
+        </b-row>
+      </b-card>
+
+       <b-card v-if="updateTrigger" header="Audit Details" header-tag="header">
+        <b-row> 
+         <b-col  md="6">
+            <b-form-group label="Created By">
               <b-form-input
-                v-model="temp_deal.tax"
+                v-model="temp_deal.created_by"
                 size="sm"
-                v-on:keypress="isNumber($event)"
+                disabled
+                required
               ></b-form-input>
             </b-form-group>
-          </b-col> -->
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Created Date">
+               <b-form-datepicker
+                id="example-datepicker"
+                v-model="temp_deal.created_date"
+                class="mb-2"
+                size="sm"
+                disabled
+              >
+              </b-form-datepicker>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Update By">
+              <b-form-input
+                v-model="temp_deal.updated_by"
+                size="sm"
+                disabled
+              ></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col md="6">
+            <b-form-group label="Update Date">
+              <b-form-datepicker
+                id="example-datepicker"
+                v-model="temp_deal.updated_date"
+                class="mb-2"
+                size="sm"
+                disabled
+              >
+              </b-form-datepicker>
+            </b-form-group>
+          </b-col>
 
         </b-row>
       </b-card>
       <b-form-textarea
         id="textarea"
         v-model="temp_deal.remarks"
-        placeholder="Remarks"
         rows="3"
         max-rows="6"
       >
       </b-form-textarea>
-      <template #modal-footer="{ ok }">
-        <b-button variant="primary" @click="ok();postDealData()"> SUBMIT </b-button>
+      <template #modal-footer="{ }">
+        <b-button variant="primary" @click="postDealData()"> SUBMIT </b-button>
       </template>
     </b-modal>
   </div>
@@ -370,6 +428,9 @@ export default {
     
   },
   created() {
+
+    // let x = 10000.59;
+    // console.log(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
     this.$root.$refs.Deals = this;
     this.getContract();
   },
@@ -387,22 +448,10 @@ export default {
       "token",
       "base_url",
     ]),
-    getAmtAndRate() {
-      return { 
-        amt: this.temp_deal.fcy_amount,
-        rate: this.temp_deal.fcy_deal_rate
-      };
-    }
+
   },
   watch: {
-    getAmtAndRate: function (newValue) {
-      if (newValue.amt >= 0 && newValue.rate >= 0) {
-        this.temp_deal.lcy_amount = (
-          newValue.amt *
-          newValue.rate
-        ).toFixed(2);
-      }
-    },
+    
   },
   
   data() {
@@ -411,6 +460,7 @@ export default {
       filter: null,
       dealsTableData: null,
       updateTrigger: false,
+      limit:{min: '30/6/2022', max: '4/7/2022'},
       dealOption: [
         { value: 'I', text: 'Inward' },
         { value: 'O', text: 'Outward' },
@@ -422,39 +472,26 @@ export default {
       targetOfFundOption: [
         { value: 'Target Bank USD', text: 'Target Bank USD' }        
       ],
-/*       temp_deal: {
-        approved_aate: null,
-        approved_by: "",
-        authorization_flag: false,
-        authorized_by: "",
-        authorized_date: null,
-        bank_charge: '',
-        bank_poc: "",
-        created_by: "",
-        created_date: "",
-        deal_date: "",
-        deal_id: false,
-        deal_no: "",
-        deal_type: "",
-        del_flag: false,
-        fcy_amount: null,   // USD Amt
-        fcy_balance: null,
-        fcy_ccy: "",
-        fcy_deal_rate: '',
-        is_settled: false,
-        lcy_amount: null,
-        lcy_ccy: "",
-        pp_amount: 0,
-        purchase_date: "",
-        rate_coll_ppccy: 0,
-        remarks: "",
-        source_bank_id: "",
-        target_bank_id: "",
-        tax: null,
-        updated_by: "",
-        updated_date: null,
-        voucher_no: "",
-      }, */
+      deal_no_exsites_error:"",
+      deal_no_exsites_error_status:"pending",
+      apiSideMessage:"",
+       temp_deal_errors: {
+        deal_type_error: "",
+        deal_date_error: "",
+        deal_no_error: "",
+        fcy_amount_error: "",  // USD Amt
+        fcy_deal_rate_error: "",
+        lcy_amount_error: "",    //MYR Amt
+        source_of_funds_error: "Public Bank MYR",
+        purchase_date_error: "",
+        bank_charge_error: 0,
+        tof_error: "Target Bank USD",          // Target of fund
+        bank_poc_error: "",
+        tax_error: "",
+        remarks_error: "",
+        no_of_settlements_error: "",
+        status_error: ""
+      },
       temp_deal: {
         deal_type: "",
         deal_date: "",
@@ -463,16 +500,14 @@ export default {
         fcy_deal_rate: "",
         lcy_amount: "",    //MYR Amt
         source_of_funds: "Public Bank MYR",
-
         purchase_date: "",
-        bank_charge: "",
+        bank_charge: 0,
         tof: "Target Bank USD",          // Target of fund
         bank_poc: "",
         tax: "",
-        remarks: "",
+        remarks: "Buying USD 20,000 @ 4.11111 by selling MYR 82222.00",
         no_of_settlements: "",
         status: ""
-
       },
       menu_hierarchy: [
         {
@@ -491,7 +526,7 @@ export default {
         },
         {
           key: 'deal_date',
-          label: 'Input Date',
+          label: 'Booking Date',
         },
         {
           key: 'source_of_funds',
@@ -516,84 +551,199 @@ export default {
         { key: "actions", label: "" },
       ],
       items: [
-        /* {
-          i_o_IRH: "O",
-          deal_date: "01 Nov 21",
-          source_of_funds: "Maybank",
-          amount_in_USD: "66,509 USD",
-          exchange_rate: "4.2100",
-          amount_in_MYR: "2,80,003.89 MYR",
-          contract_no: "S1341125",
-          purchase_date: "02 Nov 21",
-          status: "Open",
-          created_by: "Siva",
-          NoOf_Setle: "1",
-          bank_poc: "",
-          TOF: "",
-          bank_charge: "",
-          tax: "",
-          break_down: "2",
-          edited_by: "",
-          comment: "This is a sample Deal",
-        }, */
       ],
     };
   },
   methods: {
-    handleChange(value) {
-        console.log(value);
-        // let vm = this;
-        let res = value.toString().replace(/\D/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        console.log(res)
-        this.$set(this.temp_deal.fcy_amount,res);
+    onHidden(){
+      if(this.updateTrigger){
+            console.log("model closing bro when updating");
+            this.getContract();
+      }else{
+            console.log("model closing bro when adding");
+      }
+    },
+    ChangeUsdAmountFormat(){
+      this.temp_deal.fcy_amount = this.formatUSD(this.parseUSD(this.temp_deal.fcy_amount));
+    },
+    formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
+    async CheckDealNo(){
+      axios
+        .get(this.treasury_ser_base_url + `new-contract/validate-deal-no?deal_no=${this.temp_deal.deal_no}`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          if(response.data.status_code === 200){
+            console.log("inside true");
+              this.deal_no_exsites_error = "";
+              this.deal_no_exsites_error_status = "valid";
+          }
+        
+          console.log("response", response.data.status_code);
+        })
+        .catch((e) => {
+           this.deal_no_exsites_error = "This Deal No is Already Exists";
+            this.deal_no_exsites_error_status = "invalid";
+          responseHandler(e.data.status_code, this, e.data.message)
+          console.log(e);
+        });
+    },
+    dateDisabled(ymd, date) {
+        // Disable weekends (Sunday = `0`, Saturday = `6`) and
+        // disable days that fall on the 13th of the month
+        const weekday = date.getDay()
+        const day = date.getDate()
+        // Return `true` if the date should be disabled
+        return weekday === 0 || weekday === 6 || day ===  1 || day ===  2 || day ===  3 || day ===  7 || day ===  8 || day ===  9 || day ===  10 || day ===  11 || day ===  12 || day ===  13 || day ===  14 || day ===  15 || day ===  16 || day ===  17
+               || day ===  18 || day ===  19 || day ===  20 || day ===  21 || day ===  22 || day ===  23 || day ===  24 || day ===  25 || day ===   26 || day ===   27|| day ===  28 || day ===  29 || day ===  30
+    },
+    handleChange() {
+        // console.log(value);
+        if(this.temp_deal.fcy_amount != "" && this.temp_deal.fcy_deal_rate != ""){
+          var temp_lcy_amount = (this.parseUSD(this.temp_deal.fcy_amount) * this.temp_deal.fcy_deal_rate).toFixed(2);
+          this.temp_deal.lcy_amount = this.formatUSD(temp_lcy_amount);
+          this.temp_deal.remarks = "Buying USD " +  this.temp_deal.fcy_amount + "@" +  this.temp_deal.fcy_deal_rate + " by selling MYR " + this.temp_deal.lcy_amount;
+        }
+        // let res = this.temp_deal.fcy_amount.toString().replace(/\D/g, "")
+        //     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        // console.log(res)
+        // this.$set(this.temp_deal.fcy_amount,res);
         
     },
     ok() {
-      console.log("ok");
+      console.log("ok closing ");
     },
     nav_update() {
       console.log("nav update");
     },
+    onInputBlue(){
+
+    },
     postDealData() {
+
+    
+      if(!this.temp_deal.deal_type){
+          this.temp_deal_errors.deal_type_error = "Deal Type Is Required"
+      }else{
+          this.temp_deal_errors.deal_type_error = ""
+      }
+      if(!this.temp_deal.deal_date){
+          this.temp_deal_errors.deal_date_error = "Deal Date Is Required"
+      }else{
+           this.temp_deal_errors.deal_date_error = ""
+      }
+      if(!this.temp_deal.deal_no){
+          this.temp_deal_errors.deal_no_error = "Deal No Is Required"
+      }else{
+           this.temp_deal_errors.deal_no_error = ""
+      }
+      if(!this.temp_deal.fcy_amount){
+          this.temp_deal_errors.fcy_amount_error = "USD Amount Is Required"
+      }else{
+           this.temp_deal_errors.fcy_amount_error = ""
+      }
+      if(!this.temp_deal.fcy_deal_rate){
+          this.temp_deal_errors.fcy_deal_rate_error = "Exchange Rate Is Required"
+      }else{
+           this.temp_deal_errors.fcy_deal_rate_error = ""
+      }
+      if(!this.temp_deal.source_of_funds){
+          this.temp_deal_errors.source_of_funds_error = "Source of Funds Is Required"
+      }else{
+           this.temp_deal_errors.source_of_funds_error = ""
+      }
+      if(!this.temp_deal.purchase_date){
+          this.temp_deal_errors.purchase_date_error = "Value Date Is Required"
+      }else{
+           this.temp_deal_errors.purchase_date_error = ""
+      }
+      if(!this.temp_deal.bank_poc){
+          this.temp_deal_errors.bank_poc_error = "Dealer Is Required"
+      }else{
+           this.temp_deal_errors.bank_poc_error = ""
+      }
       const request = this.getRequest();
+      // request.fcy_amount = this.parseUSD(this.temp_deal.fcy_amount);
       // console.log('req', JSON.parse(JSON.stringify(request)))
       if (this.updateTrigger) {
-        axios.put(this.treasury_ser_base_url + "new-contract/update-contract/" + request.deal_id, request, {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          })
-          .then((response) => {
-            responseHandler(response.data.status_code, this, response.data.message)
-            const index = this.items.findIndex(ele => ele.deal_id === this.temp_deal.deal_id);
-            this.items[index] = response.data.data[0];
-            if (this.$root.$refs.Settlements) {
-              this.$root.$refs.Settlements.getSelectedDealDtl();
-            }
-          })
-          .catch((err) => {
-            responseHandler(err.data.status_code, this, err.data.message)
-            console.log('Deal not posted', err);
-        });
+        
+        if(this.temp_deal.deal_type && this.temp_deal.deal_date && this.temp_deal.deal_no && this.temp_deal.fcy_amount && this.temp_deal.fcy_deal_rate && this.temp_deal.lcy_amount && this.temp_deal.source_of_funds && this.temp_deal.bank_poc && this.temp_deal.purchase_date){
+            request.fcy_amount = this.parseUSD(request.fcy_amount)
+            request.lcy_amount = this.parseUSD(request.lcy_amount)
+          axios.put(this.treasury_ser_base_url + "new-contract/update-contract/" + request.deal_id, request, {
+              headers: {
+                Authorization: `Bearer ${this.token}`,
+              },
+            })
+            .then((response) => {
+              if(response.data.status_code === 200){
+                this.$refs['add-deal'].hide();
+                this.$swal({
+                        title: "Deal Updated Succesfully",
+                        icon: "success",
+                        button: "Done",
+                });
+              }
+              
+              
+              responseHandler(response.data.status_code, this, response.data.message)
+              const index = this.items.findIndex(ele => ele.deal_id === this.temp_deal.deal_id);
+              this.items[index] = response.data.data[0];
+              if (this.$root.$refs.Settlements) {
+                this.$root.$refs.Settlements.getSelectedDealDtl();
+              }
+            })
+            .catch((err) => {
+              responseHandler(err.data.status_code, this, err.data.message)
+              console.log('Deal not posted', err);
+          });
+        }
 
       } else {
-        axios.post(this.treasury_ser_base_url + "new-contract/new-contract", request, {
+        //flag for add
+        // request.fcy_amount = this.parseUSD(this.temp_deal.fcy_amount);
+        if(this.temp_deal.deal_type && this.temp_deal.deal_date && this.temp_deal.deal_no && this.temp_deal.fcy_amount && this.temp_deal.fcy_deal_rate && this.temp_deal.lcy_amount && this.temp_deal.source_of_funds && this.temp_deal.bank_poc && this.temp_deal.purchase_date && this.deal_no_exsites_error_status === 'valid'){
+          request.fcy_amount = this.parseUSD(request.fcy_amount)
+          request.lcy_amount = this.parseUSD(request.lcy_amount)
+          axios.post(this.treasury_ser_base_url + "new-contract/new-contract", request, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
           })
-          .then((response) => {
-            responseHandler(response.data.status_code, this, response.data.message)
-            // response.data.data[0]['status'] = "open";
-            // response.data.data[0]['no_of_settlements'] = 1;
-            this.items.unshift(response.data.data[0]);
-          })
-          .catch((err) => {
-            responseHandler(err.data.status_code, this, err.data.message)
-            console.log('Deal not posted', err);
-        });
-        
+            .then((response) => {
+              responseHandler(response.data.status_code, this, response.data.message)
+              if(response.data.status_code === 200){
+                this.apiSideMessage = "";
+                this.$refs['add-deal'].hide();
+                this.$swal({
+                        title: "Deal Added Succesfully",
+                        icon: "success",
+                        button: "Done",
+                });
+
+              }
+              if(response.data.status_code != 200){
+                this.apiSideMessage = response.data.message;
+              }
+              this.items.unshift(response.data.data[0]);
+            })
+            .catch((err) => {
+              this.apiSideMessage = err.data.message;
+              responseHandler(err.data.status_code, this, err.data.message)
+              console.log('Deal not posted', err);
+          });
+        }       
       }
     },
     getRequest() {
@@ -634,12 +784,32 @@ export default {
       }
     },
     newDealClicked() {
+      this.$refs['add-deal'].show();
       this.resetTempDeals();
       this.updateTrigger = false;
       this.temp_deal.status = "open";
       this.temp_deal.no_of_settlements = 0;
     },
     resetTempDeals() {
+      this.deal_no_exsites_error = "";
+      this.deal_no_exsites_error_status = "valid";
+      this.temp_deal_errors = {
+        deal_type_error: "",
+        deal_date_error: "",
+        deal_no_error: "",
+        fcy_amount_error: "",  // USD Amt
+        fcy_deal_rate_error: "",
+        lcy_amount_error: "",    //MYR Amt
+        source_of_funds_error: "Public Bank MYR",
+        purchase_date_error: "",
+        bank_charge_error: 0,
+        tof_error: "Target Bank USD",          // Target of fund
+        bank_poc_error: "",
+        tax_error: "",
+        remarks_error: "",
+        no_of_settlements_error: "",
+        status_error: ""
+      },
       this.temp_deal = {
         deal_type: "",
         deal_date: "",
@@ -648,7 +818,6 @@ export default {
         fcy_deal_rate: "",
         lcy_amount: "",    //MYR Amt
         source_of_funds: "Public Bank MYR",
-
         purchase_date: "",
         bank_charge: "",
         tof: "Target Bank USD",          // Target of fund
@@ -660,8 +829,28 @@ export default {
       }
     },
     onclickUpdate(selectedRow) {
+      this.$refs['add-deal'].show();
       this.updateTrigger = true;
+      selectedRow.fcy_amount = this.formatUSD(selectedRow.fcy_amount);
+      selectedRow.lcy_amount = this.formatUSD(selectedRow.lcy_amount);
       this.temp_deal = selectedRow;
+      this.temp_deal_errors = {
+        deal_type_error: "",
+        deal_date_error: "",
+        deal_no_error: "",
+        fcy_amount_error: "",  // USD Amt
+        fcy_deal_rate_error: "",
+        lcy_amount_error: "",    //MYR Amt
+        source_of_funds_error: "Public Bank MYR",
+        purchase_date_error: "",
+        bank_charge_error: 0,
+        tof_error: "Target Bank USD",          // Target of fund
+        bank_poc_error: "",
+        tax_error: "",
+        remarks_error: "",
+        no_of_settlements_error: "",
+        status_error: ""
+      }
     },
     deleteDeal(selectedRow) {
       axios.delete(this.treasury_ser_base_url + "new-contract/delete-contract/" + selectedRow.deal_id, {
@@ -698,6 +887,19 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+
+.invalid input {
+  border-color: rgb(248, 146, 146);
+}
+.errorstyles {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: red;
+
+}
 
 .menu-sec {
   margin-top: 0.5rem;

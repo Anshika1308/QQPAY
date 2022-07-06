@@ -1,4 +1,5 @@
 import axios from "axios";
+// import { store } from "../..";
 // import { APIService } from "../../../service/api";
 // import urlConstant from "../../../constant/url.constant";
 const state = {
@@ -10,7 +11,7 @@ const state = {
   user_port: process.env.VUE_APP_USER_PORT,
 };
 
-const mutations = {
+const mutations = { 
   loginAccount(state, payload) {
     switch (payload.type) {
       case "LOGING_ACCOUNT":

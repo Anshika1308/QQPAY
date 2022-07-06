@@ -2,6 +2,121 @@
   <div class="add-partner">
     <b-container>
       <form @submit.prevent="handleSubmit">
+        
+        <b-card class="mt-3" header="Company Details">
+          <b-row class="mt-2">
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Name of Employeer"/>
+              <b-form-group id="input-group-name-of-employee" label="Name of Employer"
+                            label-for="input-name-of-employee">
+                <b-form-input id="input-name-of-employee" v-model="companyDetail.nameOfEmployer" type="text" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Short Code"/>
+              <b-form-group id="input-group-short-code" label="Short Code" label-for="input-name-of-employee">
+                <b-form-input id="input-name-short-code" v-model="companyDetail.agentShortcode" type="text" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Agent Code"/>
+              <b-form-group id="input-group-partner-id" label="Agent Code" label-for="input-partner-id">
+                <b-form-input id="input-partner-id" v-model="companyDetail.agentCode" type="text"/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Agent Code"/>
+              <b-form-group id="input-group-partner-type" label="Partner Type" label-for="input-partner-type">
+                <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.partnerType"
+                               :options="companyDetail.partnerTypeOptions" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Business License"/>
+              <b-form-group id="input-group-business-license" label="Business License"
+                            label-for="input-business-license">
+                <b-form-input id="input-business-license" v-model="companyDetail.businessLicense" type="text"
+                              required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Address"/>
+              <b-form-group id="input-group-address" label="Address" label-for="input-address">
+                <b-form-input id="input-address" v-model="companyDetail.address" type="text" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="License Expiry Date"/>
+              <b-form-group id="input-group-license-expiry-date" label="License Expiry Date"
+                            label-for="input-license-expiry-date">
+                 <b-form-datepicker
+                id="input-license-expiry-date"
+                v-model="companyDetail.licenseExpiryDate"
+                class="mb-2"
+                size="sm"
+                @input="ChangeDate"
+                required
+              ></b-form-datepicker>           
+                <!-- <b-form-input id="input-license-expiry-date" v-model="companyDetail.licenseExpiryDate" type="date"
+                              required/> -->
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="City"/>
+              <b-form-group id="input-group-city" label="City" label-for="input-city">
+                <b-form-input id="input-city" v-model="companyDetail.city" type="text" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Country"/>
+              <b-form-group id="input-group-country" label="Country" label-for="input-country">
+                <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.country_name"
+                               :options="companyDetail.countryOptions" @change="changeCountry" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Phone 1"/>
+              <b-form-group id="input-group-phone-1" label="Phone 1" label-for="input-phone-1">
+                <b-form-input id="input-phone-1" v-model="companyDetail.phone1" type="tel" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <b-form-group id="input-group-phone-2" label="Phone 2" label-for="input-phone-2">
+                <b-form-input id="input-phone-2" v-model="companyDetail.phone2" type="tel"/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <UpdateLabel label="Email"/>
+              <b-form-group id="input-group-email" label="Email" label-for="input-email">
+                <b-form-input id="input-email" v-model="companyDetail.email" type="email" required/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <b-form-group id="input-group-1" label="Website" label-for="input-1">
+                <b-form-input id="input-1" v-model="companyDetail.website" type="url"/>
+              </b-form-group>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4">
+              <b-form-group id="input-group-zip-code" label="Zip Code" label-for="input-zip-code">
+                <b-form-input id="input-zip-code" v-model="companyDetail.zipCode" type="text"/>
+              </b-form-group>
+            </b-col>
+
+            <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
+              <b-form-checkbox class="mt-5 checkbox" id="checkbox-block-this-user"
+                               v-model="companyDetail.blockThisPartner" name="checkbox-block-this-user" value="true"
+                               unchecked-value="false">
+                Block This Partner
+              </b-form-checkbox>
+            </b-col>
+            <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
+              <b-form-checkbox id="checkbox-is-this-non-irh-partner" v-model="companyDetail.isThisNonIRHPartner"
+                               name="checkbox-block-this-user" value="true" unchecked-value="false">
+                Is This Non-IRH Partner
+              </b-form-checkbox>
+            </b-col>
+          </b-row>
+        </b-card>
         <b-card class="mt-3" header="Contact Information">
           <b-row class="mt-2">
             <b-col md="6" sm="12" lg="4" xl="4">
@@ -13,8 +128,8 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Post"/>
-              <b-form-group id="input-group-post-required" label="Post" label-for="input-post-required">
+              <UpdateLabel label="Designation"/>
+              <b-form-group id="input-group-post-required" label="Designation" label-for="input-post-required">
                 <b-form-input id="input-post-required" v-model="contactInformation.post1" type="text" required/>
               </b-form-group>
             </b-col>
@@ -63,113 +178,7 @@
             </b-col>
           </b-row>
         </b-card>
-        <b-card class="mt-3" header="Company Details">
-          <b-row class="mt-2">
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Name of Employeer"/>
-              <b-form-group id="input-group-name-of-employee" label="Name of Employer"
-                            label-for="input-name-of-employee">
-                <b-form-input id="input-name-of-employee" v-model="companyDetail.nameOfEmployer" type="text" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Short Code"/>
-              <b-form-group id="input-group-short-code" label="Short Code" label-for="input-name-of-employee">
-                <b-form-input id="input-name-short-code" v-model="companyDetail.agentShortcode" type="text" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Agent Code"/>
-              <b-form-group id="input-group-partner-id" label="Agent Code" label-for="input-partner-id">
-                <b-form-input id="input-partner-id" v-model="companyDetail.agentCode" type="text"/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Agent Code"/>
-              <b-form-group id="input-group-partner-type" label="Partner Type" label-for="input-partner-type">
-                <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.partnerType"
-                               :options="companyDetail.partnerTypeOptions" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Business License"/>
-              <b-form-group id="input-group-business-license" label="Business License"
-                            label-for="input-business-license">
-                <b-form-input id="input-business-license" v-model="companyDetail.businessLicense" type="text"
-                              required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Address"/>
-              <b-form-group id="input-group-address" label="Address" label-for="input-address">
-                <b-form-input id="input-address" v-model="companyDetail.address" type="text" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="License Expiry Date"/>
-              <b-form-group id="input-group-license-expiry-date" label="License Expiry Date"
-                            label-for="input-license-expiry-date">
-                <b-form-input id="input-license-expiry-date" v-model="companyDetail.licenseExpiryDate" type="date"
-                              required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="City"/>
-              <b-form-group id="input-group-city" label="City" label-for="input-city">
-                <b-form-input id="input-city" v-model="companyDetail.city" type="text" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Country"/>
-              <b-form-group id="input-group-country" label="Country" label-for="input-country">
-                <b-form-select id="input-partner-type" class="form-control" v-model="companyDetail.country"
-                               :options="companyDetail.countryOptions" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Phone 1"/>
-              <b-form-group id="input-group-phone-1" label="Phone 1" label-for="input-phone-1">
-                <b-form-input id="input-phone-1" v-model="companyDetail.phone1" type="tel" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <b-form-group id="input-group-phone-2" label="Phone 2" label-for="input-phone-2">
-                <b-form-input id="input-phone-2" v-model="companyDetail.phone2" type="tel"/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <UpdateLabel label="Email"/>
-              <b-form-group id="input-group-email" label="Email" label-for="input-email">
-                <b-form-input id="input-email" v-model="companyDetail.email" type="email" required/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <b-form-group id="input-group-1" label="Website" label-for="input-1">
-                <b-form-input id="input-1" v-model="companyDetail.website" type="url"/>
-              </b-form-group>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4">
-              <b-form-group id="input-group-zip-code" label="Zip Code" label-for="input-zip-code">
-                <b-form-input id="input-zip-code" v-model="companyDetail.zipCode" type="text"/>
-              </b-form-group>
-            </b-col>
-
-            <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-              <b-form-checkbox class="mt-5 checkbox" id="checkbox-block-this-user"
-                               v-model="companyDetail.blockThisPartner" name="checkbox-block-this-user" value="true"
-                               unchecked-value="false">
-                Block This Partner
-              </b-form-checkbox>
-            </b-col>
-            <b-col md="6" sm="12" lg="4" xl="4" class="mb-4">
-              <b-form-checkbox id="checkbox-is-this-non-irh-partner" v-model="companyDetail.isThisNonIRHPartner"
-                               name="checkbox-block-this-user" value="true" unchecked-value="false">
-                Is This Non-IRH Partner
-              </b-form-checkbox>
-            </b-col>
-          </b-row>
-        </b-card>
-        <b-card class="mt-3" header="Bank and Branch A/C Details">
+        <b-card class="mt-3" header="Account Details">
           <b-row>
             <b-col md="6" sm="12" lg="6" xl="6" class="mb-4">
               <b-form-checkbox id="checkbox-calculate-payout-commission-daily"
@@ -283,10 +292,15 @@
             <b-col md="12" sm="12" lg="12" xl="12">
               <b-form-group id="input-group-partner-settlement-in" label="Payment Mode Allowed"
                             label-for="input-partner-settlement-in">
-                <b-form-checkbox-group v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
+                            <multiselect
+                              v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
+                              :multiple="true"
+                              :options="bankAndBranchAccountDetail.paymentMethodAllowedOptions" @input="ChangeCheckbox">
+                            </multiselect>
+                <!-- <b-form-checkbox-group v-model="bankAndBranchAccountDetail.paymentMethodAllowedSelected"
                                        :options="bankAndBranchAccountDetail.paymentMethodAllowedOptions" class="mb-3"
                                        value-field="item"
-                                       text-field="name" disabled-field="notEnabled"/>
+                                       text-field="name" disabled-field="notEnabled"/> -->
               </b-form-group>
             </b-col>
             <b-col md="12" sm="12" lg="12" xl="12">
@@ -393,11 +407,13 @@ import {postApiData, transactionGetApiData} from "@/helpers/AxiosInstance";
 import APIS from "@/constants/EndPoint";
 import {responseHandler} from "@/helpers/globalFunctions";
 import UpdateLabel from "@/components/reusable/UpdateLabel";
+import Multiselect from 'vue-multiselect'
 
 export default {
   name: 'AddPartner',
   components: {
     UpdateLabel,
+    Multiselect
   },
   data() {
     return {
@@ -424,6 +440,7 @@ export default {
 
       },
       companyDetail: {
+        iso_alpha3:"",
         nameOfEmployer: "",
         agentShortcode: "",
         agentCode: "",
@@ -439,7 +456,7 @@ export default {
         address: "",
         licenseExpiryDate: "",
         city: "",
-        country: "",
+        country_name: "",
         countryOptions: [],
         phone1: "",
         phone2: "",
@@ -538,6 +555,23 @@ export default {
     }
   },
   methods: {
+    ChangeCheckbox(){
+        console.log(this.bankAndBranchAccountDetail.paymentMethodAllowedSelected.toString());
+    },
+    ChangeDate(){
+      console.log(this.companyDetail.licenseExpiryDate);
+
+    },
+    async changeCountry(){
+      const responseCountry = await transactionGetApiData(`${APIS.GET_COUNTRY_NAME}`);
+      console.log("responseCountry",responseCountry.data);
+      responseCountry.data.forEach(element => {
+        if(this.companyDetail.country_name == element.country_name){
+          this.companyDetail.iso_alpha3 = element.iso_alpha3;
+        }
+      });
+      console.log(this.companyDetail.iso_alpha3)
+    },
     async handleSubmit() {
       const formData = JSON.stringify({
         contact_person_1: this.contactInformation.contactPerson1,
@@ -556,7 +590,8 @@ export default {
         company_address: this.companyDetail.address,
         license_expiry_date: moment(this.companyDetail.licenseExpiryDate).toDate(),
         company_city: this.companyDetail.city,
-        company_country: this.companyDetail.country,
+        company_country: this.companyDetail.country_name,
+        company_country_code:this.companyDetail.iso_alpha3,
         company_phone_1: this.companyDetail.phone1,
         company_phone_2: this.companyDetail.phone2,
         company_email: this.companyDetail.email,
@@ -580,7 +615,7 @@ export default {
         risk_level: this.bankAndBranchAccountDetail.riskLevels,
         tax_type: this.bankAndBranchAccountDetail.taxType,
         settlement_date: this.bankAndBranchAccountDetail.settlementDate ? moment(this.bankAndBranchAccountDetail.settlementDate).format("YYYY-MM-DD") : null,
-        payment_mode_allowed: this.bankAndBranchAccountDetail.paymentMethodAllowedOptions.toString(),
+        payment_mode_allowed: this.bankAndBranchAccountDetail.paymentMethodAllowedSelected.toString(),
         remarks: this.bankAndBranchAccountDetail.remarks,
         print_receipt_information: this.bankAndBranchAccountDetail.printReceiptInformation,
         fund_collection_day: this.bankAndBranchAccountDetail.fundCollectionDay,
@@ -611,8 +646,8 @@ export default {
       this.companyDetail = {
         ...this.companyDetail,
         countryOptions: res?.data?.map(item => ({
-          value: item.id,
-          text: item.nationality
+          value: item.country_name,
+          text: item.country_name
         })),
       };
       this.bankAndBranchAccountDetail = {
@@ -630,6 +665,7 @@ export default {
   }
 }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="scss" scoped>
 @import "@/global.scss";
 

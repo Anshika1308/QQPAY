@@ -1,72 +1,55 @@
 <template>
   <div class="home">
     <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
-    <!-- <b-row>
-      <b-col cols="12">
-        <div class="float-right mt-3">
-          <b-button size="md" variant="outline-light" v-b-modal.sr-country-wise
-            >Add Special Rates</b-button
-          >
-        </div>
-      </b-col>
-    </b-row> -->
-    <b-row>
-      <b-col cols="6">
+    <b-row style="margin-bottom: -16px;">
+      <b-col>
         <div>
-          <b-input-group size="md" class="mt-3">
-            <b-form-input
-              placeholder="Search for user"
-              v-model="form.search_user"
-              class="converted"
-            ></b-form-input>
-            <template #append>
-              <b-dropdown :text="form.filter_option" right variant="light">
-                <b-dropdown-item
-                  v-for="option in filter_options"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.text }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </template>
-          </b-input-group>
-        </div>
-      </b-col>
-      <b-col cols="1">
-        <div class="mt-3">
-          <b-button class="float-right" variant="primary" @click="onSearch"
-            >Search</b-button
-          >
-        </div>
-      </b-col>
-      <b-col cols="3">
-        <div class="float-right mt-3">
-          <b-button size="md" variant="outline-light" v-b-modal.sr-country-wise
-            >Add Special Rates</b-button
-          >
-        </div>
-      </b-col>
-      <b-col cols="2">
-        <div class="float-right mt-3">
-          <b-button-group size="md">
+          <b-button-group size="sm">
+            <b-button variant="outline-light"  v-b-modal.sr-country-wise>
+              <b-icon
+                icon="file-earmark-plus-fill"
+              ></b-icon>
+              New Special Rate
+            </b-button>
             <b-button variant="outline-light">
               <b-icon icon="cloud-download-fill"></b-icon> Export XLS
             </b-button>
           </b-button-group>
         </div>
       </b-col>
-    </b-row>
-    <b-row>
       <b-col>
-        <b-alert v-model="isError" variant="danger" dismissible>
-          {{ this.error }}
-        </b-alert>
+        <b-form-group
+          label-for="filter-input"
+          label-cols-sm="0"
+          label-cols-lg="0"
+          label-align-lg="right"
+          content-cols-sm="12"
+          content-cols-lg="8"
+          label-align-sm="right"
+          label-size="sm"
+          class="mb-2"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+              id="filter-input"
+              v-model="filter"
+              type="search"
+              placeholder="Type to Search"
+            ></b-form-input>
+
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''"
+                >Clear</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
       </b-col>
     </b-row>
     <b-table
       :items="items"
       :fields="fields"
+      :filter="filter"
       responsive
       class="align-middle mt-4"
     >
@@ -87,43 +70,51 @@
         </b-form-checkbox>
       </template>
       <template #cell(actions)="row">
-        <div class="action-div">
-          <b-button
-            variant="light"
-            size="sm"
-            @click="edit(row.item)"
-            class="mr-2 expand-btn"
-          >
-            <b-icon icon="pencil-square"></b-icon>
-          </b-button>
-        </div>
+        
+          <b-icon
+                class="btn"
+                icon="pencil-square"
+                variant="success"
+                @click="edit(row.item)"
+              />
+           <b-icon
+                class=" btn"
+                icon="trash-fill"
+                variant="danger"
+                @click="onDlete(row.item)"
+            />
+          
       </template>
     </b-table>
     <b-modal
       id="sr-country-wise"
       title="Special Rates"
-      size="md"
+      size="lg"
       ref="rates-modal"
       variant="primary"
       hide-footer
       @hide="resetForm()"
     >
       <b-card no-body class="my-custom-class">
-        <b-row>
-          <b-form>
-            <div class="row">
-              <b-col cols="12">
+         <b-form>
+            <b-row>
+              <b-col>
+                <b-alert v-model="isError" variant="danger" dismissible>
+                  {{ this.error }}
+                </b-alert>
+              </b-col>
+            </b-row>
+          <b-row>
+              <b-col md="6">
                 <b-form-group label="Company">
                   <v-select
                     :options="companyList"
                     label="registered_business_name"
-                    v-model="form.company"
-                    :reduce="(item) => item.business_user_kyc_id"
+                    v-model="form.company_name"
+                    :reduce="(item) => item.registered_business_name"
                     required
                     :clearable="false"
-                    :class="{
-                      'is-invalid': $v.form.company.$error,
-                    }"
+                   
                     aria-describedby="company-live-feedback"
                   >
                   </v-select>
@@ -131,16 +122,18 @@
                     This is a required field.
                   </b-form-invalid-feedback>
                 </b-form-group>
+                <div class="errorstyles">
+                    <div class="z-index">{{ form.company_name_error }}</div>
+                  </div>
               </b-col>
-              <b-col cols="12">
+              <b-col md="6">
                 <b-form-group label="Currency Type"
                   ><v-select
                     :options="currencyList"
                     label="currency_code"
                     v-model="form.currency_type"
-                    :reduce="(item) => item.id"
+                    :reduce="(item) => item.currency_code"
                     required
-                    @input="onChangeCurrency()"
                     :clearable="false"
                     :class="{
                       'is-invalid': $v.form.currency_type.$error,
@@ -152,16 +145,19 @@
                     This is a required field.
                   </b-form-invalid-feedback>
                 </b-form-group>
+                <div class="errorstyles">
+                    <div class="z-index">{{ form.currency_type_error }}</div>
+                  </div>
               </b-col>
-              <b-col cols="6">
+              <b-col md="6">
                 <b-form-group label="Special Rate">
                   <b-form-input
                     type="number"
                     id="special_rate"
                     name="special_rate"
                     v-model="form.special_rate"
+                    @input="restrictDecimal"
                     size="md"
-                    @keypress="onlyForDecimal($event, form.special_rate)"
                     required
                     :class="{
                       'is-invalid': $v.form.special_rate.$error,
@@ -172,102 +168,30 @@
                     This is a required field.
                   </b-form-invalid-feedback>
                 </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group label="Publish Rate">
-                  <label>
-                    {{
-                      this.publishRate == null
-                        ? "N/A"
-                        : this.publishRate.publish_rate
-                    }}
-                  </label>
-                  <!-- <b-form-input
-                    type="number"
-                    id="publish_rate"
-                    name="publish_rate"
-                    v-model="form.publish_rate"
-                    size="md"
-                    @keypress="onlyForDecimal($event, form.publish_rate)"
-                    required
-                    :class="{
-                      'is-invalid': $v.form.publish_rate.$error,
-                    }"
-                    aria-describedby="publish_rate-live-feedback"
-                  ></b-form-input>
-                  <b-form-invalid-feedback id="publish_rate-live-feedback">
-                    This is a required field.
-                  </b-form-invalid-feedback> -->
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group label="Reuters Rate">
-                  <label>
-                    {{
-                      this.publishRate == null
-                        ? "N/A"
-                        : this.publishRate.reuters_rate
-                    }}
-                  </label>
-                  <!-- <b-form-input
-                    type="number"
-                    id="reuters_rate"
-                    name="reuters_rate"
-                    v-model="form.reuters_rate"
-                    size="md"
-                    @keypress="onlyForDecimal($event, form.reuters_rate)"
-                    required
-                    :class="{
-                      'is-invalid': $v.form.reuters_rate.$error,
-                    }"
-                    aria-describedby="reuters_rate-live-feedback"
-                  ></b-form-input>
-                  <b-form-invalid-feedback id="reuters_rate-live-feedback">
-                    This is a required field.
-                  </b-form-invalid-feedback>-->
-                </b-form-group>
-              </b-col>
-              <b-col cols="6">
-                <b-form-group label="Paying Amount(min)">
-                  <b-form-input
-                    type="number"
-                    id="paying_amount_min"
-                    name="paying_amount_min"
-                    v-model="form.paying_amount_min"
-                    size="md"
-                    @keypress="onlyForDecimal($event, form.paying_amount_min)"
-                    required
-                    :class="{
-                      'is-invalid': $v.form.paying_amount_min.$error,
-                    }"
-                    aria-describedby="paying_amount_min-live-feedback"
-                  ></b-form-input>
-                  <b-form-invalid-feedback id="paying_amount_min-live-feedback">
-                    This is a required field.
-                  </b-form-invalid-feedback></b-form-group
-                >
-              </b-col>
-              <b-col cols="6">
-                <b-form-group label="Paying Amount(max)"
-                  ><b-form-input
+                 <div class="errorstyles">
+                    <div class="z-index">{{ form.special_rate_error }}</div>
+                  </div>
+              </b-col> 
+              <b-col md="6">
+                <b-form-group label="Transfer Amount">
+                    <b-form-input
                     type="number"
                     id="paying_amount_max"
                     name="paying_amount_max"
-                    v-model="form.paying_amount_max"
+                    v-model="form.max_paying_amount"
                     size="md"
-                    @keypress="onlyForDecimal($event, form.paying_amount_max)"
                     required
                     :class="{
-                      'is-invalid': $v.form.paying_amount_max.$error,
+                      'is-invalid': $v.form.special_rate.$error,
                     }"
-                    aria-describedby="paying_amount_max-live-feedback"
+                    aria-describedby="special_rate-live-feedback"
                   ></b-form-input>
-                  <b-form-invalid-feedback id="paying_amount_max-live-feedback">
-                    This is a required field.
-                  </b-form-invalid-feedback>
-                </b-form-group>
+                   </b-form-group>
+                   <div class="errorstyles">
+              <div class="z-index">{{ form.max_paying_amount_error }}</div>
+            </div>
               </b-col>
-              <b-col cols="6">
+              <b-col md="6">
                 <b-form-group label="Rates Date">
                   <b-form-group id="fieldset-1" label-for="example-datepicker">
                     <b-form-datepicker
@@ -276,21 +200,27 @@
                       size="sm"
                     ></b-form-datepicker> </b-form-group
                 ></b-form-group>
-              </b-col>
+                <div class="errorstyles">
+              <div class="z-index">{{ form.processing_date_error }}</div>
             </div>
+              </b-col>
+           </b-row>
             <b-row class="float-right">
               <b-button size="lg" variant="primary" @click="manage()">
                 Add Special Rates
               </b-button>
             </b-row>
-          </b-form>
-        </b-row>
+          
+        
+        </b-form>
       </b-card>
     </b-modal>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { mapGetters } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll as getCompanyList } from "@/api/businessUserKYC";
@@ -299,8 +229,15 @@ import { getAll as list, getByCompany, save, update } from "@/api/specialRates";
 import { getPublishRateByCurrency } from "@/api/dailyForex";
 export default {
   mixins: [validationMixin],
+  computed: {
+    ...mapGetters([
+      "token"
+    ]),
+
+  },
   data() {
     return {
+      filter: null,
       menu_hierarchy: [
         {
           text: "Setup",
@@ -311,6 +248,7 @@ export default {
           active: true,
         },
       ],
+      special_rate_url:'http://3.111.47.115:8004/api/v1/',
       isError: false,
       error: null,
       companyList: [],
@@ -319,16 +257,25 @@ export default {
       paymentModeList: [],
       publishRate: null,
       items: [],
+      updateTriger:false,
       defaultForm: {
         id: 0,
-        company: null,
+        company_name: null,
         currency_type: null,
         special_rate: null,
         publish_rate: null,
         reuters_rate: null,
         paying_amount_min: null,
-        paying_amount_max: null,
+        max_paying_amount: null,
         processing_date: null,
+        company_name_error: null,
+        currency_type_error: null,
+        special_rate_error: null,
+        publish_rate_error: null,
+        reuters_rate_error: null,
+        paying_amount_min_error: null,
+        max_paying_amount_error: null,
+        processing_date_error: null,
       },
       form: null,
       fields: [
@@ -336,10 +283,7 @@ export default {
         { key: "company_name", label: "Company Name" },
         { key: "currency_type", label: "Currency Type" },
         { key: "special_rate", label: "Special Rate" },
-        { key: "publish_rate", label: "Publish Rate" },
-        { key: "reuters_rate", label: "Reuters Rate" },
-        { key: "min_paying_amount", label: "Paying Amount(min)" },
-        { key: "max_paying_amount", label: "Paying Amount(max)" },
+        { key: "max_paying_amount", label: "Transaction Amount" },
         { key: "processing_date", label: "Processing Date" },
         { key: "created_by", label: "Created By" },
         { key: "is_active", label: "Active" },
@@ -409,7 +353,7 @@ export default {
         (keyCode < 48 || keyCode > 57) &&
         (keyCode !== 46 || val.toString().indexOf(".") != -1)
       ) {
-        $event.preventDefault();
+        console.log("test");
       }
 
       if (
@@ -417,7 +361,7 @@ export default {
         val.toString().indexOf(".") != -1 &&
         val.toString().split(".")[1].length > 3
       ) {
-        $event.preventDefault();
+       console.log("test");
       }
     },
 
@@ -431,18 +375,18 @@ export default {
     onSearch() {
       list().then((res) => {
         this.items = res.data.data;
-        debugger; // eslint-disable-line no-debugger
+        // debugger; // eslint-disable-line no-debugger
       });
     },
     onChangeCurrency() {
-      debugger; // eslint-disable-line no-debugger
+      // debugger; // eslint-disable-line no-debugger
 
       let result = this.currencyList.find(
         (el) => el.id === this.form.currency_type
       );
       getPublishRateByCurrency(result.currency_code)
         .then((res) => {
-          debugger; // eslint-disable-line no-debugger
+          // debugger; // eslint-disable-line no-debugger
           this.publishRate = res.data.data[0];
         })
         .catch((error) => {
@@ -450,17 +394,35 @@ export default {
           this.error = error.message;
         });
     },
+    onDlete(item){
+      axios.delete(this.special_rate_url + `special_rates_router/delete_special_rates_by_company/${item.company_name}` , {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          // responseHandler(response.data.status_code, this, response.data.message)
+          if (response.data.success) {
+            this.onSearch();
+        
+          }
+        })
+        .catch((err) => {
+          // responseHandler(err.data.status_code, this, err.data.message)
+          console.log('Deal not posted', err);
+      });
+      console.log("test",item);
+    },
     edit(item) {
-      debugger; // eslint-disable-line no-debugger
-      if (item.id > 0) {
-          debugger; // eslint-disable-line no-debugger
-        getByCompany(item.id)
+      if (item.special_rates_id > 0) {
+        getByCompany(item.company_name)
           .then((res) => {
-              debugger; // eslint-disable-line no-debugger
-            this.form = Object.assign({}, res.data);
-
+            this.updateTriger = true;
+            this.form = {};
+            this.form = res.data.data[0];
             this.$refs["rates-modal"].show();
             console.log(res);
+            console.log('item',this.form);
           })
           .catch((error) => {
             this.isError = true;
@@ -468,29 +430,50 @@ export default {
           });
       }
     },
-    manage() {
-      debugger; // eslint-disable-line no-debugger
-      console.log(this.form);
+    restrictDecimal () {
+            this.form.special_rate = (this.form.special_rate).toFixed(4);
+    },
 
-      if (this.publishRate == null) {
-        this.isError = true;
-        this.error = "Publish rate required";
-        return;
+    manage() {
+      // debugger; // eslint-disable-line no-debugger
+      console.log(this.form);
+      if(!this.form.company_name){
+        this.form.company_name_error = "Company Name is Required"
+      }else{
+         this.form.company_name_error = ""
       }
-      if (
-        this.publishRate.publish_rate > 0 &&
-        this.publishRate.reuters_rate > 0
-      ) {
-        this.form.publish_rate = this.publishRate.publish_rate;
-        this.form.reuters_rate = this.publishRate.reuters_rate;
+
+      if(!this.form.currency_type){
+        this.form.currency_type_error = "Currency Type is Required"
+      }else{
+         this.form.currency_type_error = ""
       }
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
+
+      if(!this.form.special_rate){
+        this.form.special_rate_error = "Special Rate is Required"
+      }else{
+         this.form.special_rate_error = ""
       }
-      debugger; // eslint-disable-line no-debugger
-      if (this.form.id > 0) {
-        debugger; // eslint-disable-line no-debugger
+
+      if(!this.form.max_paying_amount){
+        this.form.max_paying_amount_error = "Transfer Amount is Required"
+      }else{
+         this.form.max_paying_amount_error = ""
+      }
+
+      if(!this.form.processing_date){
+        this.form.processing_date_error = "Rates Date is Required"
+      }else{
+         this.form.processing_date_error = ""
+      }
+      console.log(this.form.processing_date_error)
+
+      if(this.form.processing_date && this.form.max_paying_amount && this.form.special_rate && this.form.currency_type && this.form.company_name){
+          if (this.form.special_rates_id > 0) {
+        this.form.paying_amount_min = 0.00;
+        this.form.publish_rate = 0.00;
+        this.form.reuters_rate = 0.00;
+        
         update(this.form)
           .then((res) => {
             this.$refs["rates-modal"].hide();
@@ -504,7 +487,9 @@ export default {
             //done()
           });
       } else {
-        debugger; // eslint-disable-line no-debugger
+        this.form.paying_amount_min = 0.00;
+        this.form.publish_rate = 0.00;
+        this.form.reuters_rate = 0.00;
         save(this.form)
           .then((res) => {
             this.$refs["rates-modal"].hide();
@@ -518,6 +503,9 @@ export default {
             //done()
           });
       }
+     }
+
+      
     },
   },
   async created() {
@@ -536,6 +524,19 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+
+.invalid input {
+  border-color: rgb(248, 146, 146);
+}
+.errorstyles {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: red;
+
+}
 .menu-sec {
   margin-top: 0.5rem;
 }

@@ -7,12 +7,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import { i18n } from './locale/index';
 import Vuelidate from 'vuelidate';
+import VueSweetalert2 from 'vue-sweetalert2';
+// import 'sweetalert2/dist/sweetalert2.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 
 
 Vue.use(Vuelidate)
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(VueSweetalert2);
+// Vue.use('multiselect', Multiselect)
 
 //vuelidate plugin
 

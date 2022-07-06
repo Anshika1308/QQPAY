@@ -152,7 +152,6 @@ export default {
         "country",
         "partner",
         "payment_method",
-        "upper_limit",
         "comm_charge_ccy",
         "active",
         "action",
@@ -212,7 +211,7 @@ export default {
       );
       if (response.data.status_code === 200) {
         this.items = response.data.data.map((item) => ({
-          country: item.country_name,
+          country: item.country,
           partner: item.name_of_employer,
           payment_method: item.payment_method
             .replaceAll("_", " ")
