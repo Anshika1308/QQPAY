@@ -81,8 +81,12 @@
               class="align-middle mt-4"
             >
               <template #cell(id)="row">
-                {{ row.index + 1 }}
+                {{ row.item.index + 1 }}
               </template>
+               <template #cell(service_charge_type)="row">
+                {{ row.item.service_charge_type == 56 ? 'Flat' : 'Percentage' }}
+              </template>
+              
               <!-- <template #cell(remarks)="row" size="sm">
         <div class="action-div">
           <b-icon
@@ -160,7 +164,7 @@
                           :options="paymentModeList"
                           label="value"
                           v-model="countryWiseForm.payment_mode"
-                          :reduce="(item) => item.id"
+                          :reduce="(item) => item.value_code"
                           required
                           :clearable="false"
                           :class="{
@@ -203,7 +207,7 @@
                           :options="serviceChargeTypeList"
                           label="value"
                           v-model="countryWiseForm.service_charge_type"
-                          :reduce="(item) => item.id"
+                          :reduce="(item) => item.value_code"
                           required
                           :clearable="false"
                           :class="{
@@ -253,12 +257,12 @@
                     >
                       <b-form-group label="Upper Limit">
                         <b-form-input
-                          type="number"
+                          type="text"
                           id="upper_limit"
                           name="upper_limit"
                           v-model="countryWiseForm.upper_limit"
                           size="md"
-                          @keypress="onForInteger($event)"
+                          @input="ChangeUsdAmountFormat"
                           required
                           :class="{
                             'is-invalid': $v.countryWiseForm.upper_limit.$error,
@@ -555,7 +559,6 @@
 </template>
 
 <script>
-//import TreasuryFlow from "@/components/flow/TreasuryFlow.vue";
 import { required, requiredIf, minLength } from "vuelidate/lib/validators";
 import { validationMixin } from "@/mixins";
 import { getAll } from "@/api/country";
@@ -611,22 +614,10 @@ export default {
         remarks: null,
       },
       countryWiseForm: null,
-      // scs_payout_partner_wise: {
-      //   id: null,
-      //   charge_type: "Cash Payment",
-      //   payout_partner: "ICICI",
-      //   receive_country: "",
-      //   service_charge_by: ,
-      //   service_charge: "",
-      //   upper_limit: "",
-      //   total_commission: "",
-      //   pay_commission: "",
-      //   remarks: "",
-      // },
       fields: [
-        { key: "id", label: "S/N" },
+        { key: "id_for_table", label: "S/N" },
         { key: "country", label: "Country" },
-        { key: "payout_partner", label: "Payout Partner" },
+        // { key: "payout_partner", label: "Payout Partner" },
         { key: "service_charge_type", label: "Charge Type" },
         { key: "upper_limit", label: "Upper Limit MYR" },
         { key: "created_by", label: "Service Charge By" },
@@ -687,6 +678,19 @@ export default {
     },
   },
   methods: {
+    ChangeUsdAmountFormat(){
+      this.countryWiseForm.upper_limit = this.formatUSD(this.parseUSD(this.countryWiseForm.upper_limit));
+    },
+    formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
     onlyForDecimal($event, val) {
       let keyCode = $event.keyCode ? $event.keyCode : $event.which;
 
@@ -706,7 +710,7 @@ export default {
       }
     },
     onForInteger($event, val) {
-      debugger; // eslint-disable-line no-debugger
+     
       let keyCode = $event.keyCode ? $event.keyCode : $event.which;
       if (
         val != null &&
@@ -718,7 +722,7 @@ export default {
       }
     },
     resetForm() {
-      debugger; // eslint-disable-line no-debugger
+     
       this.countryWiseForm = Object.assign({}, this.countryWiseDefaultForm);
       this.$v.$reset();
       this.isError = false;
@@ -729,10 +733,15 @@ export default {
     onSearch() {
       list().then((res) => {
         this.items = res.data.data;
+         this.items.forEach(function callback(value, index) {
+          // console.log(`${index}: ${value}`);
+
+          value.id_for_table = index + 1;
+        });
       });
     },
     onChangeTotalCommission() {
-      debugger; // eslint-disable-line no-debugger
+   
       this.countryWiseForm.qqpay_commission = parseInt(
         this.countryWiseForm.qqpay_commission
       );
@@ -766,7 +775,9 @@ export default {
         getById(item.id)
           .then((res) => {
             this.countryWiseForm = Object.assign({}, res.data.data[0]);
-            debugger; // eslint-disable-line no-debugger
+            if(this.countryWiseForm.service_charge_type == 57){
+            this.countryWiseForm.upper_limit = this.formatUSD(this.parseUSD(this.countryWiseForm.upper_limit));
+            }
             if (
               this.countryWiseForm.payment_partner == null ||
               this.countryWiseForm.payment_partner == 0
@@ -798,28 +809,22 @@ export default {
           //done()
         });
     },
-    // onDelete(item) {
-    //   onDelete(item.parameter_code, item.value_code)
-    //     .then(() => {
-    //       this.resetForm();
-    //     })
-    //     .catch((error) => {
-    //       this.isError = true;
-    //       this.error = error.message;
-    //     });
-    // },
+   
     manage() {
       this.$v.$touch();
 
       if (this.countryWiseForm.payment_partner == null) {
         this.countryWiseForm.payment_partner = 0;
       }
-      debugger; // eslint-disable-line no-debugger
+     
       if (this.$v.$invalid) {
         return;
       }
       if (this.countryWiseForm.id > 0) {
-        debugger; // eslint-disable-line no-debugger
+          if(this.countryWiseForm.service_charge_type == 57){
+              this.countryWiseForm.upper_limit = this.parseUSD(this.countryWiseForm.upper_limit);
+          }
+           this.countryWiseForm.country_code = 'IND';
         update(this.countryWiseForm)
           .then((res) => {
             this.$refs["charge-modal"].hide();
@@ -834,7 +839,10 @@ export default {
             //done()
           });
       } else {
-        debugger; // eslint-disable-line no-debugger
+        if(this.countryWiseForm.service_charge_type == 57){
+         this.countryWiseForm.upper_limit = this.parseUSD(this.countryWiseForm.upper_limit);
+        }
+        this.countryWiseForm.country_code = 'IND';
         save(this.countryWiseForm)
           .then((res) => {
             this.$refs["charge-modal"].hide();
@@ -854,6 +862,7 @@ export default {
   async created() {
     this.resetForm();
     this.onSearch();
+    
     await Promise.all([
       getAll().then((res) => {
         this.countryList = res.data;

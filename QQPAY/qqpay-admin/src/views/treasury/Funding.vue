@@ -619,10 +619,10 @@ export default {
           key: "pp_amount",
           label: "FCY Converted Amount",
         },
-        {
-          key: "funding_number", //  Need to check that
-          label: "Reference Number",
-        },
+        // {
+        //   key: "funding_number", //  Need to check that
+        //   label: "Reference Number",
+        // },
         {
           key: "bank_poc",
           label: "Partner POC",
@@ -753,6 +753,11 @@ export default {
             response.data.message
           );
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+          console.log("this.funding items",this.items);
+          this.items.forEach(element => {
+              element.lcy_amount = this.formatUSD(element.lcy_amount);
+               element.pp_amount = this.formatUSD(element.pp_amount);
+            });
         })
         .catch((e) => {
           responseHandler(e.data.status_code, this, e.data.message);

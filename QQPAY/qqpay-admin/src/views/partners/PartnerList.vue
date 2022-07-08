@@ -2,7 +2,7 @@
   <div>
     <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
    
-    <b-container>
+    <!-- <b-container> -->
       <b-row>
       <b-col>
         <div>
@@ -114,7 +114,7 @@
           </div>
         </template>
       </b-overlay>
-    </b-container>
+    <!-- </b-container> -->
     <b-modal id="add-partner-modal" hide-footer size="xl" title="Add Partner">
       <AddPartner @getPartners="getPartners" />
     </b-modal>
@@ -196,7 +196,7 @@ export default {
         },
       ],
       fields: [
-        "id",
+        "no",
         "partner_name",
         "contact_person",
         "country",
@@ -270,6 +270,11 @@ export default {
           partner_type: item.partner_type.toUpperCase().replaceAll("_", " "),
           action: item.agent_id,
         }));
+        this.items.forEach(function callback(value, index) {
+          // console.log(`${index}: ${value}`);
+          value.no = index + 1;
+        });
+        console.log("partner list",this.items);
       }
     },
   },
@@ -396,7 +401,7 @@ export default {
   top: 40px;
 }
 
-.compliance-table {
-  text-align: center;
-}
+// .compliance-table {
+//   text-align: center;
+// }
 </style>

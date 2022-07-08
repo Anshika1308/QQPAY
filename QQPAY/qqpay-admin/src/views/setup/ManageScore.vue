@@ -16,7 +16,7 @@
       </b-col>
       <b-col cols="3">
         <div class="float-right mt-3">
-          <b-button size="md" variant="outline-light" v-b-modal.sr-country-wise
+          <b-button size="md" variant="outline-light" v-b-modal.sr-country-wise-new
             >Add Special Rates</b-button
           >
         </div>
@@ -46,7 +46,7 @@
       </template>
     </b-table>
     <b-modal
-      id="sr-country-wise"
+      id="sr-country-wise-new"
       ref="modal"
       title="Special Rates"
       size="md"
@@ -314,7 +314,7 @@ export default {
 .modal-footer {
   justify-content: center !important;
 }
-#sr-country-wise___BV_modal_footer_ {
+#sr-country-wise-new___BV_modal_footer_ {
   justify-content: center !important;
 }
 .my-custom-class .card-title {

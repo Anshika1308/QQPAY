@@ -146,12 +146,12 @@
              {{itemsForsmallTable_by_partner[0].bid}}
             </template>           -->
             <template #cell(lcy_fcy_rate)="row" size="sm">
-              <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' ? items_by_partner[0].lcy_fcy_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'City express Nepal Pvt Ltd' ? items_by_partner[1].lcy_fcy_rate : '' }}</span>
+              <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' ? items_by_partner[0].lcy_fcy_rate :
+                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' ? items_by_partner[1].lcy_fcy_rate : '' }}</span>
             </template>
             <template #cell(offer_rate)="row" size="sm">
-               <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' ? items_by_partner[0].offer_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'City express Nepal Pvt Ltd' ? items_by_partner[1].offer_rate : '' }}</span>
+               <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' ? items_by_partner[0].offer_rate :
+                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' ? items_by_partner[1].offer_rate : '' }}</span>
             </template>
 
             <!-- <template #cell(selling_rate) size="sm">
@@ -203,16 +203,16 @@
              {{itemsForsmallTable_by_payment_mode[0].bid}}
             </template>           -->
             <template #cell(lcy_fcy_rate)="row" size="sm">
-              <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[0].lcy_fcy_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Home Delivery' ? items_by_payment_mode[1].lcy_fcy_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Account Deposit to Other Bank' ? items_by_payment_mode[2].lcy_fcy_rate : 
-                      row.item.country_code == 'IND' && row.item.partner_name == 'City express Nepal Pvt Ltd' && row.item.payment_mode == 'Digital Currency' ? items_by_payment_mode[3].lcy_fcy_rate :'' }}</span>
+              <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[0].lcy_fcy_rate :
+                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Home Delivery' ? items_by_payment_mode[1].lcy_fcy_rate :
+                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Account Deposit to Other Bank' ? items_by_payment_mode[2].lcy_fcy_rate : 
+                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[3].lcy_fcy_rate :'' }}</span>
             </template>
             <template #cell(offer_rate)="row" size="sm">
-                  <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[0].offer_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Home Delivery' ? items_by_payment_mode[1].offer_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'E/Mobile-Wallet' ? items_by_payment_mode[2].offer_rate : 
-                      row.item.country_code == 'IND' && row.item.partner_name == 'City express Nepal Pvt Ltd' && row.item.payment_mode == 'Digital Currency' ? items_by_payment_mode[3].offer_rate : '' }}</span>
+                  <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[0].offer_rate :
+                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Home Delivery' ? items_by_payment_mode[1].offer_rate :
+                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'E/Mobile-Wallet' ? items_by_payment_mode[2].offer_rate : 
+                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[3].offer_rate : '' }}</span>
               
             </template>
 
@@ -565,6 +565,7 @@ export default {
       save(item).then((res) => {
         console.log("res",res)
         this.onSearch();
+        this.editMain();
       })
     },
      editPartner(item) {

@@ -5,7 +5,7 @@
       <b-col>
         <div>
           <b-button-group size="sm">
-            <b-button variant="outline-light"  v-b-modal.sr-country-wise>
+            <b-button variant="outline-light"  v-b-modal.sr-country-wise-special>
               <b-icon
                 icon="file-earmark-plus-fill"
               ></b-icon>
@@ -87,7 +87,7 @@
       </template>
     </b-table>
     <b-modal
-      id="sr-country-wise"
+      id="sr-country-wise-special"
       title="Special Rates"
       size="lg"
       ref="rates-modal"
@@ -175,9 +175,10 @@
               <b-col md="6">
                 <b-form-group label="Transfer Amount">
                     <b-form-input
-                    type="number"
+                    type="text"
                     id="paying_amount_max"
                     name="paying_amount_max"
+                    @input="ChangeUsdAmountFormat"
                     v-model="form.max_paying_amount"
                     size="md"
                     required
@@ -346,6 +347,19 @@ export default {
     },
   },
   methods: {
+    ChangeUsdAmountFormat(){
+      this.form.max_paying_amount = this.formatUSD(this.parseUSD(this.form.max_paying_amount));
+    },
+      formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
     onlyForDecimal($event, val) {
       let keyCode = $event.keyCode ? $event.keyCode : $event.which;
 
@@ -375,6 +389,9 @@ export default {
     onSearch() {
       list().then((res) => {
         this.items = res.data.data;
+         this.items.forEach(element => {
+              element.max_paying_amount = this.formatUSD(this.parseUSD(element.max_paying_amount));
+            });
         // debugger; // eslint-disable-line no-debugger
       });
     },
@@ -420,6 +437,7 @@ export default {
             this.updateTriger = true;
             this.form = {};
             this.form = res.data.data[0];
+            this.form.max_paying_amount = this.formatUSD(this.parseUSD(this.form.max_paying_amount));
             this.$refs["rates-modal"].show();
             console.log(res);
             console.log('item',this.form);
@@ -473,7 +491,7 @@ export default {
         this.form.paying_amount_min = 0.00;
         this.form.publish_rate = 0.00;
         this.form.reuters_rate = 0.00;
-        
+        this.form.max_paying_amount = this.parseUSD(this.form.max_paying_amount);
         update(this.form)
           .then((res) => {
             this.$refs["rates-modal"].hide();
@@ -604,7 +622,7 @@ export default {
 .modal-footer {
   justify-content: center !important;
 }
-#sr-country-wise___BV_modal_footer_ {
+#sr-country-wise-special___BV_modal_footer_ {
   justify-content: center !important;
 }
 .my-custom-class .card-title {

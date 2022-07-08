@@ -9,6 +9,9 @@
               responsive
               class="align-middle"
         >
+         <template #cell(id)="row" size="sm">
+                {{row.index}}              
+        </template>
         <template #cell(type) size="sm">
                              <b-form-select class="form-control" id="input-partner-settlement-in"
                                v-model="itemsForsmallTable[0].type"

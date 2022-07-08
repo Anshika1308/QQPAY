@@ -12,7 +12,7 @@
                 <b-icon icon="chevron-right" aria-hidden="true"></b-icon>
               </div>
               <b-collapse :id="'menu-' + menu.id">
-                <b-card class="m-card">
+                <b-card class="m-card" >
                   <b-list-group flush>
                     <b-list-group-item href="#" v-for="sub_menu in menu.sub_menus" :key="sub_menu.title"
                       @click="openTab(sub_menu.value)"><small>{{ sub_menu.title }}</small></b-list-group-item>
@@ -22,7 +22,9 @@
             </b-list-group-item>
           </b-list-group>
         </b-col>
-        <b-col col sm="12" md="8" lg="10" class="px-0">
+        
+        <b-col col sm="12" md="8" lg="10" class="">
+         
           <NavBar title="Welcome to QQPay Admin Portal !" />
           <b-container>
             <b-row align-v="center" align-h="center" class="mt-5">
@@ -39,7 +41,7 @@
                       </template>
                       <ComplianceUser />
                     </b-tab>
-
+                    
                     <b-tab v-if="tab_show.business" :active="tab_active.business">
                       <template #title>
                         <b-icon icon="journal-check" aria-hidden="true"></b-icon>
@@ -49,6 +51,25 @@
                         </b-button>
                       </template>
                       <Business />
+                    </b-tab>
+
+                    <b-tab v-if="tab_show.EmployeeCreation" :active="tab_active.EmployeeCreation">
+                      <EmployeeCreation />
+                    </b-tab>
+
+                    <b-tab v-if="tab_show.EmployeeManagement" :active="tab_active.EmployeeManagement">
+                      <EmployeeManagement />
+                    </b-tab>
+                    
+                    <b-tab v-if="tab_show.CountrySetUp" :active="tab_active.CountrySetUp">
+                      <template #title>
+                        <b-icon icon="journal-check" aria-hidden="true"></b-icon>
+                        Country SetUp
+                        <b-button variant="outline-light" size="sm" @click="closeTab('CountrySetUp')">
+                          <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
+                        </b-button>
+                      </template>
+                      <CountrySetUp />
                     </b-tab>
 
                     <b-tab v-if="tab_show.fraud_users" :active="tab_active.fraud_users">
@@ -265,12 +286,32 @@
                     <b-tab v-if="tab_show.complianceSettings" :active="tab_active.complianceSettings">
                       <template #title>
                         <b-icon icon="graph-up" aria-hidden="true"></b-icon>
-                        Compliance Settings
+                        Compliance IND Score 
                         <b-button variant="outline-light" size="sm" @click="closeTab('complianceSettings')">
                           <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
                         </b-button>
                       </template>
                       <ComplianceSettings />
+                    </b-tab>
+                    <b-tab v-if="tab_show.ComplienceSettingsBu" :active="tab_active.ComplienceSettingsBu">
+                      <template #title>
+                        <b-icon icon="graph-up" aria-hidden="true"></b-icon>
+                        Compliance BU Score  
+                        <b-button variant="outline-light" size="sm" @click="closeTab('ComplienceSettingsBu')">
+                          <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
+                        </b-button>
+                      </template>
+                      <ComplienceSettingsBu />
+                    </b-tab>
+                    <b-tab v-if="tab_show.ComplianceSetup" :active="tab_active.ComplianceSetup">
+                      <template #title>
+                        <b-icon icon="graph-up" aria-hidden="true"></b-icon>
+                        Compliance Setup  
+                        <b-button variant="outline-light" size="sm" @click="closeTab('ComplianceSetup')">
+                          <b-icon icon="x-circle-fill" aria-hidden="true"></b-icon>
+                        </b-button>
+                      </template>
+                      <ComplianceSetup />
                     </b-tab>
                   </b-tabs>
                 </b-card>
@@ -307,12 +348,21 @@ import ManageScore from "@/views/setup/ManageScore.vue";
 import Service from "./ServiceCharge/Service.vue";
 import PPComm from "./ServiceCharge/PPComm.vue";
 import ComplianceSettings from "@/views/setup/ComplianceSettings.vue";
+import ComplienceSettingsBu from "@/views/setup/ComplienceSettingsBu.vue";
+import ComplianceSetup from "@/views/setup/ComplianceSetup.vue";
 import DealsBu from "./treasury/DealsBu.vue";
 import Reports from "./treasury/Report.vue";
+
+import EmployeeCreation from "./Employee/EmployeeCreation.vue";
+import EmployeeManagement from "./Employee/UserManagment.vue";
+import CountrySetUp from "./setup/CountrySetup.vue";
+
 
 export default {
   name: "Home",
   components: {
+    EmployeeCreation,
+    EmployeeManagement,
     NavBar,
     Deals,
     Settlements,
@@ -323,7 +373,6 @@ export default {
     PartnerList,
     AddPartner,
     PartnerCommissionList,
-    //Business,
     DailyForex,
     ServiceCharge,
     SpecialRates,
@@ -333,7 +382,10 @@ export default {
     ComplianceSettings,
     DealsBu,
     Reports,
-    DailyForexBUS
+    DailyForexBUS,
+    CountrySetUp,
+    ComplienceSettingsBu,
+    ComplianceSetup
   },
   // flag
   data() {
@@ -356,7 +408,12 @@ export default {
         PPComm: false,
         dealsbu: false,
         Reports:false,
-        DailyForexBUS:false
+        DailyForexBUS:false,
+        EmployeeCreation:false,
+        EmployeeManagement:false,
+        CountrySetUp:false,
+        ComplienceSettingsBu:false,
+        ComplianceSetup:false
       },
       tab_active: {
         deals: false,
@@ -374,7 +431,12 @@ export default {
         user: false,
         dealsbu: false,
         Reports:false,
-        DailyForexBUS:false
+        DailyForexBUS:false,
+        EmployeeCreation:false,
+        EmployeeManagement:false,
+        CountrySetUp:false,
+        ComplienceSettingsBu:false,
+        ComplianceSetup:false
       },
       menus: [
         {
@@ -382,16 +444,6 @@ export default {
           title: "Dashboard",
           sub_menus: {},
         },
-        // {
-        //   id: 2,
-        //   title: "KYC",
-        //   sub_menus: {},
-        // },
-        // {
-        //   id: 3,
-        //   title: "Transactions",
-        //   sub_menus: {},
-        // },
         {
           id: 4,
           title: "Compliance",
@@ -430,14 +482,7 @@ export default {
               title: "Daily Forex -BUS",
               value: "DailyForexBUS",
             },
-            {
-              title : "Reports",
-              value :"Reports",
-            }
-            // {
-            //   title: "A/C Statement",
-            //   value: "statement",
-            // },
+       
           ],
         },
         {
@@ -447,32 +492,9 @@ export default {
             {
               title: "Partners List",
               value: "partners",
-            }, {
-              title: "Partner Commission",
-              value: "partner_commissions",
             },
           ],
         },
-        // {
-        //   id: 7,
-        //   title: "Master Settings",
-        //   sub_menus: {},
-        // },
-        // {
-        //   id: 8,
-        //   title: "Service charge",
-        //   sub_menus: [
-        //     {
-        //       title: "All setups",
-        //       value: "Service",
-        //     },
-
-        //     {
-        //       title: "PP Comm Charge",
-        //       value: "PPComm",
-        //     },
-        //   ],
-        // },
         {
           id: 8,
           title: "Setup",
@@ -487,11 +509,48 @@ export default {
             },
             {
               title: "Manage Score",
-              value: "manageScore",
+              value: "manageScore", 
             },
             {
-              title: "Compliance Settings",
+              title: "Compliance IND Score",
               value: "complianceSettings",
+            },
+            {
+              title: "Compliance BU Score",
+              value: "ComplienceSettingsBu",
+            },
+             {
+              title: "Compliance Setup",
+              value: "ComplianceSetup",
+            },
+            {
+              title: "Country Setup",
+              value: "CountrySetUp",
+            },
+            
+          ],
+        },
+        {
+          id: 9,
+          title: "User",
+          sub_menus: [
+            {
+              title: "Employee Creation",
+              value: "EmployeeCreation",
+            },
+            {
+              title: "Employee Management",
+              value: "EmployeeManagement",
+            }
+          ],
+        },
+        {
+          id: 10,
+          title: "Reports",
+          sub_menus: [
+            {
+              title: "Statment of Accounts",
+              value: "Reports",
             },
           ],
         },
@@ -553,6 +612,12 @@ export default {
   height: 100vh;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
+
+.container{
+max-width: 1540px !important;
+margin-top: -20px;
+}
+
 
 ::v-deep .nav-pills {
   .nav-link {

@@ -407,13 +407,40 @@ export default {
   methods: {
     async getUserDtl() {
       console.log("token", this.token, this.base_url);
+      //get all transaction details
+      axios
+        .get(this.base_url + "transaction/transaction/" + this.selectedData[0].Remitter_code, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          // this.userDtl = JSON.parse(JSON.stringify(response.data.data[0]));
+          console.log("this.transaction details", JSON.parse(JSON.stringify(response.data.data[0])));
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
 
       axios
-        // .get(this.base_url + "user/profile", {
-        //   headers: {
-        //     Authorization: `Bearer ${this.token}`,
-        //   },
-        // })
+        .get(this.base_url + "transaction_limit/all-limits-by-txn-type?transaction_type=IND" + this.selectedData[0].Remitter_code, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then(response => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          // this.userDtl = JSON.parse(JSON.stringify(response.data.data[0]));
+          console.log("this.transaction limits", JSON.parse(JSON.stringify(response.data.data[0])));
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+
+
+      axios
         .get(this.base_url + "user/get-remitter-by/" + this.selectedData[0].Remitter_code, {
           headers: {
             Authorization: `Bearer ${this.token}`,

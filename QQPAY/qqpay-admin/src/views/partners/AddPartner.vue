@@ -211,11 +211,15 @@
               </b-form-group>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
+              <!-- flag -->
               <b-form-group id="input-group-local-currency" label="Local Currency" label-for="input-local-currency">
                 <b-form-select class="form-control" id="input-local-currency"
                                v-model="bankAndBranchAccountDetail.localCurrency"
-                               :options="bankAndBranchAccountDetail.localCurrencyOptions"/>
+                               :options="bankAndBranchAccountDetail.localCurrencyOptions" required/>
               </b-form-group>
+              <div class="errorstyles">
+                <div class="z-index">{{ localCurruncyError}}</div>
+              </div>
             </b-col>
             <b-col md="6" sm="12" lg="4" xl="4">
               <b-form-group id="input-group-mileage-defined" label="Mileage Defined" label-for="input-mileage-defined">
@@ -532,6 +536,7 @@ export default {
         remarks: "",
         printReceiptInformation: "",
         fundCollectionDay: null,
+        localCurruncyError:"",
         fundCollectionDayOptions: [
           {value: '1', text: 'Fund Collection Type 1'},
           {value: '2', text: 'Fund Collection Type 1'},
@@ -573,7 +578,13 @@ export default {
       console.log(this.companyDetail.iso_alpha3)
     },
     async handleSubmit() {
-      const formData = JSON.stringify({
+      if(!this.bankAndBranchAccountDetail.localCurrency){
+        this.localCurruncyError = "Local Currency is required"
+      }else{
+        this.localCurruncyError = ""
+      }
+      if(this.bankAndBranchAccountDetail.localCurrency){
+        const formData = JSON.stringify({
         contact_person_1: this.contactInformation.contactPerson1,
         contact_person_1_post: this.contactInformation.post1,
         contact_person_1_phone: this.contactInformation.contactPersonPhone1,
@@ -640,6 +651,8 @@ export default {
         })
         console.log(this.errors);
       }
+      }
+      
     },
     async getCountryList() {
       const res = await transactionGetApiData(`${APIS.GET_COUNTRY_NAME}`);
@@ -669,6 +682,18 @@ export default {
 <style lang="scss" scoped>
 @import "@/global.scss";
 
+.invalid input {
+  border-color: rgb(248, 146, 146);
+}
+.errorstyles {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: red;
+
+}
 .submit-btn {
   margin: 20px;
   background-color: $primary;

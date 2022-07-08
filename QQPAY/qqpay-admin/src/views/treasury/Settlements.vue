@@ -760,6 +760,10 @@ export default {
           responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+           this.items.forEach(element => {
+              element.credit_amount = this.formatUSD(element.credit_amount);
+            });
+          console.log("this.items",this.items)
         })
         .catch((e) => {
           responseHandler(e.status_code, this, e.message)

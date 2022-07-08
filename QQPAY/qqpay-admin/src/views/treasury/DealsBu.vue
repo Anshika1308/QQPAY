@@ -361,24 +361,10 @@ export default {
           key: 'deal_date',
           label: 'Booking Date',
         },
-        // {
-        //   key: 'source_of_funds',
-        //   label: 'Source of Funds',
-        // },
-
-      
-
-     
-
         {
           key: 'usd_amount',
           label: 'FCY Rate',
         },
-
-        // {
-        //   key: 'pp_ccy',
-        //   label: 'PP CCY',
-        // },
 
         {
           key: 'pp_amount',
@@ -394,6 +380,16 @@ export default {
     };
   },
   methods: {
+     formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
     ok() {
       console.log("ok");
     },
@@ -576,6 +572,10 @@ export default {
         .then(response => {
           responseHandler(response.data.status_code, this, response.data.message)
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
+          console.log("items new",this.items)
+           this.items.forEach(element => {
+              element.pp_amount = this.formatUSD(element.pp_amount);
+            });
         })
         .catch((e) => {
           responseHandler(e.data.status_code, this, e.data.message)

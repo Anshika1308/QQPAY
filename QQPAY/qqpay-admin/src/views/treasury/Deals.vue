@@ -58,12 +58,6 @@
       <template #cell(item)="row">
         {{ row.item.deal_type }}
       </template>
-      <!-- <template #cell(fcy_amount)="row">
-        {{ formatUsd(parseUSD(row.item.fcy_amount)) }}
-      </template> -->
-      <template #cell(deal_date)="row"
-        >{{ format(row.item.deal_date) }}
-      </template>
       <template #cell(actions)="row" size="sm">
         <div class="action-div">
           <b-button
@@ -127,43 +121,15 @@
               <b-col sm="12" md="6" lg="6">
                 <div class="menu-sec">
                   <b-list-group flush>
-                    
-
-                    <!-- <b-list-group-item
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <label>Target of funds</label>
-                      <label>{{ row.item.tof }}</label>
-                    </b-list-group-item> -->
-
                     <b-list-group-item
                       class="d-flex justify-content-between align-items-center"
                     >
                       <label>Edited by</label>
                       <label>{{ row.item.updated_by_name }}</label>
                     </b-list-group-item>
-
-                    <!-- <b-list-group-item
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <label>Service Charge</label>
-                      <label>{{ row.item.bank_charge }}</label>
-                    </b-list-group-item>
-
-                    <b-list-group-item
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <label>Service Tax</label>
-                      <label>{{ row.item.tax }}</label>
-                    </b-list-group-item> -->
                   </b-list-group>
                 </div>
               </b-col>
-
-              <!-- <b-col sm="12" md="6" lg="6" align-h="center">
-                <TreasuryFlow />
-              </b-col> -->
-
               </b-row>
             </b-col>
             <b-col sm="12" md="6" lg="3">
@@ -429,10 +395,13 @@ export default {
   },
   created() {
 
-    // let x = 10000.59;
-    // console.log(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
     this.$root.$refs.Deals = this;
     this.getContract();
+    this.items.forEach(element => {
+      element.fcy_amount = this.formatUSD(this.parseUSD(element.fcy_amount))
+    });
+  
+
   },
   mounted() {
     this.$root.$on('selectedDealEventing', data => {
@@ -600,11 +569,8 @@ export default {
         });
     },
     dateDisabled(ymd, date) {
-        // Disable weekends (Sunday = `0`, Saturday = `6`) and
-        // disable days that fall on the 13th of the month
         const weekday = date.getDay()
         const day = date.getDate()
-        // Return `true` if the date should be disabled
         return weekday === 0 || weekday === 6 || day ===  1 || day ===  2 || day ===  3 || day ===  4  || day ===  5  || day ===  9 || day ===  10 || day ===  11 || day ===  12 || day ===  13 || day ===  14 || day ===  15 || day ===  16 || day ===  17
                || day ===  18 || day ===  19 || day ===  20 || day ===  21 || day ===  22 || day ===  23 || day ===  24 || day ===  25 || day ===   26 || day ===   27|| day ===  28 || day ===  29 || day ===  30
     },
@@ -764,7 +730,11 @@ export default {
           responseHandler(response.data.status_code, this, response.data.message)
           // this.dealsTableData = JSON.parse(response.data.data);
           this.items = JSON.parse(JSON.stringify(response.data.data[0]));
-          console.log("this.items", this.items);
+            this.items.forEach(element => {
+              element.fcy_amount = this.formatUSD(element.fcy_amount);
+              element.lcy_amount = this.formatUSD(element.lcy_amount);
+            });
+          
         })
         .catch((e) => {
           responseHandler(e.data.status_code, this, e.data.message)

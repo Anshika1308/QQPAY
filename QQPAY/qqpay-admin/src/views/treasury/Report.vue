@@ -72,7 +72,7 @@
       responsive
       class="align-middle"
     > 
-     <template #cell(debit_amount)="row" size="sm">
+     <!-- <template #cell(debit_amount)="row" size="sm">
               <span>{{row.item.debit_amount.toFixed(4)}}</span>
       </template>  
       <template #cell(credit_amount)="row" size="sm">
@@ -80,7 +80,7 @@
       </template>
       <template #cell(balance)="row" size="sm">
               <span>{{row.item.balance.toFixed(4)}}</span>
-      </template>  
+      </template>   -->
     </b-table>
     </div>
   </div>
@@ -150,6 +150,16 @@ data() {
     this.getPPdetails();
   },
   methods:{
+    formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
     GenarateReport(){
       console.log(this.search_data);
        axios.post(this.account_url + "account/get-usd-balance-sheet", this.search_data, {
@@ -188,6 +198,12 @@ data() {
             responseHandler(response.data.status_code, this, response.data.message)
             this.report_data = response.data;
             this.items = response.data;
+            this.items.forEach(element => {
+              element.credit_amount = this.formatUSD(element.credit_amount);
+              element.debit_amount = this.formatUSD(element.debit_amount);
+              element.Balance = this.formatUSD(element.Balance);
+            });
+
 
           })
           .catch((err) => {

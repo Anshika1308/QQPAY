@@ -9,7 +9,7 @@
       </b-col>
       <b-col cols="2">
         <div class="mt-3">
-          <b-button class="float-right" variant="primary" 
+          <b-button class="float-right" variant="primary"
             >Search</b-button
           >
         </div>
@@ -260,7 +260,7 @@ export default {
       },
       parameterForm: null,
       defaultForm: {
-        user_type:"IND",
+        user_type:"BU",
         value_code: null,
         value: null,
         parameter:null,
@@ -349,15 +349,14 @@ export default {
     },
     onSearch() {
       list().then((res) => {
-        this.items = [];
+         this.items = []
         res.data.data[0].forEach(element => {
-          if(element.user_type == 'IND'){
+          if(element.user_type == 'BU'){
             this.items.push(element);
           }
         });
         // this.items = res.data.data[0];
       });
-
     },
     edit(item) {
 
@@ -379,7 +378,7 @@ export default {
     onDelete(item) {
       onDelete(item.parameter_code, item.value_code)
         .then(() => {
-          // this.resetForm();
+          this.resetForm();
         })
         .catch((error) => {
           this.isError = true;
@@ -455,7 +454,7 @@ export default {
       }
       if (this.form.id > 0) {
        this.form.parameter = this.form.parameter_code;
-         this.form.user_type = 'IND';
+       this.form.user_type = 'BU';
         this.parameterList.forEach(element => {
           if(element.parameter_name == this.form.parameter_code){
             this.form.parameter_code = element.id;
@@ -482,7 +481,7 @@ export default {
         this.form.is_active = true;
         console.log(this.form)
         this.form.parameter = this.form.parameter_code;
-        this.form.user_type = 'IND';
+        this.form.user_type = 'BU';
         this.parameterList.forEach(element => {
           if(element.parameter_name == this.form.parameter_code){
             this.form.parameter_code = element.id;
