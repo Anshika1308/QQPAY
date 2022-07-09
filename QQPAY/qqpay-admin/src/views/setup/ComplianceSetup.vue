@@ -390,7 +390,7 @@ export default {
     isNumber(e) {
       let char = String.fromCharCode(e.keyCode); // Get the character
       let val = e.target.value; // Get the character
-      if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
+      if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; 
       // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
       else e.preventDefault(); // If not match, don't add to input text
     }
