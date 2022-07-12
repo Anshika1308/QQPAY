@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
-    <b-row>
+    <!-- <b-row>
       <b-col cols="4">
         <div class="mt-3">
           <strong></strong>
@@ -43,15 +43,71 @@
           </b-button-group>
         </div>
       </b-col>
-    </b-row>
-    <b-row>
+    </b-row> -->
+    <!-- <b-row>
+
       <b-col>
         <b-alert v-model="isError" variant="danger" dismissible>
           {{ this.error }}
         </b-alert>
       </b-col>
+    </b-row> -->
+
+   <b-row style="margin-bottom: -25px;">
+      <b-col>
+        <div>
+          <b-button-group size="sm">
+            <b-button variant="outline-light"   @click="showParameterForm()">
+              <b-icon
+                icon="file-earmark-plus-fill"
+                
+              ></b-icon>
+              Add Parameter
+            </b-button>
+            <b-button variant="outline-light"  @click="showValueForm()">
+              <b-icon
+                icon="file-earmark-plus-fill"
+                
+              ></b-icon>
+              Add Record
+            </b-button>
+            <b-button variant="outline-light">
+              <b-icon icon="cloud-download-fill"></b-icon> Export XLS
+            </b-button>
+          </b-button-group>
+        </div>
+      </b-col>
+      <b-col>
+        <b-form-group
+          label-for="filter-input"
+          label-cols-sm="0"
+          label-cols-lg="0"
+          label-align-lg="right"
+          content-cols-sm="12"
+          content-cols-lg="8"
+          label-align-sm="right"
+          label-size="sm"
+          class="mb-2"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+              id="filter-input"
+              v-model="filter"
+              type="search"
+              placeholder="Type to Search"
+            ></b-form-input>
+
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''"
+                >Clear</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
+      </b-col>
     </b-row>
-    <b-row v-if="showParameter">
+
+    <b-row v-if="showParameter" style="margin-top: 25px;">
       <b-col cols="3">
         <b-form-group label="Parameter">
           <b-form-input
@@ -89,7 +145,8 @@
         </b-form-group>
       </b-col>
     </b-row>
-    <b-row v-if="showValue">
+
+    <b-row v-if="showValue" style="margin-top: 25px;">
       <b-col cols="3">
         <b-form-group label="Select Parameter">
           <v-select
@@ -168,6 +225,7 @@
         </b-form-group>
       </b-col>
     </b-row>
+
     <div>
       <b-row>
         <b-col sm="12" md="12" lg="12">
@@ -259,6 +317,7 @@ export default {
         is_active: null,
       },
       parameterForm: null,
+      filter: null,
       defaultForm: {
         user_type:"BU",
         value_code: null,
@@ -464,7 +523,7 @@ export default {
         updateValue(
           this.form,
           this.form.parameter_code,
-          this.form.parameter_val_code
+          this.form.value_code
         )
           .then((res) => {
             console.log(res);

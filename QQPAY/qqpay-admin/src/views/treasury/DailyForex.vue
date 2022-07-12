@@ -131,7 +131,7 @@
               </div>
             </template>
           </b-table>
-    </div>
+        </div>
 
       </b-tab>
        <b-tab title="Partner Wise">

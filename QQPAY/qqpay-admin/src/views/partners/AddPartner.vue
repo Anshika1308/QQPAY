@@ -561,7 +561,7 @@ export default {
   },
   methods: {
     ChangeCheckbox(){
-        console.log(this.bankAndBranchAccountDetail.paymentMethodAllowedSelected.toString());
+        console.log("SELECTED PAYMENT METHODE",this.bankAndBranchAccountDetail.paymentMethodAllowedSelected.toString());
     },
     ChangeDate(){
       console.log(this.companyDetail.licenseExpiryDate);
@@ -578,6 +578,7 @@ export default {
       console.log(this.companyDetail.iso_alpha3)
     },
     async handleSubmit() {
+      console.log(this.bankAndBranchAccountDetail.paymentMethodAllowedSelected.toString(),"test")
       if(!this.bankAndBranchAccountDetail.localCurrency){
         this.localCurruncyError = "Local Currency is required"
       }else{

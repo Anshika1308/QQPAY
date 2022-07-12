@@ -134,8 +134,11 @@
               </template>
             </template>
             <template v-slot:cell(Is_Negativelisted)="row">
-              <template v-if="row.item.Is_Negativelisted === 1">
+              <template v-if="row.item.Is_Negativelisted === 2">
                 <b-icon icon="flag-fill" variant="danger"></b-icon>
+              </template>
+               <template v-else>
+                <b-icon icon="flag-fill" variant="success"></b-icon>
               </template>
             </template>
             
@@ -221,7 +224,6 @@ export default {
   computed: {
     ...mapGetters([
       "token",
-      // "base_url",
     ]),
 
   },
@@ -241,19 +243,11 @@ export default {
       fields: [
         "name_&_occupation",
         {
-          key: 'Phone_Number',
-          label: 'Number',
-        },
-        {
-          key: 'Email_ID',
-          label: 'Email',
-        },
-        {
-          key: 'Country_Code',
+          key: 'country',
           label: 'Country',
         },
         {
-          key: 'User_Type',
+          key: 'user_type_name',
           label: 'User Type',
         },
         {
@@ -269,66 +263,9 @@ export default {
           key: 'Is_Negativelisted',
           label: 'Fraudulent',
         },
-        // "user_status",
-        // "fraudulent",
-       /*  {
-          key: 'deal_type',
-          label: 'Deal Type',
-        }, */
+       
       ],
       items: [
-/*         {
-          name: "Yammi Peter",
-          occupation: "Software Engineer",
-          avatarImg:
-            "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-          number: "+91 9172131234",
-          email: "Test2@mail.com",
-          country: "India",
-          user_type: "Indiviual",
-          risk_status: "Low risk",
-          user_status: "Active",
-          fraudulent: true,
-        },
-        {
-          name: "Jason",
-          occupation: "Software Engineer",
-          avatarImg:
-            "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-          email: "Test1@mail.com",
-          number: "+1 9812121211",
-          country: "USA",
-          user_type: "Indiviual",
-          risk_status: "Low risk",
-          user_status: "Active",
-          fraudulent: false,
-        },
-        {
-          name: "Peter Jain",
-          occupation: "Traveller",
-          avatarImg:
-            "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-          number: "+91 9172131224",
-          email: "peter@mail.com",
-          country: "India",
-          user_type: "Indiviual",
-          risk_status: "Critical risk",
-          user_status: "Active",
-          fraudulent: true,
-        },
-        {
-          name: "Arvind",
-          occupation: "Media Manager",
-          avatarImg:
-            "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-          email: "Arvind@mail.com",
-          number: "+91 9812123811",
-          country: "India",
-          user_type: "Indiviual",
-          risk_status: "High risk",
-          user_status: "Active",
-          fraudulent: false,
-        }, */
       ],
       tableData: [],
       riskStatusOptions: [
@@ -374,32 +311,7 @@ export default {
       this.showUserDetails = true;
       // this.$router.push("userDetails");
     },
-/*     riskFilterApply() {
-      // this.items = this.tableData
-      console.log(this.riskStatus);
-      this.items = this.tableData.filter(ele => {
-        if (this.riskStatus.all) {
-          return ele.risk_status === 'Low risk' || ele.risk_status === 'High risk' || ele.risk_status === 'Critical risk'
-        }
-        if (this.riskStatus.high) {
-          return ele.risk_status === 'High risk'
-        }
-        if (this.riskStatus.critical) {
-          return ele.risk_status === 'Critical risk'
-        }
-      })
-      const dropdown = this.$refs.riskStatusFilter;
-      if (dropdown) {
-        dropdown.hide();
-      }
-    },
 
-    checkAllClick() {
-      this.riskStatus.all = !this.riskStatus.all;
-      this.riskStatus.low = this.riskStatus.all
-      this.riskStatus.high = this.riskStatus.all
-      this.riskStatus.critical = this.riskStatus.all
-    }, */
     onChangeRiskStatus(eve) {
       console.log(eve);
       // eve.preventDefault();
@@ -487,9 +399,28 @@ export default {
 }
 
 .compliance-table {
-  overflow-x: auto;
-  text-align: center;
+  // overflow-x: auto;
+  // text-align: center;
   font-size: 14px;
+}
+
+::v-deep th {
+  color: $txt !important;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+::v-deep td {
+  font-size: 12px !important;
+}
+
+::v-deep .col-form-label {
+  color: $dimgrey;
+}
+::v-deep .table {
+  td {
+    vertical-align: middle !important;
+  }
 }
 .risk-status-header {
   display: flex;

@@ -507,10 +507,10 @@ export default {
               title: "Special Rates",
               value: "specialRates",
             },
-            {
-              title: "Manage Score",
-              value: "manageScore", 
-            },
+            // {
+            //   title: "Manage Score",
+            //   value: "manageScore", 
+            // },
             {
               title: "Compliance IND Score",
               value: "complianceSettings",

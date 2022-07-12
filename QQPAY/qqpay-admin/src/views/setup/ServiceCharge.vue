@@ -2,17 +2,6 @@
   <div class="home">
     <b-breadcrumb :items="menu_hierarchy"></b-breadcrumb>
     <!-- <b-row>
-      <b-col cols="12">
-        <div class="float-right mt-3">
-          <b-button-group size="md">
-            <b-button variant="outline-light">
-              <b-icon icon="cloud-download-fill"></b-icon> Export XLS
-            </b-button>
-          </b-button-group>
-        </div>
-      </b-col>
-    </b-row> -->
-    <b-row>
       <b-col cols="6">
         <div>
           <b-input-group size="md" class="mt-3">
@@ -62,12 +51,62 @@
           </b-button-group>
         </div>
       </b-col>
-    </b-row>
-    <b-row>
+    </b-row> -->
+
+
+    <!-- <b-row>
       <b-col>
         <b-alert v-model="isError" variant="danger" dismissible>
           {{ this.error }}
         </b-alert>
+      </b-col>
+    </b-row> -->
+
+
+    <b-row style="margin-bottom: -20px;">
+      <b-col>
+        <div>
+          <b-button-group size="sm">
+            <b-button variant="outline-light" v-b-modal.scs-country-wise>
+              <b-icon
+                icon="file-earmark-plus-fill"
+                
+              ></b-icon>
+             Add Service Charge
+            </b-button>
+            <b-button variant="outline-light">
+              <b-icon icon="cloud-download-fill"></b-icon> Export XLS
+            </b-button>
+          </b-button-group>
+        </div>
+      </b-col>
+      <b-col>
+        <b-form-group
+          label-for="filter-input"
+          label-cols-sm="0"
+          label-cols-lg="0"
+          label-align-lg="right"
+          content-cols-sm="12"
+          content-cols-lg="8"
+          label-align-sm="right"
+          label-size="sm"
+          class="mb-2"
+        >
+          <b-input-group size="sm">
+            <b-form-input
+              id="filter-input"
+              v-model="filter"
+              type="search"
+              placeholder="Type to Search"
+            ></b-form-input>
+
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''"
+                >Clear</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
       </b-col>
     </b-row>
     <div>
@@ -77,6 +116,7 @@
             <b-table
               :items="items"
               :fields="fields"
+              :filter="filter"
               responsive
               class="align-middle mt-4"
             >
@@ -86,20 +126,6 @@
                <template #cell(service_charge_type)="row">
                 {{ row.item.service_charge_type == 56 ? 'Flat' : 'Percentage' }}
               </template>
-              
-              <!-- <template #cell(remarks)="row" size="sm">
-        <div class="action-div">
-          <b-icon
-            v-if="row.item.remarks != null && row.item.remarks != ''"
-            style="color: green"
-            icon="square-fill"
-          ></b-icon>
-          <b-icon
-            v-if="row.item.remarks == null || row.item.remarks == ''"
-            icon="square"
-          ></b-icon>
-        </div>
-      </template> -->
               <template #cell(is_active)="row">
                 <b-form-checkbox
                   v-model="row.item.is_active"
@@ -135,6 +161,7 @@
         </b-col>
       </b-row>
     </div>
+
     <b-modal
       id="scs-country-wise"
       ref="charge-modal"
@@ -588,6 +615,7 @@ export default {
       ],
       isError: false,
       error: null,
+     
       tabIndex: 0,
       defaultForm: {
         country_name: null,

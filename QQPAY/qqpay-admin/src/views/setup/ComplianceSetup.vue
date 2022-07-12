@@ -65,6 +65,9 @@
             v-model="occupation"
             :options="occupation_options"
           ></b-form-select>
+          <div class="errorstyles">
+              <div class="z-index">{{ occupation_error }}</div>
+            </div>
         </b-form-group>
       </b-col>
       <b-col md="6">
@@ -73,6 +76,9 @@
             v-model="transaction_type"
             :options="Transaction_Type_options"
           ></b-form-select>
+          <div class="errorstyles">
+              <div class="z-index">{{ transaction_type_error }}</div>
+          </div>
         </b-form-group>
       </b-col>
     </b-row>
@@ -82,13 +88,20 @@
           <b-form-input
             v-model="per_transaction_upper_limit"
             size="md"
-            v-on:keypress="isNumber($event)"
+            v-on:keypress="ChangeUsdAmountFormatper_transaction_upper_limit()"
           ></b-form-input>
+          <div class="errorstyles">
+              <div class="z-index">{{ per_transaction_upper_limit_error }}</div>
+          </div>
         </b-form-group>
       </b-col>
       <b-col md="6">
         <b-form-group label="per Daily">
-          <b-form-input v-model="per_day_upper_limit" size="md" v-on:keypress="isNumber($event)"></b-form-input>
+          <b-form-input v-model="per_day_upper_limit" size="md" v-on:keypress="ChangeUsdAmountFormatper_day_upper_limit()"></b-form-input>
+          <div class="errorstyles">
+              <div class="z-index">{{ per_day_upper_limit_error }}</div>
+              <div class="z-index">{{ per_day_less_error }}</div>
+          </div>
         </b-form-group>
       </b-col>
     </b-row>
@@ -99,8 +112,12 @@
           <b-form-input
             v-model="per_month_upper_limit"
             size="md"
-            v-on:keypress="isNumber($event)"
+            v-on:keypress="ChangeUsdAmountFormatper_month_upper_limit()"
           ></b-form-input>
+          <div class="errorstyles">
+              <div class="z-index">{{ per_month_upper_limit_error }}</div>
+              <div class="z-index">{{ per_month_less_error }}</div>
+          </div>
         </b-form-group>
       </b-col>
     </b-row>
@@ -112,6 +129,7 @@
     <b-table
       :items="items_per_transaction"
       :fields="feilds_for_transac"
+        :filter="filter"
       responsive
       class="align-middle"
     >
@@ -153,6 +171,7 @@ export default {
   },
   data() {
     return {
+      filter:"",
       updateTrigger:false,
       transaction_base_url:"http://3.111.47.115:8000/api/v1/",
       per_transaction_upper_limit: "",
@@ -161,14 +180,15 @@ export default {
       transaction_type: "",
       occupation: "",
       temp_id:null,
+      per_transaction_upper_limit_error:"",
+      per_day_upper_limit_error: "",
+      per_month_upper_limit_error: "",
+      transaction_type_error: "",
+      occupation_error: "",
+      per_day_less_error:"",
+      per_month_less_error:"",
       items_per_transaction: [
-        {
-          occupation: "Agri Worker",
-          Transaction_Type: "C2C",
-          perTransaction: "3000",
-          perdaily: "5000",
-          permonthly: "10000",
-        },
+        
       ],
       Transaction_Type_options: [
         { value: "C2C", text: "C2C" },
@@ -211,16 +231,78 @@ export default {
     },
   },
   methods: {
+    ChangeUsdAmountFormatper_transaction_upper_limit(){ 
+      this.per_transaction_upper_limit = this.formatUSD(this.parseUSD(this.per_transaction_upper_limit));
+    },
+    ChangeUsdAmountFormatper_month_upper_limit(){ 
+      this.per_month_upper_limit = this.formatUSD(this.parseUSD(this.per_month_upper_limit));
+     
+    },
+    ChangeUsdAmountFormatper_day_upper_limit(){ 
+      this.per_day_upper_limit = this.formatUSD(this.parseUSD(this.per_day_upper_limit));
+     
+    },
+    formatUSD(num) {
+      return (
+              Number(num)
+                  .toString()
+                  .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+              );
+    },
+    parseUSD(text) {
+      return Number(text.replace("$", "").replace(/,/g, ""));
+    },
     postTransData(){
-        if(!this.updateTrigger){
+      //  if(this.parseUSD(this.per_month_upper_limit) < this.parseUSD(this.per_transaction_upper_limit)){
+      //   this.per_month_less_error = "Amount shoud high than per transaction limit and per day limit";
+      // }else{
+      //   this.per_month_less_error = "";
+      // }
+      // if(this.parseUSD(this.per_month_upper_limit) < this.parseUSD(this.per_day_upper_limit)){
+      //   this.per_month_less_error = "Amount shoud high than per transaction limit and per day limit";
+      // }else{
+      //   this.per_month_less_error = "";
+      // }
+      //  if(this.parseUSD(this.per_day_upper_limit) < this.parseUSD(this.per_transaction_upper_limit)){
+      //   this.per_day_less_error = "Amount shoud high than per transaction limit";
+      // }else{
+      //   this.per_day_less_error = "";
+      // }
+        if(!this.transaction_type){
+          this.transaction_type_error = "Transaction Type is Required"
+        }else{
+          this.transaction_type_error = ""
+        }
+        if(!this.occupation){
+          this.occupation_error = "Occupation is Required"
+        }else{
+          this.occupation_error = ""
+        }
+        if(!this.per_transaction_upper_limit){
+          this.per_transaction_upper_limit_error = "Transaction Upper Limit is Required"
+        }else{
+          this.per_transaction_upper_limit_error = ""
+        }
+        if(!this.per_day_upper_limit){
+          this.per_day_upper_limit_error = "Dayli Limit is Required"
+        }else{
+          this.per_day_upper_limit_error = ""
+        }
+        if(!this.per_month_upper_limit){
+          this.per_month_upper_limit_error = "Per Month Transaction Limit is Required"
+        }else{
+          this.per_month_upper_limit_error = ""
+        }
+        if(this.transaction_type && this.occupation && this.per_transaction_upper_limit && this.per_day_upper_limit && this.per_month_upper_limit && this.per_month_less_error == "" && this.per_day_less_error == ""){
+   if(!this.updateTrigger){
             const data = 
             {
             "transaction_type": this.transaction_type,
             "occupation": this.occupation,
             "occipation_code": 0,
-            "per_transaction_limit": parseInt(this.per_transaction_upper_limit),
-            "per_day_limit": parseInt(this.per_day_upper_limit),
-            "per_month_limit": parseInt(this.per_month_upper_limit),
+            "per_transaction_limit": this.parseUSD(this.per_transaction_upper_limit),
+            "per_day_limit": this.parseUSD(this.per_day_upper_limit),
+            "per_month_limit": this.parseUSD(this.per_month_upper_limit),
             "is_active": true
             }
             this.occupation_options.forEach(element => {
@@ -265,9 +347,9 @@ export default {
         "transaction_type": this.transaction_type,
         "occupation": this.occupation,
         "occipation_code": 0,
-        "per_transaction_limit": parseInt(this.per_transaction_upper_limit),
-        "per_day_limit": parseInt(this.per_day_upper_limit),
-        "per_month_limit": parseInt(this.per_month_upper_limit),
+        "per_transaction_limit": this.parseUSD(this.per_transaction_upper_limit),
+        "per_day_limit": this.parseUSD(this.per_day_upper_limit),
+        "per_month_limit": this.parseUSD(this.per_month_upper_limit),
         "is_active": true
         }
           this.occupation_options.forEach(element => {
@@ -301,6 +383,8 @@ export default {
               console.log('Deal not posted', err);
           });
         }
+        }
+     
         
     },
     onclickUpdate(selectedRow) {
@@ -334,6 +418,12 @@ export default {
       });
     },
     onHidden(){
+        this.updateTrigger = false;
+         this.transaction_type = "";
+                this.occupation = "";
+                this.per_transaction_upper_limit = "";
+                this.per_day_upper_limit = "";
+                this.per_month_upper_limit = "";
         console.log("hiding");
     },
     newRecode(){
@@ -349,7 +439,9 @@ export default {
         .then(response => {
           responseHandler(response.data.status_code, this, response.data.message)
           console.log("limites",response.data.data)
+
           this.items_per_transaction = response.data.data[0];
+         
           console.log("items_per_transaction",this.items_per_transaction);
         })
         .catch((e) => {
@@ -398,12 +490,31 @@ export default {
   async created() {
     this.getTransactionLimitData();
     this.getalloccutionData();
+     this.items_per_transaction.forEach(element => {
+            element.per_transaction_limit =  this.formatUSD(element.per_transaction_limit)
+            element.per_month_limit =  this.formatUSD(element.per_month_limit)
+            element.per_day_limit = this.formatUSD(element.per_day_limit)
+      });
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/global.scss";
+
+.invalid input {
+  border-color: rgb(248, 146, 146);
+}
+.errorstyles {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: red;
+
+}
+
 .menu-sec {
   margin-top: 0.5rem;
 }

@@ -3,7 +3,7 @@
     <div class="my-5">
       <b-container>
         <b-row align-v="center" align-h="center" class="my-auto">
-          <b-col col sm="12" md="1" lg="6" class="mt-5">
+          <b-col col sm="12" md="1" lg="6" class="mt-5 shadow_class">
             <b-jumbotron bg-variant="light" text-variant="secondary">
               <template #header><img
                 alt="QQ Pay"
@@ -33,7 +33,7 @@
             >
               {{errorMessage}}
             </b-alert>
-            <b-card :header="$t('loginScreen.signin')" header-tag="header" class="mt-2">
+            <b-card :header="$t('loginScreen.signin')" header-tag="header" class="mt-2 shadow_class">
               <b-form-input
                 v-model="userEmail"
                 type="email"
@@ -146,6 +146,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/global.scss";
+.shadow_class{
+  box-shadow: 0 4px 4px rgba(0,0,0,.25);
+// width: %;
+background: #f8f9fa;
+border-radius: 7px;
+}
 .lead {
   font-weight: 400;
   color: $txt;

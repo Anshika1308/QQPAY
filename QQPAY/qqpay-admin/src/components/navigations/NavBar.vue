@@ -15,17 +15,17 @@
           <template #button-content>
             <b-icon icon="list" aria-hidden="true" variant="secondary"></b-icon>
           </template>
-          <b-dropdown-item @click="$router.push('/transaction')"><b-icon icon="lightning" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Fund Transfer</b-dropdown-item>
-          <b-dropdown-item @click="$router.push('/transactionsummary')"><b-icon icon="receipt" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Transaction Summary</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item @click="$router.push('/beneficiary')"><b-icon icon="person-plus-fill" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Add Beneficiary</b-dropdown-item>
-          <b-dropdown-item @click="$router.push('/beneficiarysummary')"><b-icon icon="people" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Beneficiary Summary</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item @click="$router.push('/settings')"><b-icon icon="gear" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Settings</b-dropdown-item>
-          <b-dropdown-item @click="$router.push('/help')"><b-icon icon="life-preserver" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Help Centre</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
+          <!-- <b-dropdown-item @click="$router.push('/transaction')"><b-icon icon="lightning" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Fund Transfer</b-dropdown-item> -->
+          <!-- <b-dropdown-item @click="$router.push('/transactionsummary')"><b-icon icon="receipt" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Transaction Summary</b-dropdown-item> -->
+          <!-- <b-dropdown-divider></b-dropdown-divider> -->
+          <!-- <b-dropdown-item @click="$router.push('/beneficiary')"><b-icon icon="person-plus-fill" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Add Beneficiary</b-dropdown-item> -->
+          <!-- <b-dropdown-item @click="$router.push('/beneficiarysummary')"><b-icon icon="people" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Beneficiary Summary</b-dropdown-item> -->
+          <!-- <b-dropdown-divider></b-dropdown-divider> -->
+          <!-- <b-dropdown-item @click="$router.push('/settings')"><b-icon icon="gear" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Settings</b-dropdown-item> -->
+          <!-- <b-dropdown-item @click="$router.push('/help')"><b-icon icon="life-preserver" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;Help Centre</b-dropdown-item> -->
+          <!-- <b-dropdown-divider></b-dropdown-divider> -->
           <b-dropdown-item @click="$router.push('/profile')"><b-icon icon="file-earmark-person" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;My Profile</b-dropdown-item>
-          <b-dropdown-item @click="$router.push('/kyc')"><b-icon icon="shield-check" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;KYC</b-dropdown-item>
+          <!-- <b-dropdown-item @click="$router.push('/kyc')"><b-icon icon="shield-check" aria-hidden="true" class="menu-icon"></b-icon>&nbsp;&nbsp;KYC</b-dropdown-item> -->
         </b-nav-item-dropdown>
       </b-nav-form>
     </b-navbar-nav>
