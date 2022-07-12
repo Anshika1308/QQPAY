@@ -74,101 +74,63 @@
         active-tab-class="text-warning"
       >
       <b-tab title="Country Wise">
-    <div>
-          <b-table
-            :items="items"
-            :fields="fields"
-            responsive
-            class="align-middle"
-          >
-            <!-- <template #cell(buying_rate) size="sm">
-             {{itemsForsmallTable[0].bid}}
-            </template>           -->
-            <template #cell(lcy_fcy_rate)="row" size="sm">
-              <span>{{row.item.country_code == 'IND' ? items[0].lcy_fcy_rate :
-                      row.item.country_code == 'BGD' ? items[1].lcy_fcy_rate :
-                      row.item.country_code == 'PHL' ? items[2].lcy_fcy_rate : 
-                      row.item.country_code == 'SGP' ? items[3].lcy_fcy_rate : '' }}</span>
-            </template>
-            <template #cell(offer_rate)="row" size="sm">
-               <span>{{row.item.country_code == 'IND' ? items[0].offer_rate :
-                      row.item.country_code == 'BGD' ? items[1].offer_rate :
-                      row.item.country_code == 'PHL' ? items[2].offer_rate : 
-                      row.item.country_code == 'SGP' ? items[3].offer_rate : '' }}</span>
-            </template>
-
-            <!-- <template #cell(selling_rate) size="sm">
-              {{itemsForsmallTable[0].ask}}
-            </template>  -->
-            <template #cell(usd_cost_rate)="row" size="sm">
-              <b-form-input
-                id="input-name"
-                v-model="row.item.usd_cost_rate"
-                 @input="ChangeLcyFcyRate();ChangeOfferRate()"
-              ></b-form-input>
-            </template>
-
-            <template #cell(margin)="row" size="sm">
-              <b-form-input
-                id="input-name"
-                @input="ChangeOfferRate()"
-                v-model="row.item.margin"
-              ></b-form-input>
-            </template>
-
-            <template #cell(actions)="row" size="sm">
-              <div class="action-div">
-                <b-button
-                  variant="light"
-                  size="sm"
-                  title="Tooltip directive content"
-                  @click="edit(row.item)"
-                  class="btn btn-outline-light"
-                >
-                  <!-- <b-icon icon="three-dots-vertical"></b-icon> -->
-                  update
-                </b-button>
-              </div>
-            </template>
-          </b-table>
-        </div>
-
+          <div>
+            <b-table
+              :items="items"
+              :fields="fields"
+              responsive
+              class="align-middle"
+            > 
+              <template #cell(usd_cost_rate)="row" size="sm">
+                <b-form-input
+                  id="input-name"
+                  v-model="row.item.usd_cost_rate"
+                  @input="ChangeLcyFcyRate(row.item.usd_cost_rate,row.item.payout_country);ChangeOfferRate(row.item.lcy_fcy_rate,row.item.margin,row.item.payout_country)"
+                ></b-form-input>
+              </template>
+              <template #cell(margin)="row" size="sm">
+                <b-form-input
+                  id="input-name"
+                  @input="ChangeOfferRate(row.item.lcy_fcy_rate,row.item.margin,row.item.payout_country)"
+                  v-model="row.item.margin"
+                ></b-form-input>
+              </template>
+              <template #cell(actions)="row" size="sm">
+                <div class="action-div">
+                  <b-button
+                    variant="light"
+                    size="sm"
+                    title="Tooltip directive content"
+                    @click="edit(row.item)"
+                    class="btn btn-outline-light"
+                  >
+                    update
+                  </b-button>
+                </div>
+              </template>
+            </b-table>
+          </div>
       </b-tab>
        <b-tab title="Partner Wise">
-    <div>
+        <div>
           <b-table
             :items="items_by_partner"
             :fields="fields_by_partner"
             responsive
             class="align-middle"
           >
-            <!-- <template #cell(buying_rate) size="sm">
-             {{itemsForsmallTable_by_partner[0].bid}}
-            </template>           -->
-            <template #cell(lcy_fcy_rate)="row" size="sm">
-              <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' ? items_by_partner[0].lcy_fcy_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' ? items_by_partner[1].lcy_fcy_rate : '' }}</span>
-            </template>
-            <template #cell(offer_rate)="row" size="sm">
-               <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' ? items_by_partner[0].offer_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' ? items_by_partner[1].offer_rate : '' }}</span>
-            </template>
-
-            <!-- <template #cell(selling_rate) size="sm">
-              {{itemsForsmallTable_by_partner[0].ask}}
-            </template>  -->
             <template #cell(usd_cost_rate)="row" size="sm">
               <b-form-input
                 id="input-name"
                 v-model="row.item.usd_cost_rate"
-                 @input="ChangeLcyFcyRatePartner();ChangeOfferRatePartner()"
+                 @input="ChangeLcyFcyRatePartner(row.item.usd_cost_rate,row.item.payout_country,row.item.partner_name);ChangeOfferRatePartner(row.item.lcy_fcy_rate,row.item.margin,row.item.payout_country,row.item.partner_name)"
               ></b-form-input>
             </template>
 
             <template #cell(margin)="row" size="sm">
               <b-form-input
                 id="input-name"
-                @input="ChangeOfferRatePartner()"
+                @input="ChangeOfferRatePartner(row.item.lcy_fcy_rate,row.item.margin,row.item.payout_country,row.item.partner_name)"
                 v-model="row.item.margin"
               ></b-form-input>
             </template>
@@ -188,7 +150,7 @@
               </div>
             </template>
           </b-table>
-    </div>
+        </div>
 
        </b-tab>
         <b-tab title="Payment Mode wise">
@@ -199,38 +161,18 @@
             responsive
             class="align-middle"
           >
-            <!-- <template #cell(buying_rate) size="sm">
-             {{itemsForsmallTable_by_payment_mode[0].bid}}
-            </template>           -->
-            <template #cell(lcy_fcy_rate)="row" size="sm">
-              <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[0].lcy_fcy_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Home Delivery' ? items_by_payment_mode[1].lcy_fcy_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Account Deposit to Other Bank' ? items_by_payment_mode[2].lcy_fcy_rate : 
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[3].lcy_fcy_rate :'' }}</span>
-            </template>
-            <template #cell(offer_rate)="row" size="sm">
-                  <span>{{row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[0].offer_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'Home Delivery' ? items_by_payment_mode[1].offer_rate :
-                      row.item.country_code == 'IND' && row.item.partner_name == 'ICICI' && row.item.payment_mode == 'E/Mobile-Wallet' ? items_by_payment_mode[2].offer_rate : 
-                      row.item.country_code == 'IND' && row.item.partner_name == 'HDFC' && row.item.payment_mode == 'Cash Payment' ? items_by_payment_mode[3].offer_rate : '' }}</span>
-              
-            </template>
-
-            <!-- <template #cell(selling_rate) size="sm">
-              {{itemsForsmallTable_by_payment_mode[0].ask}}
-            </template>  -->
             <template #cell(usd_cost_rate)="row" size="sm">
               <b-form-input
                 id="input-name"
                 v-model="row.item.usd_cost_rate"
-                 @input="ChangeLcyFcyRatePayment();ChangeOfferRatePayment()"
+                 @input="ChangeLcyFcyRatePayment(row.item.usd_cost_rate,row.item.payout_country,row.item.partner_name,row.item.payment_mode);ChangeOfferRatePayment(row.item.lcy_fcy_rate,row.item.margin,row.item.payout_country,row.item.partner_name,row.item.payment_mode)"
               ></b-form-input>
             </template>
 
             <template #cell(margin)="row" size="sm">
               <b-form-input
                 id="input-name"
-                @input="ChangeOfferRatePayment()"
+                @input="ChangeOfferRatePayment(row.item.lcy_fcy_rate,row.item.margin,row.item.payout_country,row.item.partner_name,row.item.payment_mode)"
                 v-model="row.item.margin"
               ></b-form-input>
             </template>
@@ -328,7 +270,8 @@ export default {
         comment: "",
       },
       fields: [
-        { key: "id", label: "S/N" },
+        { key: "id_for_table", label: "S/N" },
+        { key: "id", thClass: 'd-none', tdClass: 'd-none' },
         { key: "payout_country", label: "FCY Country" },
         { key: "ccy", label: "CCY" },
         { key: "buying_rate", label: "BID" },
@@ -340,7 +283,8 @@ export default {
         { key: "actions", label: "" },
       ],
       fields_by_partner: [
-        { key: "id", label: "S/N" },
+         { key: "id_for_table", label: "S/N" },
+        { key: "id", thClass: 'd-none', tdClass: 'd-none' },
         { key: "payout_country", label: "FCY Country" },
         { key: "partner_name", label: "Partner Name" },
         { key: "ccy", label: "CCY" },
@@ -353,7 +297,8 @@ export default {
         { key: "actions", label: "" },
       ],
       fields_by_payment_mode: [
-        { key: "id", label: "S/N" },
+         { key: "id_for_table", label: "S/N" },
+        { key: "id", thClass: 'd-none', tdClass: 'd-none' },
         { key: "payout_country", label: "FCY Country" },
         { key: "partner_name", label: "Partner Name" },
         { key: "payment_mode", label: "Payment Mode" },
@@ -419,48 +364,55 @@ export default {
     },
   },
   methods: {
-    ChangeLcyFcyRatePayment(){
-      console.log("test")
-      this.items_by_payment_mode[0].lcy_fcy_rate = ( this.items_by_payment_mode[0].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items_by_payment_mode[1].lcy_fcy_rate = ( this.items_by_payment_mode[1].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items_by_payment_mode[2].lcy_fcy_rate = ( this.items_by_payment_mode[2].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items_by_payment_mode[3].lcy_fcy_rate = ( this.items_by_payment_mode[3].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      // this.items_by_payment_mode[4].lcy_fcy_rate = ( this.items_by_payment_mode[4].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      // this.items_by_payment_mode[5].lcy_fcy_rate = ( this.items_by_payment_mode[5].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      // this.items_by_payment_mode[6].lcy_fcy_rate = ( this.items_by_payment_mode[6].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-       console.log("test",this.items_by_payment_mode[0].lcy_fcy_rate);
+    ChangeLcyFcyRatePayment(usd_cost_rate,payout_country,partner_name,payment_mode){
+      console.log("payment_mode",payment_mode);
+      var lcy_fcy_rate = (usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+      this.items_by_payment_mode.forEach(element => {
+          console.log("lement.payment_mode",element.payment_mode)
+          if(element.payout_country == payout_country && element.partner_name == partner_name && element.payment_mode == payment_mode){
+            element.lcy_fcy_rate = lcy_fcy_rate;
+          }
+        });
     },
-    ChangeOfferRatePayment(){
-      this.items_by_payment_mode[0].offer_rate = (this.items_by_payment_mode[0].lcy_fcy_rate -  this.items_by_payment_mode[0].margin).toFixed(4);
-      this.items_by_payment_mode[1].offer_rate = (this.items_by_payment_mode[1].lcy_fcy_rate -  this.items_by_payment_mode[1].margin).toFixed(4);
-      this.items_by_payment_mode[2].offer_rate = (this.items_by_payment_mode[2].lcy_fcy_rate -  this.items_by_payment_mode[2].margin).toFixed(4);
-      this.items_by_payment_mode[3].offer_rate = (this.items_by_payment_mode[3].lcy_fcy_rate -  this.items_by_payment_mode[3].margin).toFixed(4);
-      // this.items_by_payment_mode[4].offer_rate = (this.items_by_payment_mode[4].lcy_fcy_rate -  this.items_by_payment_mode[4].margin).toFixed(4);
-      // this.items_by_payment_mode[5].offer_rate = (this.items_by_payment_mode[5].lcy_fcy_rate -  this.items_by_payment_mode[5].margin).toFixed(4);
-      // this.items_by_payment_mode[6].offer_rate = (this.items_by_payment_mode[6].lcy_fcy_rate -  this.items_by_payment_mode[6].margin).toFixed(4);
+    ChangeOfferRatePayment(lcy_fcy_rate,margin,payout_country,partner_name,payment_mode){
+       var offer_rate = (lcy_fcy_rate - margin).toFixed(4);
+      this.items_by_payment_mode.forEach(element => {
+          if(element.payout_country == payout_country && element.partner_name == partner_name && element.payment_mode == payment_mode){
+            element.offer_rate = offer_rate;
+          }
+        });
     },
-    ChangeLcyFcyRatePartner(){
-      this.items_by_partner[0].lcy_fcy_rate = ( this.items_by_partner[0].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items_by_partner[1].lcy_fcy_rate = ( this.items_by_partner[1].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+    ChangeLcyFcyRatePartner(usd_cost_rate,payout_country,partner_name){
+      var lcy_fcy_rate = (usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+      this.items_by_partner.forEach(element => {
+          if(element.payout_country == payout_country && element.partner_name == partner_name){
+            element.lcy_fcy_rate = lcy_fcy_rate;
+          }
+        });
     },
-    ChangeOfferRatePartner(){
-      this.items_by_partner[0].offer_rate = (this.items_by_partner[0].lcy_fcy_rate -  this.items_by_partner[0].margin).toFixed(4);
-      this.items_by_partner[1].offer_rate = (this.items_by_partner[1].lcy_fcy_rate -  this.items_by_partner[1].margin).toFixed(4);
-    
+    ChangeOfferRatePartner(lcy_fcy_rate,margin,payout_country,partner_name){
+      var offer_rate = (lcy_fcy_rate - margin).toFixed(4);
+      this.items_by_partner.forEach(element => {
+          if(element.payout_country == payout_country && element.partner_name == partner_name){
+            element.offer_rate = offer_rate;
+          }
+        });  
     },
-    ChangeLcyFcyRate(){
-      this.items[0].lcy_fcy_rate = ( this.items[0].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items[1].lcy_fcy_rate = ( this.items[1].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items[2].lcy_fcy_rate = ( this.items[2].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      this.items[3].lcy_fcy_rate = ( this.items[3].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-      // this.items[4].lcy_fcy_rate = ( this.items[4].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+    ChangeLcyFcyRate(usd_cost_rate,payout_country){
+       var lcy_fcy_rate = (usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+       this.items.forEach(element => {
+          if(element.payout_country == payout_country){
+            element.lcy_fcy_rate = lcy_fcy_rate;
+          }
+        });
     },
-    ChangeOfferRate(){
-      this.items[0].offer_rate = (this.items[0].lcy_fcy_rate -  this.items[0].margin).toFixed(4);
-      this.items[1].offer_rate = (this.items[1].lcy_fcy_rate -  this.items[1].margin).toFixed(4);
-      this.items[2].offer_rate = (this.items[2].lcy_fcy_rate -  this.items[2].margin).toFixed(4);
-      this.items[3].offer_rate = (this.items[3].lcy_fcy_rate -  this.items[3].margin).toFixed(4);
-      // this.items[4].offer_rate = (this.items[4].lcy_fcy_rate -  this.items[4].margin).toFixed(4);
+    ChangeOfferRate(lcy_fcy_rate,margin,payout_country){
+      var offer_rate = (lcy_fcy_rate - margin).toFixed(4);
+      this.items.forEach(element => {
+        if(element.payout_country == payout_country){
+          element.offer_rate = offer_rate;
+        }
+      });
     },
     resetForm() {
       this.type = Object.assign({}, this.defaultType);
@@ -478,7 +430,13 @@ export default {
           if(element.buying_rate != 0 && element.selling_rate != 0){
             this.itemsForsmallTable[0].bid = element.buying_rate;
             this.itemsForsmallTable[0].ask = element.selling_rate;
-        }
+          }
+          this.items.forEach(function callback(value, index) {
+            value.id_for_table = index + 1;
+            value.lcy_fcy_rate = (value.usd_cost_rate / value.buying_rate).toFixed(4)
+            value.offer_rate =  (value.lcy_fcy_rate - value.margin).toFixed(4)
+          });
+
         });
       });
       list(2).then((res) => {
@@ -487,7 +445,12 @@ export default {
           if(element.buying_rate != 0 && element.selling_rate != 0){
             this.itemsForsmallTable_by_partner[0].bid = element.buying_rate;
             this.itemsForsmallTable_by_partner[0].ask = element.selling_rate;
-        }
+          }
+          this.items_by_partner.forEach(function callback(value, index) {
+            value.id_for_table = index + 1;
+            value.lcy_fcy_rate = (value.usd_cost_rate / value.buying_rate).toFixed(4)
+            value.offer_rate =  (value.lcy_fcy_rate - value.margin).toFixed(4)
+          });
         });
         // this.otherCountriesItems = res.data.data[0];
       });
@@ -498,7 +461,12 @@ export default {
           if(element.buying_rate != 0 && element.selling_rate != 0){
             this.itemsForsmallTable_by_payment_mode[0].bid = element.buying_rate;
             this.itemsForsmallTable_by_payment_mode[0].ask = element.selling_rate;
-        }
+          }
+          this.items_by_payment_mode.forEach(function callback(value, index) {
+            value.id_for_table = index + 1;
+            value.lcy_fcy_rate = (value.usd_cost_rate / value.buying_rate).toFixed(4)
+            value.offer_rate =  (value.lcy_fcy_rate - value.margin).toFixed(4)
+          });
         });
         // this.otherCountriesItems = res.data.data[0];
       });
@@ -624,17 +592,18 @@ export default {
     this.resetForm();
     this.onSearch();
 
-    this.items[0].lcy_fcy_rate = ( this.items[0].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-    this.items[1].lcy_fcy_rate = ( this.items[1].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-    this.items[2].lcy_fcy_rate = ( this.items[2].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
-    this.items[3].lcy_fcy_rate = ( this.items[3].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+    
+    // this.items[0].lcy_fcy_rate = ( this.items[0].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+    // this.items[1].lcy_fcy_rate = ( this.items[1].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+    // this.items[2].lcy_fcy_rate = ( this.items[2].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
+    // this.items[3].lcy_fcy_rate = ( this.items[3].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
     // this.items[4].lcy_fcy_rate = ( this.items[4].usd_cost_rate / this.itemsForsmallTable[0].ask).toFixed(4);
 
 
-    this.items[0].offer_rate = (this.items[0].lcy_fcy_rate -  this.items[0].margin).toFixed(4);
-    this.items[1].offer_rate = (this.items[1].lcy_fcy_rate -  this.items[1].margin).toFixed(4);
-    this.items[2].offer_rate = (this.items[2].lcy_fcy_rate -  this.items[2].margin).toFixed(4);
-    this.items[3].offer_rate = (this.items[3].lcy_fcy_rate -  this.items[3].margin).toFixed(4);
+    // this.items[0].offer_rate = (this.items[0].lcy_fcy_rate -  this.items[0].margin).toFixed(4);
+    // this.items[1].offer_rate = (this.items[1].lcy_fcy_rate -  this.items[1].margin).toFixed(4);
+    // this.items[2].offer_rate = (this.items[2].lcy_fcy_rate -  this.items[2].margin).toFixed(4);
+    // this.items[3].offer_rate = (this.items[3].lcy_fcy_rate -  this.items[3].margin).toFixed(4);
     // this.items[4].offer_rate = (this.items[4].lcy_fcy_rate -  this.items[4].margin).toFixed(4);
 
     this.items_by_partner[0].offer_rate = (this.items_by_partner[0].lcy_fcy_rate -  this.items_by_partner[0].margin).toFixed(4);

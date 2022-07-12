@@ -32,7 +32,6 @@
                   @click="editMain()"
                   class="btn btn-outline-light"
                 >
-                  <!-- <b-icon icon="three-dots-vertical"></b-icon> -->
                   update
                 </b-button>
               </div>
@@ -52,8 +51,7 @@
     </b-row>
     
     <div>
-     
-          <b-table
+    <b-table
             :items="items"
             :fields="fields"
             responsive
@@ -62,15 +60,9 @@
             <template #cell(margin)="row" size="sm">
               <b-form-input
                 id="input-name"
-                @input="calculateOfferRate()"
+                @input="calculateOfferRate(row.item.reuters_rate,row.item.margin,row.item.payout_country)"
                 v-model="row.item.margin"
               ></b-form-input>
-            </template>
-            <template #cell(offer_rate)="row" size="sm">
-                    {{row.item.payout_country == 'India' ? items[0].offer_rate :
-                      row.item.payout_country == 'Bangladesh' ? items[1].offer_rate :
-                      row.item.payout_country == 'Philippines' ? items[2].offer_rate : 
-                      row.item.payout_country == 'Singapore' ? items[3].offer_rate : '' }}
             </template>
             <template #cell(actions)="row" size="sm">
               <div class="action-div">
@@ -174,7 +166,8 @@ export default {
         comment: "",
       },
       fields: [
-        { key: "id", label: "S/N" },
+        { key: "id_for_table", label:"S/N"},
+        { key: "id", thClass: 'd-none', tdClass: 'd-none' },
         { key: "payout_country", label: "FCY Country" },
         { key: "ccy", label: "CCY" },
         { key: "reuters_rate", label: "Reuters Rate" },
@@ -197,11 +190,14 @@ export default {
     },
   },
   methods: {
-    calculateOfferRate(){
-      this.items[0].offer_rate = (this.items[0].reuters_rate + parseFloat(this.items[0].margin)).toFixed(4);
-      this.items[1].offer_rate = (this.items[1].reuters_rate + parseFloat(this.items[1].margin)).toFixed(4);
-      this.items[2].offer_rate = (this.items[2].reuters_rate + parseFloat(this.items[2].margin)).toFixed(4);
-      this.items[3].offer_rate = (this.items[3].reuters_rate + parseFloat(this.items[3].margin)).toFixed(4);
+    calculateOfferRate(reture_rate,margin,payout_country){
+      var offer_rate = (reture_rate + parseFloat(margin)).toFixed(4);
+      console.log("comming",reture_rate,margin);
+      this.items.forEach(element => {
+        if(element.payout_country == payout_country){
+          element.offer_rate = offer_rate;
+        }
+      });
     },
     resetForm() {
       this.type = Object.assign({}, this.defaultType);
@@ -215,7 +211,10 @@ export default {
       getBusinusForex().then((res) => {
         console.log(res.data.data)
         this.items = res.data.data;
-        // this.otherCountriesItems = res.data.data[0];
+        this.items.forEach(function callback(value, index) {
+          value.id_for_table = index + 1;
+          value.offer_rate =  (value.reuters_rate + value.margin).toFixed(4)
+         });
       });
     },
     onMarginChange(item) {
@@ -273,8 +272,11 @@ export default {
               element.margin = this.itemsForsmallTable[0].value
         }   
       });
-      this.calculateOfferRate(); 
-        // this.otherCountriesItems = res.data.data[0];
+      this.items.forEach(element => {
+        console.log(element)
+        this.calculateOfferRate(element.reuters_rate, element.margin,element.payout_country); 
+      });
+        
       });
       
  
@@ -316,10 +318,6 @@ export default {
   async created() {
     this.resetForm();
     this.onSearch();
-    this.items[0].offer_rate = (this.items[0].reuters_rate + this.items[0].margin).toFixed(4);
-    this.items[1].offer_rate = (this.items[1].reuters_rate + this.items[1].margin).toFixed(4);
-    this.items[2].offer_rate = (this.items[2].reuters_rate + this.items[2].margin).toFixed(4);
-    this.items[3].offer_rate = (this.items[3].reuters_rate + this.items[3].margin).toFixed(4);
     await Promise.all([
       getAll().then((res) => {
         this.countryList = res.data;
