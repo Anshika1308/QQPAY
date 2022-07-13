@@ -53,12 +53,6 @@
     </div>
 
     <div>
-      <!-- <b-button variant="outline-warning" class="mt-5 btn"
-        >View/Update E-KYC</b-button
-      >
-      <b-button variant="outline-warning" class="mt-5 ml-5 btn"
-        >Update Status</b-button
-      > -->
       <b-button variant="outline-warning" class="mt-5 btn"
         >View Compilance</b-button
       >
@@ -90,28 +84,16 @@
         >
       </b-row>
 
-      <!-- <b-row>
-        <b-col cols="3" class="data mt-2">Revised daily txn. limit</b-col>
-        <b-col cols="4" class="data mt-2">25,000 MYR</b-col>
-        <b-col cols="3" class="data mt-2">Last Review</b-col>
-        <b-col cols="2" class="data mt-2">01 Nov 2021</b-col>
-      </b-row> -->
 
       <b-row v-if="userDtl.Is_Ekyc_User">
         <b-col cols="3" class="data mt-2">Monthly txn. limit</b-col>
         <b-col cols="4" class="data mt-2"
           >{{ transLimitData.per_month_limit }} MYR</b-col
         >
-        <!-- <b-col cols="3" class="data mt-2">Next Review</b-col>
-        <b-col cols="2" class="data mt-2">1 Dec 2021</b-col> -->
+     
       </b-row>
 
-      <!-- <b-row>
-        <b-col cols="3" class="data mt-2">Revised Monthly txn. limit</b-col>
-        <b-col cols="4" class="data mt-2">1,50,000</b-col>
-        <b-col cols="3" class="data mt-2">Most transcated nation</b-col>
-        <b-col cols="2" class="data mt-2">India</b-col>
-      </b-row> -->
+     
     </b-container>
 
     <b-tabs
@@ -121,12 +103,23 @@
       active-tab-class="text-warning"
     >
       <b-tab title="Transactions">
-        <b-btn>1M</b-btn>
-         <b-btn>3M</b-btn>
-          <b-btn>6M</b-btn>
-           <b-btn>1Y</b-btn>
-        <LineChart />
-        <div class="mt-5 d-flex " style="margin-left: 51px;">
+        <b-row>
+          <b-col md="9">
+
+          </b-col>
+          <b-col md="3">
+            <div >
+          <b-button class="btn-graph" @click="getTransactionDataForGraph(1)">1M</b-button>
+          <b-button class="btn-graph" @click="getTransactionDataForGraph(3)">3M</b-button>
+          <b-button class="btn-graph" @click="getTransactionDataForGraph(6)">6M</b-button>
+          <b-button class="btn-graph" @click="getTransactionDataForGraph(12)">1Y</b-button>
+        </div>
+          </b-col>
+        </b-row>
+        
+
+        <LineChart :transactionData="chartDataForCurruntMonth" :key="chartKey" />
+        <div class="mt-5 d-flex" style="margin-left: 51px">
           <b-card
             class="info"
             border-variant="secondary"
@@ -134,8 +127,9 @@
             gn="left"
           >
             <b-card-text>
-              <span class="label">India</span>
-              <span class="lab2">50k</span>
+              <div v-for="tramscationByCountry in transactionsByCountry" :key="tramscationByCountry">
+              <span class="label">{{tramscationByCountry.country}}</span>
+              <span class="lab2">{{tramscationByCountry.amount}}</span>
               <b-progress
                 variant="warning"
                 height="2px"
@@ -143,56 +137,8 @@
                 :max="max"
                 class="mb-3"
               ></b-progress>
-
-              <span class="label">USA</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">Malaysia</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">Australia</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">United Kingdom</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-              <span class="label">Germany</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              >
-              </b-progress>
+              </div>
+              
               <div></div>
             </b-card-text>
           </b-card>
@@ -200,12 +146,13 @@
           <b-card
             class="info1"
             border-variant="secondary"
-            header="Transaction by reception"
+            header="Transaction by reception method"
             align="left"
           >
             <b-card-text>
-              <span class="label">Bank transfer</span>
-              <span class="lab2">50k</span>
+              <div v-for="tramscationByPayment in transactionsByPaymentMode" :key="tramscationByPayment.length">
+              <span class="label">{{tramscationByPayment.payment_mode}}</span>
+              <span class="lab2">{{tramscationByPayment.amount}}</span>
               <b-progress
                 variant="warning"
                 height="2px"
@@ -213,46 +160,8 @@
                 :max="max"
                 class="mb-3"
               ></b-progress>
+              </div>
 
-              <span class="label">Home delivery</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">Pickup</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">Wallet</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">3rd Party</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
             </b-card-text>
           </b-card>
 
@@ -261,10 +170,12 @@
             border-variant="secondary"
             header="Transaction by Currency"
             align="left"
+            v-if="transactionsByCurruncy"
           >
             <b-card-text>
-              <span class="label">INR</span>
-              <span class="lab2">50k</span>
+              <div v-for="tramscationByCurruncy in transactionsByCurruncy" :key="tramscationByCurruncy.length">
+              <span class="label">{{tramscationByCurruncy.currency}}</span>
+              <span class="lab2">{{tramscationByCurruncy.amount}}</span>
               <b-progress
                 variant="warning"
                 height="2px"
@@ -272,55 +183,7 @@
                 :max="max"
                 class="mb-3"
               ></b-progress>
-
-              <span class="label">USD</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">MYR</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">AUD</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-
-              <span class="label">Sterling Pound</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
-              <span class="label">Euro</span>
-              <span class="lab2">50k</span>
-              <b-progress
-                variant="warning"
-                height="2px"
-                :value="value"
-                :max="max"
-                class="mb-3"
-              ></b-progress>
+              </div>
             </b-card-text>
           </b-card>
         </div>
@@ -446,12 +309,12 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import LineChart from '../../components/charts/Line.vue'
+import LineChart from "../../components/charts/Line.vue";
 
 export default {
   name: "UserDetails",
   components: {
-    LineChart
+    LineChart,
   },
   computed: {
     ...mapGetters([
@@ -464,10 +327,10 @@ export default {
     // this.userDtl = this.selectedData[0][0];
     console.log("selded row data", this.selectedData);
     this.getUserDtl();
-    this.getTransactions().then(() => {
-
-    })
-    
+    this.getTransactions().then(() => {});
+    this.getTransactionsByCurruncy();
+    this.getTransactionsByPaymentMode();
+    this.getTransactionsByCountry();
   },
 
   data() {
@@ -483,17 +346,37 @@ export default {
       busUserDetails: [],
       transactionDtl: [],
       transLimitData: [],
+      chartKey:"defult",
+      chartDataForCurruntMonth: [],
+      transactionsByCurruncy: [],
+      transactionsByPaymentMode: [],
+      transactionsByCountry:[],
+      transactionDtlforGraph:[]
+
     };
   },
   methods: {
-    async getUserDtl() {
-      console.log("token", this.token, this.base_url);
-      //get all transaction details
+    nFormatter(num, digits) {
+      const lookup = [
+        { value: 1, symbol: "" },
+        { value: 1e3, symbol: "k" },
+        { value: 1e6, symbol: "M" },
+        { value: 1e9, symbol: "G" },
+        { value: 1e12, symbol: "T" },
+        { value: 1e15, symbol: "P" },
+        { value: 1e18, symbol: "E" }
+      ];
+      const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+      var item = lookup.slice().reverse().find(function(item) {
+        return num >= item.value;
+      });
+      return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
+    }, 
+    getTransactionsByCountry(){
       axios
         .get(
           this.transaction_base_url +
-            "/transaction/transaction/" +
-            this.selectedData[0].Remitter_code,
+            `/transaction/total_amount/by_country?remitter_code=${this.selectedData[0].Remitter_code}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -501,12 +384,103 @@ export default {
           }
         )
         .then((response) => {
-          this.transactionDtl = response.data.data[0];
-          
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.transactionsByCountry = JSON.parse(JSON.stringify(response.data.data));
+          this.transactionsByCountry.forEach((element) => {
+            element.amount = this.nFormatter(element.amount, 1)
+          });
+          console.log("transactionsByCurruncy", this.transactionsByCurruncy);
         })
         .catch((e) => {
           console.log(e);
         });
+    },
+    getTransactionsByCurruncy(){
+      axios
+        .get(
+          this.transaction_base_url +
+            `/transaction/total_amount/by_currency?remitter_code=${this.selectedData[0].Remitter_code}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.transactionsByCurruncy = JSON.parse(JSON.stringify(response.data.data));
+          this.transactionsByCurruncy.forEach((element) => {
+            element.amount = this.nFormatter(element.amount, 1)
+          });
+          console.log("transactionsByCurruncy", this.transactionsByCurruncy);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getTransactionsByPaymentMode(){
+      axios
+        .get(
+          this.transaction_base_url +
+            `/transaction/total_amount/by_payment_mode?remitter_code=${this.selectedData[0].Remitter_code}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.transactionsByPaymentMode = JSON.parse(JSON.stringify(response.data.data));
+          this.transactionsByPaymentMode.forEach((element) => {
+            element.amount = this.nFormatter(element.amount, 1)
+          });
+          console.log("transactionsByPaymentMode", this.transactionsByPaymentMode);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getTransactionDataForGraph(no_of_months) {
+      console.log("token", this.token, this.transaction_base_url);
+      axios
+        .get(
+          this.transaction_base_url +
+            `/transaction/transaction/monthly/data?remitter_code=${this.selectedData[0].Remitter_code}&no_of_months=${no_of_months}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          // this.dealsTableData = JSON.parse(response.data.data);
+          this.transactionDtlforGraph = JSON.parse(JSON.stringify(response.data.data));
+          console.log("this.transactionDtl", this.transactionDtl);
+          this.chartDataForCurruntMonth = [];
+          this.transactionDtlforGraph.forEach((element) => {
+              var json = {
+                date: element.transaction_date,
+                amount: element.pay_amount,
+              };
+              this.chartDataForCurruntMonth.push(json);
+          });
+          this.chartKey = no_of_months+'M'
+          console.log("Transactions for month", this.chartDataForCurruntMonth);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    reverseArr(input) {
+        var ret = new Array;
+        for(var i = input.length-1; i >= 0; i--) {
+            ret.push(input[i]);
+        }
+        return ret;
+    },
+    async getUserDtl() {
+      console.log("token", this.token, this.base_url);
 
       axios
         .get(
@@ -557,9 +531,6 @@ export default {
                 }
               )
               .then((response) => {
-                // this.dealsTableData = JSON.parse(response.data.data);
-                // this.userDtl = JSON.parse(JSON.stringify(response.data.data[0]));
-                // console.log("this.transaction limits", JSON.parse(JSON.stringify(response.data.data[0])));
                 this.transLimitData = response.data.data[0][0];
               })
               .catch((e) => {
@@ -590,6 +561,25 @@ export default {
           // this.dealsTableData = JSON.parse(response.data.data);
           this.transactionDtl = JSON.parse(JSON.stringify(response.data.data));
           console.log("this.transactionDtl", this.transactionDtl);
+          this.transactionDtl = this.reverseArr(this.transactionDtl);
+          this.transactionDtl.forEach((element) => {
+            const d = new Date(element.transaction_date);
+            let month = d.getMonth();
+
+            const d_currunt = new Date(element.transaction_date);
+            let month_currunt = d_currunt.getMonth();
+
+            console.log("test data month elemtnt", month, element);
+            if (month === month_currunt) {
+              var json = {
+                date: element.transaction_date,
+                amount: element.pay_amount,
+              };
+              this.chartDataForCurruntMonth.push(json);
+            }
+            this.chartKey = "1M"
+          });
+          console.log("Transactions for month", this.chartDataForCurruntMonth);
         })
         .catch((e) => {
           console.log(e);
@@ -603,12 +593,7 @@ export default {
         transaction.Remitter_last_name &&
         transaction.Remitter_last_name.charAt(0);
       console.log(first, last);
-    //   this.transactionDtl.forEach(element => {
-    //     const d = element.transaction_date;
-    //     let month = d.getMonth();
-    //     console.log(month,element);
-    //             // if(element.transaction_date)
-    // });
+
       return first + last;
     },
     format(date) {
@@ -623,10 +608,19 @@ export default {
 </script>
 
 <style scoped>
-.btn {
+
+.text-warning{
+  color: black !important;
+}
+.btn-graph{
+  color: black !important;
+  background-color: #ff4500;
+}
+
+/* .btn {
   color: orangered;
   border: 1px solid orangered;
-}
+} */
 
 .btn:hover {
   background-color: orangered;

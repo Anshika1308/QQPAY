@@ -5,7 +5,7 @@ import Axios from 'axios';
 
 const API_ROOT = process.env.VUE_APP_SERVER_ENDPOINT
 const TRANSACTION_SERVICE = process.env.VUE_APP_TRANSACTION_SERVICE
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc2OTg0ODMsInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.gkWv_6m_f8OdB8P3Ijj1HUp38o74qsgQwcp-TrOr7xc'
+const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc3MzgwMjEsInN1YiI6ImFkbWluQGdtYWlsLmNvbSJ9.wxdC9594YKVSMzVa5OyM0Ow0BwF6JV5WxOqYXE-tlrI'
 
 
 //create axios instance

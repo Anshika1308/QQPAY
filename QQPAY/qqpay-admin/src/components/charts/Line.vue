@@ -39,55 +39,51 @@ ChartJS.register(
 
 export default {
   name: 'LineChart',
+  props: ["transactionData"],
   components: {
     LineChartGenerator
   },
-  props: {
-    chartId: {
-      type: String,
-      default: 'line-chart'
-    },
-    datasetIdKey: {
-      type: String,
-      default: 'label'
-    },
-    width: {
-      type: Number,
-      default: 400
-    },
-    height: {
-      type: Number,
-      default: 400
-    },
-    cssClasses: {
-      default: '',
-      type: String
-    },
-    styles: {
-      type: Object,
-      default: () => {}
-    },
-    plugins: {
-      type: Array,
-      default: () => []
-    }
-  },
+  // props: {
+  //   chartId: {
+  //     type: String,
+  //     default: 'line-chart'
+  //   },
+  //   datasetIdKey: {
+  //     type: String,
+  //     default: 'label'
+  //   },
+  //   width: {
+  //     type: Number,
+  //     default: 400
+  //   },
+  //   height: {
+  //     type: Number,
+  //     default: 400
+  //   },
+  //   cssClasses: {
+  //     default: '',
+  //     type: String
+  //   },
+  //   styles: {
+  //     type: Object,
+  //     default: () => {}
+  //   },
+  //   plugins: {
+  //     type: Array,
+  //     default: () => []
+  //   }
+  // },
   data() {
     return {
       chartData: {
         labels: [
-          '01 Nov',
-          '07 Nov',
-          '15 Nov',
-          '21 Nov',
-          '28 Nov',
-          '31 Nov'
+         
         ],
         datasets: [
           {
             label: 'Transaction',
             backgroundColor: '#d598e0',
-            data: [2, 4,  5,  0,  10,  20]
+            data: []
           }
         ]
       },
@@ -96,6 +92,13 @@ export default {
         maintainAspectRatio: false
       }
     }
+  },
+  created(){
+    this.transactionData.forEach(element => {
+        this.chartData.labels.push(element.date);
+        this.chartData.datasets[0].data.push(element.amount)
+        console.log("this is from chart component", element);
+    });
   }
 }
 </script>
