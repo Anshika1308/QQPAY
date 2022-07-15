@@ -239,6 +239,8 @@
             <b-form-group label="USD Amount">
               <b-form-input
                 v-model="temp_deal.fcy_amount"
+                maxlength="12"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 @change="handleChange"
                 @input="ChangeUsdAmountFormat();handleChange()"
                 size="sm"
@@ -253,9 +255,12 @@
             <b-form-group label="Exchange Rate">
               <b-form-input
                 v-model="temp_deal.fcy_deal_rate"
-                @input="handleChange"
+                 maxlength="13"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                @change="handleChange"
+                @input="ChangeUsdAmountFormat();handleChange()"
                 size="sm"
-                v-on:keypress="isNumber($event)"
+               
                 required
               ></b-form-input>
             </b-form-group>
@@ -270,7 +275,8 @@
                 v-model="temp_deal.lcy_amount"
                 @change="handleChange"
                 size="sm"
-                v-on:keypress="isNumber($event)"
+                 maxlength="12"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 required
                 disabled
               ></b-form-input>

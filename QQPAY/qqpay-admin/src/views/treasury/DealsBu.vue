@@ -150,7 +150,10 @@
         <b-row>
           <b-col sm="12" md="4" lg="4">
             <b-form-group label="LCY Amount">
-              <b-form-input type = "number" v-model="temp_dealBu.rate_usd_myr" size="sm"></b-form-input>
+              <b-form-input type = "number" v-model="temp_dealBu.rate_usd_myr"
+              maxlength="12"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+               size="sm"></b-form-input>
             </b-form-group>
              <div class="errorstyles">
               <div class="z-index">{{ temp_dealBu_error.rate_usd_myr_error }}</div>
@@ -168,7 +171,10 @@
           </b-col>
            <b-col sm="12" md="4" lg="4">
             <b-form-group label="FCY Amount">
-              <b-form-input v-model="temp_dealBu.pp_amount" size="sm"></b-form-input>
+              <b-form-input v-model="temp_dealBu.pp_amount"
+                maxlength="12"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              size="sm"></b-form-input>
             </b-form-group>
              <div class="errorstyles">
               <div class="z-index">{{ temp_dealBu_error.pp_amount_error }}</div>
@@ -176,7 +182,10 @@
           </b-col>
           <b-col sm="12" md="4" lg="4">
             <b-form-group label="FCY Rate">
-              <b-form-input v-model="temp_dealBu.usd_amount" size="sm"></b-form-input>
+              <b-form-input v-model="temp_dealBu.usd_amount" 
+              maxlength="12"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              size="sm"></b-form-input>
             </b-form-group>
              <div class="errorstyles">
               <div class="z-index">{{ temp_dealBu_error.usd_amount_error }}</div>
@@ -682,6 +691,15 @@ export default {
           console.log(e);
         });
     },
+
+
+               isNumber(e) {
+      let char = String.fromCharCode(e.keyCode); // Get the character
+      let val = e.target.value; // Get the character
+      if(/^\d*\.?\d{0,4}$/.test(char) && /^\d*\.?\d{0,3}$/.test(val)) return true; // Match with regex 
+      // if(/^[0-9]+$/.test(char)) return true; // Match with regex 
+      else e.preventDefault(); // If not match, don't add to input text
+    }
   },
 };
 
